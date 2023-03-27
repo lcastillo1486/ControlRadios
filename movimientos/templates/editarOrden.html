@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackTrack</title>
+</head>
+{% extends 'base.html' %}
+{% block content %}
+<body>
+
+    <div class="row">
+
+        <div class="table-responsive py-4">
+            <h1>Detalle del Pedido</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Cliente
+                        </th>
+                        <th>
+                            Radios
+                        </th>
+                        <th>
+                            Cobras
+                        </th>
+                        <th>
+                            Baterias
+                        </th>
+                        <th>
+                            Cargadores
+                        </th>
+                        <th>
+                            Handsfree
+                        </th>
+                        <th>
+                            Cascos
+                        </th>
+                        <th>
+                            Repetidoras
+                        </th>
+                        <th>
+                            Estaciones
+                        </th>
+                        <th>
+                            Dirección
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    
+                    <tr>
+                        <td>
+                            <b><font color ="blue">{{listaDetalles.cliente}}</b></font>
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_radios}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_cobras}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_baterias}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_cargadores}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_manos_libres}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_cascos}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_repetidoras}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="green">{{listaDetalles.cantidad_estaciones}}</b></font> 
+                        </td>
+                        <td>
+                            {{listaDetalles.direccion_entrega}}
+                        </td>
+                    </tr>
+                    <thead>
+                        <tr>
+                            <th>
+                                Entrega
+                            </th>
+                            <th>
+                                Retiro
+                            </th>
+                            <th colspan="2"></th>
+
+                        </tr>
+
+                    </thead>
+                    <tr>
+                        <td>
+                           <b><font color ="red">{{listaDetalles.fecha_entrega}}</b></font> 
+                        </td>
+                        <td>
+                            <b><font color ="red">{{listaDetalles.fecha_retiro}}</b></font> 
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br>
+                <a href='/generarsalida/{{listaDetalles.id}}' class="btn btn-success">PROCESAR PEDIDO</a>
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+                    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+                    crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+</html>

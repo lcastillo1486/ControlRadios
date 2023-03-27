@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackTrack</title>
+</head>
+
+<body>
+
+    <div class="row">
+
+        <div class="table-responsive py-2">
+            
+            <h1>Listado de Pedidos</h1>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            ID
+                        </th>
+                        <th>
+                            Cliente
+                        </th>
+                        <th>
+                            Creada el:
+                        </th>
+                        <th>
+                            Entregar el:
+                        </th>
+                        <th>
+                            Evento desde:
+                        </th>
+                        <th>
+                            Evento hasta:
+                        </th>
+                        <th>
+                            Estado:
+                        </th>
+                        <th>
+                            Observaciones:
+                        </th>
+                        <th colspan="2"></th>
+
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for c in listaOrdenes %}
+                    <tr>
+                        <td>{{c.id}}</td>
+                        <td>{{c.cliente}}</td>
+                        <td>{{c.fecha_creacion}}</td>
+                        <td>{{c.fecha_entrega}}</td>
+                        <td>{{c.fecha_evento_desde}}</td>
+                        <td>{{c.fecha_evento_hasta|default:""}}</td>
+                        <td>{{c.estado}}</td>
+                        <td>{{c.observaciones}}</td>
+                        <td><a href='/detalleOrden/{{c.id}}' class="btn btn-success">Ver Detalle y Procesar</a></td>
+                        <td><a href='/editarOrden/{{c.id}}' class="btn btn-warning">Editar Pedido</a></td>
+                        <td><a href='/generarPDF/{{c.id}}' target="_blank" class="btn btn-primary">Generar Etiqueta</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+</html>

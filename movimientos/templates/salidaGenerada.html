@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+{% load crispy_forms_tags %}
+
+<body>
+    <div class="row">
+        <div class="table responsive py-2">
+
+            <h1> Detalle de Salida N° {{salidaGenerada.id}} </h1><br>
+            <h1> Cliente: {{datosOrden.cliente}}</h1>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Radios
+                        </th>
+                        <th>
+                            Cobras
+                        </th>
+                        <th>
+                            Baterias extras
+                        </th>
+                        <th>
+                            Cargadores
+                        </th>
+                        <th>
+                            Handsfree
+                        </th>
+                        <th>
+                            Cascos
+                        </th>
+                        <th>
+                            Repetidoras
+                        </th>
+                        <th>
+                            Estaciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            {{datosOrden.cantidad_radios}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.cobras}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.cargadores}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.cargadores}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.handsfree}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.cascos}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.repetidoras}}
+                        </td>
+                        <td>
+                            {{salidaGenerada.estaciones}}
+                        </td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 10">
+            <path fill="#273036" fill-opacity="1" d="M0,128L0,32L1440,32L1440,0L0,0L0,0Z"></path>
+        </svg>
+
+    </div>
+
+    <h1>
+        <font color=#151B54>Radios agregadas al pedido = {{cantidad_radios}}</font>
+    </h1>
+
+    <form action='/detalleradios/{{salidaGenerada.id}}/{{datosOrden.id}}' method="POST">
+        {% csrf_token %}
+        <h1><b>
+                <font color="red">{{error}}</h1></b><br></font>
+
+        {{formRadios}}
+
+        <button>
+            AGREGAR
+        </button>
+    </form>
+
+    <table class="table table-striped">
+
+        <thead>
+            <tr>
+                <th>
+                    Radios
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in serial_radios %}
+            <tr>
+                <td>
+                    {{c.serial}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+</body>
+{% endblock %}
+
+</html>

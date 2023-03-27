@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+{% load crispy_forms_tags %}
+
+<body>
+    <h1>
+        <FONT color=#1589FF>PROCESAR ENTRADA
+    </h1>
+    </FONT>
+    <div class="row">
+        <div class="table responsive py-2">
+
+            <h2> Salida N° {{listado_entrada.id}} </h2>
+            <h2> Cliente: {{listado_orden.cliente}}</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            Radios
+                        </th>
+                        <th>
+                            Cobras
+                        </th>
+                        <th>
+                            Baterias extras
+                        </th>
+                        <th>
+                            Cargadores
+                        </th>
+                        <th>
+                            Handsfree
+                        </th>
+                        <th>
+                            Cascos
+                        </th>
+                        <th>
+                            Repetidoras
+                        </th>
+                        <th>
+                            Estaciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td>
+                            {{listado_orden.cantidad_radios}}
+                        </td>
+                        <td>
+                            {{listado_entrada.cobras}} 
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.baterias}}    
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.cargadores}} 
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.handsfree}} 
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.cascos}} 
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.repetidoras}} 
+                            
+                        </td>
+                        <td>
+                            {{listado_entrada.estaciones}} 
+                            
+                        </td>
+
+                    </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 10">
+            <path fill="#273036" fill-opacity="1" d="M0,128L0,32L1440,32L1440,0L0,0L0,0Z"></path>
+        </svg>
+
+    </div>
+    <br>
+
+
+    <div class="row" style="text-align: center">
+
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <h5><b>Registrar Radios</h5></b>
+            <form action='/entradaRadios/{{listado_entrada.id}}' method="POST">
+                {% csrf_token %}
+                <h3><font color ="red">{{error}}</h3></font><br>
+                <!-- <input type="text" id="serialRx" name="serialRx" size="30" /> -->
+                {{form}}
+                <button class="btn btn-primary">
+                    GUARDAR
+                </button>
+            </form>
+            <br>
+            
+            
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <h5><b></h5></b>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>
+                            <h5><b>Devueltas</h5></b>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in listadoRadiosCargadas %}
+                    <tr>
+                      
+                        <td><font color ="green"><b>{{c.serial}} </b></font></td>
+                        
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                
+            </table>
+            <!-- <a href='/generarEntrada/{{listado_entrada.id}}' class="btn btn-success">FINALIZAR</a> -->
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
+            <h5><b>Registrar Accesorios</h5></b>
+            <h4><font color ="red">{{error1}}</h4></font><br>
+            <form action='/generarEntrada/{{listado_entrada.id}}' method="POST">
+                {% csrf_token %}              
+                <!-- <input type="text" id="serialRx" name="serialRx" size="30" /> -->
+                {{formEntrada|crispy}}
+                <button class="btn btn-warning">
+                    CERRAR PEDIDO
+                </button>
+            </form>
+            <!-- <h5><b>Observaciones:</h5></b>
+
+            <textarea id="ObsText" name="ObsText" rows="10" cols="60"></textarea> -->
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+</body>
+{% endblock %}
+
+</html>
