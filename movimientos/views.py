@@ -461,11 +461,11 @@ def generarPDFGuia(request, id):
     detalle_acce = salidasDetalle.objects.get(id = id)
     b = detalle_acce
 
-    orden = b.id_orden
+    # orden = b.id_orden
 
-    ordenes = ordenRegistro.objects.get(id = orden)
+    # ordenes = ordenRegistro.objects.get(id = orden)
 
-    c = ordenes
+    # c = ordenes
 
     # fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
