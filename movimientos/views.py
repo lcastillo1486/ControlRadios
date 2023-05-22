@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -452,7 +452,7 @@ def generarEntrada(request, id):
 def verFaltante(request):
     
     rx_listado_faltante = vista_radios_faltantes.objects.all()
-    listadoFantante = accesoriosFaltantes.objects.all()
+    listadoFantante = vista_accesorios_faltantes.objects.all()
     return render(request,"faltantes.html",{"listAccFaltante":listadoFantante, "listadorxfaltante":rx_listado_faltante})
 
 def generarPDFGuia(request, id):

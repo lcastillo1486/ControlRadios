@@ -86,7 +86,21 @@ class vista_radios_faltantes(models.Model):
         db_table = 'vista_radios_faltantes'
         auto_created = True
 
+class vista_accesorios_faltantes(models.Model):
+    cobras = models.CharField(max_length=150)
+    baterias = models.CharField(max_length=150)
+    cargadores = models.CharField(max_length=150)
+    handsfree = models.CharField(max_length=150)
+    cascos = models.CharField(max_length=150)
+    repetidoras = models.CharField(max_length=150)
+    estaciones = models.CharField(max_length=150)
+    cod_salida = models.CharField(primary_key=True, max_length=150)
+    nombre = models.CharField(max_length=150)
 
+    class Meta:
+        managed = False
+        db_table = 'vista_accesorios_faltantes'
+        auto_created = True
 
 
 

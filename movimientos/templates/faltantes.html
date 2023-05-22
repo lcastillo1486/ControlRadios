@@ -27,7 +27,7 @@
                             ID Salida
                         </th>
                         <th>
-                            Fecha de Devolución
+                            Cliente
                         </th>
                         <th>
                             Cobras
@@ -60,15 +60,15 @@
                     {% for c in listAccFaltante %}
                     
                     <tr>
-                        <td>{{c.id_salida}}</td>
-                        <td>{{c.fecha_creacion}}</td>
-                        <td>{{c.fcobras}}</td>
-                        <td>{{c.fbaterias}}</td>
-                        <td>{{c.fcargadores}}</td>
-                        <td>{{c.fhandsfree}}</td>
-                        <td>{{c.fcascos}}</td>
-                        <td>{{c.frepetidoras}}</td>
-                        <td>{{c.festaciones}}</td>
+                        <td>{{c.cod_salida}}</td>
+                        <td>{{c.nombre}}</td>
+                        <td>{{c.cobras}}</td>
+                        <td>{{c.baterias}}</td>
+                        <td>{{c.cargadores}}</td>
+                        <td>{{c.handsfree}}</td>
+                        <td>{{c.cascos}}</td>
+                        <td>{{c.repetidoras}}</td>
+                        <td>{{c.estaciones}}</td>
                     </tr>
                     {% endfor %}     
                    
