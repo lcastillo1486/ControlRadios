@@ -469,9 +469,9 @@ def generarPDFGuia(request, id):
 
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
-    radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
+    #radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
 
-    d = radios
+    #d = radios
 
     cliente = str(c.cliente)
     cobras = str(b.cobras)
@@ -483,7 +483,7 @@ def generarPDFGuia(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    rx = d
+    #rx = d
 
     buffer = BytesIO()
 
@@ -500,10 +500,10 @@ def generarPDFGuia(request, id):
     pdf.drawString(450, 180, str(cargadores + ' UND'))
     #y = 110
     x = 60
-    for i in rx:
-        pdf.drawString(x, 110, str(i))
-        #y += 20
-        x += 50
+    # for i in rx:
+    #     pdf.drawString(x, 110, str(i))
+    #     #y += 20
+    #     x += 50
     pdf.drawString(50, 760, str(cascos))
     pdf.drawString(50, 740, str(estaciones))
     pdf.drawString(50, 720, str(repetidoras))
