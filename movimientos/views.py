@@ -467,11 +467,11 @@ def generarPDFGuia(request, id):
 
     c = ordenes
 
-    fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
+    # fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
-    radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
+    # radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
 
-    d = radios
+    # d = radios
 
     # cliente = str(c.cliente)
     # cobras = str(b.cobras)
