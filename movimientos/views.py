@@ -485,7 +485,7 @@ def generarPDFGuia(request, id):
     # fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
     # rx = d
 
-    # buffer = BytesIO()
+    buffer = BytesIO()
 
     # pdf = canvas.Canvas(buffer)
     # ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
@@ -513,15 +513,16 @@ def generarPDFGuia(request, id):
 
     # pdf.save()
 
-    # buffer.seek(0)
+    buffer.seek(0)
 
     # nombre_archivo = str(id)+'_'+str(cliente)+'_'+str(fecha_entrega)+'.pdf'
+    nombre_archivo = 'a.pdf'
 
-    # response = HttpResponse(buffer, content_type='application/pdf')
-    # response['Content-Disposition'] = 'inline; filename="{nombre_archivo}"'
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = 'inline; filename="{nombre_archivo}"'
 
 
-    # return response
+    return response
 
 
 
