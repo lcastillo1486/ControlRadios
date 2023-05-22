@@ -76,6 +76,16 @@ class radiosFantantes(models.Model):
     id_salida = models.PositiveIntegerField(null=False)
     fserial = models.CharField(max_length=15)
 
+class vista_radios_faltantes(models.Model):
+    n_serial = models.CharField(max_length=150)
+    cod_salida = models.CharField(primary_key=True,max_length=150)
+    nombre = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'vista_radios_faltantes'
+        auto_created = True
+
 
 
 
