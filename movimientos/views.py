@@ -458,66 +458,65 @@ def verFaltante(request):
 
 def generarPDFGuia(request, id):
     
-    detalle_acce = salidasDetalle.objects.get(id = id)
+    detalle_acce = salidasDetalle.objects.get(id_orden = id)
     b = detalle_acce
 
-    # orden = b.id_orden
+    orden = b.id_orden
 
-    # ordenes = ordenRegistro.objects.get(id = orden)
+    ordenes = ordenRegistro.objects.get(id = orden)
 
-    # c = ordenes
+    c = ordenes
 
-    # fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
+    fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
-    # radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
+    radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
 
-    # d = radios
+    d = radios
 
-    # cliente = str(c.cliente)
-    # cobras = str(b.cobras)
-    # cargadores = str(b.cargadores)
-    # handsfree = str(b.handsfree)
-    # cascos = str(b.cascos)
-    # estaciones = str(b.estaciones)
-    # repetidoras = str(b.repetidoras)
-    # baterias = str(b.baterias)
-    # fecha_entrega = str(c.fecha_entrega)
-    # fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    # rx = d
+    cliente = str(c.cliente)
+    cobras = str(b.cobras)
+    cargadores = str(b.cargadores)
+    handsfree = str(b.handsfree)
+    cascos = str(b.cascos)
+    estaciones = str(b.estaciones)
+    repetidoras = str(b.repetidoras)
+    baterias = str(b.baterias)
+    fecha_entrega = str(c.fecha_entrega)
+    fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
+    rx = d
 
     buffer = BytesIO()
 
-    # pdf = canvas.Canvas(buffer)
-    # ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+    pdf = canvas.Canvas(buffer)
+    ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
 
-    # pdf.drawString(5*cm, altura_pagina - 9*cm, str(id))
-    # pdf.drawString(150, 700, str(cliente))
-    # pdf.drawString(450, 620, str(fecha_actual))
-    # pdf.drawString(450, 600, 'Evento: '+ str(fecha_evento))
-    # pdf.drawString(450, 400, str(cobras) + ' UND')
-    # pdf.drawString(450, 380, str(handsfree) + ' UND')
-    # pdf.drawString(450, 200, str(baterias) + ' UND')
-    # pdf.drawString(450, 180, str(cargadores + ' UND'))
+    pdf.drawString(5*cm, altura_pagina - 9*cm, str(id))
+    pdf.drawString(150, 700, str(cliente))
+    pdf.drawString(450, 620, str(fecha_actual))
+    pdf.drawString(450, 600, 'Evento: '+ str(fecha_evento))
+    pdf.drawString(450, 400, str(cobras) + ' UND')
+    pdf.drawString(450, 380, str(handsfree) + ' UND')
+    pdf.drawString(450, 200, str(baterias) + ' UND')
+    pdf.drawString(450, 180, str(cargadores + ' UND'))
     # #y = 110
-    # x = 60
-    # for i in rx:
-    #     pdf.drawString(x, 110, str(i))
-    #     #y += 20
-    #     x += 50
-    # pdf.drawString(50, 760, str(cascos))
-    # pdf.drawString(50, 740, str(estaciones))
-    # pdf.drawString(50, 720, str(repetidoras))
+    x = 60
+    for i in rx:
+        pdf.drawString(x, 110, str(i))
+        #y += 20
+        x += 50
+    pdf.drawString(50, 760, str(cascos))
+    pdf.drawString(50, 740, str(estaciones))
+    pdf.drawString(50, 720, str(repetidoras))
     
 
-    # pdf.showPage()
+    pdf.showPage()
 
-    # pdf.save()
+    pdf.save()
 
     buffer.seek(0)
 
-    # nombre_archivo = str(id)+'_'+str(cliente)+'_'+str(fecha_entrega)+'.pdf'
-    nombre_archivo = 'a.pdf'
-
+    nombre_archivo = str(id)+'_'+str(fecha_entrega)+'.pdf'
+   
     response = HttpResponse(buffer, content_type='application/pdf')
     response['Content-Disposition'] = 'inline; filename="{nombre_archivo}"'
 
