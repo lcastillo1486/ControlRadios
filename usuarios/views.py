@@ -16,7 +16,7 @@ def registro(request):
                 user = User.objects.create_user(
                     username=request.POST['username'], password=request.POST['password1'])
                 user.save()
-                return HttpResponse('Usuario Creado')
+                return redirect('inicial')
             except:
                 return render(request, 'registro.html', {'registro_form': UserCreationForm, 'error': 'El usuario ya existe'})
 

@@ -1,11 +1,16 @@
 from django.db import models
 from ordenes.models import ordenRegistro, cliente
+from django.utils import timezone
+import pytz
 
+def obtener_fecha_hora_peru():
+    peru_timezone = pytz.timezone('America/Lima')
+    return timezone.now().astimezone(peru_timezone)
 # Create your models here.
 
 class salidasDetalle(models.Model):
     id_orden = models.PositiveIntegerField(null=False)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(default=obtener_fecha_hora_peru, editable=False, blank=True, null=True)
     cobras = models.PositiveIntegerField(null=False, default=0)
     baterias = models.PositiveIntegerField(null=False, default=0)
     cargadores = models.PositiveIntegerField(null=False, default=0)
@@ -26,7 +31,7 @@ class movimientoRadios(models.Model):
     id_salida = models.PositiveIntegerField()
     serial = models.CharField(max_length=15)
     estado = models.CharField(max_length=15)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(default=obtener_fecha_hora_peru, editable=False, blank=True, null=True)
 
 class estadoRadios(models.Model):
     estado = models.CharField(max_length=15)
@@ -46,7 +51,7 @@ class entradaDetalle(models.Model):
     id_salida = models.PositiveIntegerField(null=False)
     id_orden = models.PositiveIntegerField(null=False)
     cliente = models.CharField(max_length=100)
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    fecha_creacion = models.DateTimeField(default=obtener_fecha_hora_peru, editable=False, blank=True, null=True)
     cobras = models.PositiveIntegerField(null=True)
     baterias = models.PositiveIntegerField(null=True)
     cargadores = models.PositiveIntegerField(null=True)
