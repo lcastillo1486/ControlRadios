@@ -357,6 +357,32 @@ def generarEntrada(request, id):
 
         if formEntrada.is_valid():
 
+            if accesoriosFaltantes.objects.filter(id_salida = id).exists():
+                cobras = formEntrada.cleaned_data['cobras']
+                baterias = formEntrada.cleaned_data['baterias']
+                cargadores = formEntrada.cleaned_data['cargadores']
+                handsfree = formEntrada.cleaned_data['handsfree']
+                cascos = formEntrada.cleaned_data['cascos']
+                repetidoras = formEntrada.cleaned_data['repetidoras']
+                estaciones = formEntrada.cleaned_data['estaciones']
+                observaciones = formEntrada.cleaned_data['observaciones']
+
+                actualiza_acce = accesoriosFaltantes.objects.get(id_salida = id)
+                actualiza_acce.fcobras = actualiza_acce.fcobras - cobras
+                actualiza_acce.fbaterias = actualiza_acce.fbaterias - baterias
+                actualiza_acce.fcargadores = actualiza_acce.fcargadores - cargadores
+                actualiza_acce.fhandsfree = actualiza_acce.fhandsfree - handsfree
+                actualiza_acce.fcascos = actualiza_acce.fcascos - cascos
+                actualiza_acce.frepetidoras = actualiza_acce.frepetidoras - repetidoras
+                actualiza_acce.festaciones = actualiza_acce.festaciones - estaciones
+                actualiza_acce.save()
+
+                actualiza_acce = accesoriosFaltantes.objects.get(id_salida = id) 
+                if actualiza_acce.fcobras + actualiza_acce.fbaterias + actualiza_acce.fcargadores + actualiza_acce.fhandsfree + actualiza_acce.fcascos + actualiza_acce.frepetidoras + actualiza_acce.festaciones == 0:
+                    actualiza_acce.delete()
+                    return redirect('/verFaltante/')
+                return redirect('/verFaltante/')
+
             #tomo cantidades enviadas desde form
             cobras = formEntrada.cleaned_data['cobras']
             baterias = formEntrada.cleaned_data['baterias']
