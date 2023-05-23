@@ -524,7 +524,7 @@ def generarPDFGuia(request, id):
 
     pdf.drawString(5*cm, altura_pagina - 9*cm, str(id))
     pdf.drawString(150, 520, str(cliente))
-    pdf.drawString(450, 500, str(fecha_actual))
+    pdf.drawString(450, 495, str(fecha_actual))
     pdf.drawString(450, 520, 'Evento: '+ str(fecha_evento))
     pdf.drawString(450, 400, str(cobras) + ' UND')
     pdf.drawString(450, 380, str(handsfree) + ' UND')
