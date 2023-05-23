@@ -526,19 +526,20 @@ def generarPDFGuia(request, id):
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(15.5*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
-    pdf.drawString(450, 400, str(cobras) + ' UND')
-    pdf.drawString(450, 380, str(handsfree) + ' UND')
-    pdf.drawString(450, 200, str(baterias) + ' UND')
-    pdf.drawString(450, 180, str(cargadores + ' UND'))
+    pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
+    pdf.drawString(14*cm, altura_pagina - 16.05*cm, str(handsfree) + ' UND')
+    pdf.drawString(14*cm, altura_pagina - 18.95*cm, str(baterias) + ' UND')
+    pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
+    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(cascos))
+    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(estaciones))
+    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(repetidoras))
     # #y = 110
     x = 60
     for i in rx:
         pdf.drawString(x, 110, str(i))
         #y += 20
         x += 50
-    pdf.drawString(50, 760, str(cascos))
-    pdf.drawString(50, 740, str(estaciones))
-    pdf.drawString(50, 720, str(repetidoras))
+    
     
 
     pdf.showPage()
