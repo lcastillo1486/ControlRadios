@@ -528,7 +528,7 @@ def generarPDFGuia(request, id):
     pdf.drawString(15.5*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
     pdf.drawString(14*cm, altura_pagina - 16.05*cm, str(handsfree) + ' UND')
-    pdf.drawString(14*cm, altura_pagina - 18.95*cm, str(baterias) + ' UND')
+    pdf.drawString(14*cm, altura_pagina - 19.25*cm, str(baterias) + ' UND')
     pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
     # pdf.drawString(14*cm, altura_pagina - 10*cm, str(cascos))
     # pdf.drawString(14*cm, altura_pagina - 10*cm, str(estaciones))
