@@ -523,7 +523,7 @@ def generarPDFGuia(request, id):
     ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
-    pdf.drawString(5*cm, altura_pagina - 10*cm, str(cliente))
+    pdf.drawString(5*cm, altura_pagina - 10.5*cm, str(cliente))
     pdf.drawString(450, 495, str(fecha_actual))
     pdf.drawString(450, 520, 'Evento: '+ str(fecha_evento))
     pdf.drawString(450, 400, str(cobras) + ' UND')
