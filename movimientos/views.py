@@ -49,6 +49,13 @@ def entradaRadios(request, id):
 
                 d = a.serial
 
+                #borrar si existe en faltantes
+
+                if radiosFantantes.objects.filter(fserial = d, id_salida = id).exists():
+                    borrarrx = radiosFantantes.objects.filter(fserial = d, id_salida = id)
+                    borrarrx.delete()
+
+
                 #cambiar el estatus del radio en el inventario
 
                 cambiaestado =  invSeriales.objects.get(codigo = d)
