@@ -526,13 +526,20 @@ def generarPDFGuia(request, id):
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(15.5*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
-    pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
-    pdf.drawString(14*cm, altura_pagina - 16.05*cm, str(handsfree) + ' UND')
-    pdf.drawString(14*cm, altura_pagina - 19.25*cm, str(baterias) + ' UND')
-    pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
-    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(cascos))
-    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(estaciones))
-    # pdf.drawString(14*cm, altura_pagina - 10*cm, str(repetidoras))
+    if b.cobras > 0:
+        pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
+    if b.handsfree > 0:
+        pdf.drawString(14*cm, altura_pagina - 16.05*cm, str(handsfree) + ' UND')
+    if b.baterias > 0:
+        pdf.drawString(14*cm, altura_pagina - 19.25*cm, str(baterias) + ' UND')
+    if b.cargadores > 0:
+        pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
+    if b.cascos > 0:
+        pdf.drawString(14*cm, altura_pagina - 10*cm, str(cascos + ' UND'))
+    if b.estaciones >0:
+        pdf.drawString(14*cm, altura_pagina - 10*cm, str(estaciones + ' UND'))
+    if b.repetidoras > 0:
+        pdf.drawString(14*cm, altura_pagina - 10*cm, str(repetidoras + ' UND'))
     # #y = 110
     x = 60
     for i in rx:
