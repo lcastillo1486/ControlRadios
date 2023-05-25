@@ -547,7 +547,7 @@ def generarPDFGuia(request, id):
     if b.repetidoras > 0:
         pdf.drawString(14*cm, altura_pagina - 13*cm, str(repetidoras + ' UND'))
     if rx_amarillas > 0:
-        pdf.drawString(14*cm, altura_pagina - 14*cm, str(rx_amarillas + 'ama'))
+        pdf.drawString(7*cm, altura_pagina - 14*cm, str(rx_amarillas))
     if rx_moradas > 0:
         pdf.drawString(14*cm, altura_pagina - 15*cm, str(rx_moradas))
     if rx_plomo > 0:
