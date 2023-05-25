@@ -102,6 +102,18 @@ class vista_accesorios_faltantes(models.Model):
         db_table = 'vista_accesorios_faltantes'
         auto_created = True
 
+class vista_movimiento_radios_tipos(models.Model):
+    id_salida = models.CharField(max_length=150)
+    serialrx = models.CharField(max_length=150)
+    estado = models.CharField(max_length=150)
+    tipo = models.CharField(max_length=150)
+    fecha_creacion = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'vista_movimiento_radios_tipos'
+        auto_created = True
+
 
 
 

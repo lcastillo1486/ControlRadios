@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -505,6 +505,12 @@ def generarPDFGuia(request, id):
 
     d = radios
 
+    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'EP 450 (Amarillas)').count()
+    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'DEP 450 (Moradas)').count()
+    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'DEP 450 (Plomo)').count()
+
+
+
     cliente = str(c.cliente)
     cobras = str(b.cobras)
     cargadores = str(b.cargadores)
@@ -535,11 +541,17 @@ def generarPDFGuia(request, id):
     if b.cargadores > 0:
         pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
     if b.cascos > 0:
-        pdf.drawString(14*cm, altura_pagina - 10*cm, str(cascos + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 11*cm, str(cascos + ' UND'))
     if b.estaciones >0:
-        pdf.drawString(14*cm, altura_pagina - 10*cm, str(estaciones + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 12*cm, str(estaciones + ' UND'))
     if b.repetidoras > 0:
-        pdf.drawString(14*cm, altura_pagina - 10*cm, str(repetidoras + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 13*cm, str(repetidoras + ' UND'))
+    if rx_amarillas > 0:
+        pdf.drawString(14*cm, altura_pagina - 14*cm, str(rx_amarillas))
+    if rx_moradas > 0:
+        pdf.drawString(14*cm, altura_pagina - 15*cm, str(rx_moradas))
+    if rx_plomo > 0:
+        pdf.drawString(14*cm, altura_pagina - 16*cm, str(rx_plomo))
     # #y = 110
     x = 60
     for i in rx:
