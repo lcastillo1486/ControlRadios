@@ -523,7 +523,7 @@ def generarPDFGuia(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    #direccion = str(c.direccion_entrega)
+    direccion = str(c.direccion_entrega)
     rx = d
 
     buffer = BytesIO()
@@ -533,7 +533,7 @@ def generarPDFGuia(request, id):
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
-    #pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
@@ -554,11 +554,11 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
     #radios
     if rx_amarillas > 0:
-        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas))
     if rx_moradas > 0:
-        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas))
     if rx_plomo > 0:
-        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo))
     # #y = 110
     x = 60
     for i in rx:
