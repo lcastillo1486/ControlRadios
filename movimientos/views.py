@@ -523,7 +523,7 @@ def generarPDFGuia(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    direccion = str(c.direccion_entrega)
+    #direccion = str(c.direccion_entrega)
     rx = d
 
     buffer = BytesIO()
@@ -533,7 +533,7 @@ def generarPDFGuia(request, id):
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
-    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
+    #pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
@@ -560,12 +560,6 @@ def generarPDFGuia(request, id):
     if rx_plomo > 0:
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo + ' UND'))
     # #y = 110
-    # font_size = 10
-    # styles = getSampleStyleSheet()
-    # style_normal = styles['Normal']
-    # style_small_font = style_normal.clone()
-    # style_small_font.fontSize = font_size
-    # pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
     x = 60
     for i in rx:
         pdf.drawString(x, 110, str(i))
