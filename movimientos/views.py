@@ -566,11 +566,11 @@ def generarPDFGuia(request, id):
     # style_small_font = style_normal.clone()
     # style_small_font.fontSize = font_size
     # pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
-    x = 2
+    x = 60
     for i in rx:
         pdf.drawString(x, 110, str(i))
         #y += 20
-        x += 2
+        x += 60
     
     
 
