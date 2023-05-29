@@ -542,6 +542,7 @@ def generarPDFGuia(request, id):
         linea_dir2 = direccion[45:88]
         linea_dir3 = direccion[89:133]
     else:
+        linea_dir1 = direccion[:44]
         linea_dir2 = ""
         linea_dir3 = "" 
 
