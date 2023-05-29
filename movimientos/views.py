@@ -580,6 +580,8 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(plomo))
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
+    font_size = 9
+    pdf.setFont("Helvetica", font_size)
     x = 60
     for i in rx:
         pdf.drawString(x, 110, str(i))
