@@ -522,6 +522,7 @@ def generarPDFGuia(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
+    direccion = str(c.direccion_entrega)
     rx = d
 
     buffer = BytesIO()
@@ -531,8 +532,9 @@ def generarPDFGuia(request, id):
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
-    pdf.drawString(15.5*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
+    pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
         pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
@@ -551,17 +553,19 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
     #radios
     if rx_amarillas > 0:
-        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas))
+        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas + ' UND'))
     if rx_moradas > 0:
-        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas))
+        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas + ' UND'))
     if rx_plomo > 0:
-        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo))
+        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo + ' UND'))
     # #y = 110
-    x = 60
+    font_size = 10
+    pdf.setFont(font_size)
+    x = 2
     for i in rx:
-        pdf.drawString(x, 110, str(i))
+        pdf.drawString(x, altura_pagina - 24.55*cm, str(i))
         #y += 20
-        x += 50
+        x += 2
     
     
 
