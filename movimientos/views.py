@@ -535,23 +535,26 @@ def generarPDFGuia(request, id):
     if b.cobras > 0:
         pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
-        pdf.drawString(14*cm, altura_pagina - 16.05*cm, str(handsfree) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 16.65*cm, str(handsfree) + ' UND')
+    if b.cascos > 0:
+        pdf.drawString(5*cm, altura_pagina - 17.45*cm, str('Headset Antiruido'))
+        pdf.drawString(14*cm, altura_pagina - 17.45*cm, str(cascos + ' UND'))
     if b.baterias > 0:
         pdf.drawString(14*cm, altura_pagina - 19.25*cm, str(baterias) + ' UND')
     if b.cargadores > 0:
         pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
-    if b.cascos > 0:
-        pdf.drawString(14*cm, altura_pagina - 11*cm, str(cascos + ' UND'))
-    if b.estaciones >0:
-        pdf.drawString(14*cm, altura_pagina - 12*cm, str(estaciones + ' UND'))
+    #if b.estaciones >0:
+        #pdf.drawString(14*cm, altura_pagina - 12*cm, str(estaciones + ' UND'))
     if b.repetidoras > 0:
-        pdf.drawString(14*cm, altura_pagina - 13*cm, str(repetidoras + ' UND'))
+        pdf.drawString(5*cm, altura_pagina - 20.85*cm, str('Repetidoras'))
+        pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
+    #radios
     if rx_amarillas > 0:
-        pdf.drawString(7*cm, altura_pagina - 14*cm, str(rx_amarillas))
+        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas))
     if rx_moradas > 0:
-        pdf.drawString(14*cm, altura_pagina - 15*cm, str(rx_moradas))
+        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas))
     if rx_plomo > 0:
-        pdf.drawString(14*cm, altura_pagina - 16*cm, str(rx_plomo))
+        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo))
     # #y = 110
     x = 60
     for i in rx:
