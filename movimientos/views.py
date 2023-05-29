@@ -568,7 +568,7 @@ def generarPDFGuia(request, id):
     # pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
     x = 2
     for i in rx:
-        pdf.drawString(x*cm, altura_pagina - 24.55*cm, str(i))
+        pdf.drawString(x, 110, str(i))
         #y += 20
         x += 2
     
