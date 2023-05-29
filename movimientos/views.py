@@ -14,7 +14,7 @@ import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
-from reportlab.lib.utils import wrap
+
 
 # Create your views here.
 
@@ -535,13 +535,11 @@ def generarPDFGuia(request, id):
 
     pdf = canvas.Canvas(buffer)
     ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
-    max_line_width = 200
-    lineas_texto = wrap(direccion, max_line_width)
+    
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
-    for lineas in lineas_texto:
-        pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(lineas))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
