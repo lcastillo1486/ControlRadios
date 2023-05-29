@@ -14,6 +14,7 @@ import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
+from reportlab.lib.styles import getSampleStyleSheet
 # Create your views here.
 
 def entradaRadios(request, id):
@@ -560,7 +561,11 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo + ' UND'))
     # #y = 110
     font_size = 10
-    pdf.setFont(font_size)
+    styles = getSampleStyleSheet()
+    style_normal = styles['Normal']
+    style_small_font = style_normal.clone()
+    style_small_font.fontSize = font_size
+    pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
     x = 2
     for i in rx:
         pdf.drawString(x, altura_pagina - 24.55*cm, str(i))
