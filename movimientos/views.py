@@ -544,8 +544,8 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 19.45*cm, str(baterias) + ' UND')
     if b.cargadores > 0:
         pdf.drawString(14*cm, altura_pagina - 20.15*cm, str(cargadores + ' UND'))
-    #if b.estaciones >0:
-        #pdf.drawString(14*cm, altura_pagina - 12*cm, str(estaciones + ' UND'))
+    if b.estaciones >0:
+        pdf.drawString(14*cm, altura_pagina - 16.75*cm, str(estaciones + ' UND'))
     if b.repetidoras > 0:
         pdf.drawString(5*cm, altura_pagina - 20.85*cm, str('Repetidoras'))
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
