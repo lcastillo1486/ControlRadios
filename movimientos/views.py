@@ -523,7 +523,7 @@ def generarPDFGuia(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    #direccion = str(c.direccion_entrega)
+    direccion = str(c.direccion_entrega)
     rx = d
 
     buffer = BytesIO()
@@ -533,7 +533,7 @@ def generarPDFGuia(request, id):
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
-    #pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
