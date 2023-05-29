@@ -14,7 +14,7 @@ import datetime
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
-from reportlab.lib.styles import getSampleStyleSheet
+
 # Create your views here.
 
 def entradaRadios(request, id):
