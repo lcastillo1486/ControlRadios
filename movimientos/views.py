@@ -550,7 +550,7 @@ def generarPDFGuia(request, id):
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
     pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(linea_dir1))
     pdf.drawString(3.5*cm, altura_pagina - 10.4*cm, str(linea_dir2))
-    pdf.drawString(3.5*cm, altura_pagina - 10.6*cm, str(linea_dir3))
+    pdf.drawString(3.5*cm, altura_pagina - 10.8*cm, str(linea_dir3))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
