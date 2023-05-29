@@ -534,16 +534,16 @@ def generarPDFGuia(request, id):
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(15.5*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
-        pdf.drawString(14*cm, altura_pagina - 15.15*cm, str(cobras) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
-        pdf.drawString(14*cm, altura_pagina - 16.65*cm, str(handsfree) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 15.95*cm, str(handsfree) + ' UND')
     if b.cascos > 0:
         pdf.drawString(5*cm, altura_pagina - 17.45*cm, str('Headset Antiruido'))
         pdf.drawString(14*cm, altura_pagina - 17.45*cm, str(cascos + ' UND'))
     if b.baterias > 0:
-        pdf.drawString(14*cm, altura_pagina - 19.25*cm, str(baterias) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 19.45*cm, str(baterias) + ' UND')
     if b.cargadores > 0:
-        pdf.drawString(14*cm, altura_pagina - 20.25*cm, str(cargadores + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 20.15*cm, str(cargadores + ' UND'))
     #if b.estaciones >0:
         #pdf.drawString(14*cm, altura_pagina - 12*cm, str(estaciones + ' UND'))
     if b.repetidoras > 0:
