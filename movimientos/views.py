@@ -535,11 +535,21 @@ def generarPDFGuia(request, id):
 
     pdf = canvas.Canvas(buffer)
     ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+    tamano_direccion = len(direccion)
     
+    if tamano_direccion > 44:
+        linea_dir1 = direccion[:44]
+        linea_dir2 = direccion[45:88]
+        linea_dir3 = direccion[89:133]
+    else:
+        linea_dir2 = ""
+        linea_dir3 = "" 
 
     pdf.drawString(5*cm, altura_pagina - 7*cm, str(id))
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
-    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(direccion))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(linea_dir1))
+    pdf.drawString(3.5*cm, altura_pagina - 10.2*cm, str(linea_dir2))
+    pdf.drawString(3.5*cm, altura_pagina - 10.4*cm, str(linea_dir3))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     if b.cobras > 0:
