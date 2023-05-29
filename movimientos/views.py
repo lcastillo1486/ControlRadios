@@ -511,6 +511,10 @@ def generarPDFGuia(request, id):
     rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Moradas)').count()
     rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Plomo)').count()
 
+    amarillas = rx_amarillas
+    moradas = rx_moradas
+    plomo = rx_plomo
+
 
 
     cliente = str(c.cliente)
@@ -554,11 +558,11 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
     #radios
     if rx_amarillas > 0:
-        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(rx_amarillas))
+        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(amarillas + ' UNID'))
     if rx_moradas > 0:
-        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(rx_moradas))
+        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(moradas + ' UNID'))
     if rx_plomo > 0:
-        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo))
+        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(plomo + ' UNID'))
     # #y = 110
     x = 60
     for i in rx:
