@@ -494,6 +494,7 @@ def generarPDFGuia(request, id):
     b = detalle_acce
 
     orden = b.id_orden
+    salida_id = b.id
 
     ordenes = ordenRegistro.objects.get(id = orden)
 
@@ -501,13 +502,13 @@ def generarPDFGuia(request, id):
 
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
-    radios = movimientoRadios.objects.filter(id_salida = id).values_list('serial', flat=True)
+    radios = movimientoRadios.objects.filter(id_salida = salida_id).values_list('serial', flat=True)
 
     d = radios
 
-    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'EP 450 (Amarillas)').count()
-    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'DEP 450 (Moradas)').count()
-    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = id, tipo = 'DEP 450 (Plomo)').count()
+    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'EP 450 (Amarillas)').count()
+    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Moradas)').count()
+    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Plomo)').count()
 
 
 
