@@ -560,12 +560,12 @@ def generarPDFGuia(request, id):
     if rx_plomo > 0:
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(rx_plomo + ' UND'))
     # #y = 110
-    font_size = 10
-    styles = getSampleStyleSheet()
-    style_normal = styles['Normal']
-    style_small_font = style_normal.clone()
-    style_small_font.fontSize = font_size
-    pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
+    # font_size = 10
+    # styles = getSampleStyleSheet()
+    # style_normal = styles['Normal']
+    # style_small_font = style_normal.clone()
+    # style_small_font.fontSize = font_size
+    # pdf.setFont(style_small_font.fontName, style_small_font.fontSize)
     x = 2
     for i in rx:
         pdf.drawString(x*cm, altura_pagina - 24.55*cm, str(i))
