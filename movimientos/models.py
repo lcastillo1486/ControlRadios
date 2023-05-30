@@ -114,6 +114,12 @@ class vista_movimiento_radios_tipos(models.Model):
         db_table = 'vista_movimiento_radios_tipos'
         auto_created = True
 
+class auditoria(models.Model):
+    fecha = models.DateTimeField(blank=True, null=True)
+    accion = models.CharField(max_length=200, blank=True, null=True)
+    usuario = models.CharField(max_length=20, blank=True, null=True)
+    
+
 
 
 
