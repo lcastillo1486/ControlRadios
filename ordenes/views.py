@@ -18,7 +18,7 @@ def ordenes(request):
             a = form.save(commit=False)
             a.estado_id = 2
             a.save()
-
+###AUDITORIA#######
             #buscar el ultimo id generado
             ultimo_id = ordenRegistro.objects.latest('id').id
             #capturar usuario actual
@@ -54,7 +54,20 @@ def buscaEdit(request, id_orden):
 
         form = formEdit(request.POST,instance=editCurso)
         if form.is_valid:
-            form.save() 
+            form.save()
+
+###AUDITORIA#######
+            #buscar el ultimo id generado
+            ultimo_id = id_orden
+            #capturar usuario actual
+            user_nombre = request.user.username
+            #fecha y hora actual
+            fecha_hora_peru = timezone.localtime(timezone.now())
+            fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+
+            log = auditoria(fecha = fecha_hora_formateada, accion = f'Orden Modificada N° {ultimo_id}', usuario = user_nombre)
+            log.save()
+ 
 
     editCurso = ordenRegistro.objects.get(id = id_orden)
     form = formEdit(instance=editCurso)
