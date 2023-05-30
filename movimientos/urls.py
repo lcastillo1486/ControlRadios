@@ -16,7 +16,7 @@ urlpatterns = [
     path('cambiaEstadoEnt/<int:id>',views.cambiaEstadoEntregado),
     path('generarPDF/<int:id>',views.generarPDFPreparados),
     path('entradaRadios/<int:id>/<int:orden_id>',views.entradaRadios),
-    path('generarEntrada/<int:id>',views.generarEntrada),
+    path('generarEntrada/<int:id>/<int:orden_id>',views.generarEntrada),
     path('verFaltante/',views.verFaltante),
     path('generaPDFGuia/<int:id>',views.generarPDFGuia),
 

@@ -354,7 +354,7 @@ def generarPDFPreparados(request, id):
 
     return response
 
-def generarEntrada(request, id):
+def generarEntrada(request, id, orden_id):
 
     if request.method == 'POST':
         formEntrada = formEntradaDetalle(request.POST)
@@ -408,8 +408,8 @@ def generarEntrada(request, id):
             repetidorasSal = datosSalida.repetidoras
             estacionesSal = datosSalida.estaciones
 
-            ordenes = ordenRegistro.objects.get(id = id)
-            msalida = salidasDetalle.objects.get(id_orden=id)
+            ordenes = ordenRegistro.objects.get(id = orden_id)
+            msalida = salidasDetalle.objects.get(id_orden=orden_id)
             radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
             cuentaRxcargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D").count()
             cuentaRxOrden =  movimientoRadios.objects.filter(id_salida = id, estado = "F").count()
@@ -472,7 +472,7 @@ def generarEntrada(request, id):
                     guardafaltanterx.fserial = serfaltante
                     guardafaltanterx.save()
 
-            numorden = salidasDetalle.objects.get(id_orden=id)
+            numorden = salidasDetalle.objects.get(id_orden=orden_id)
             numordena = numorden.id_orden
             client = ordenRegistro.objects.get(id=numordena)
             client_id = client.cliente
