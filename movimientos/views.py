@@ -18,12 +18,12 @@ from reportlab.lib.units import cm
 
 # Create your views here.
 
-def entradaRadios(request, id):
+def entradaRadios(request, id, orden_id):
 
     form = guardaEntradaRx()
     formEntrada = formEntradaDetalle()
-    ordenes = ordenRegistro.objects.get(id = id)
-    msalida = salidasDetalle.objects.get(id_orden=id)
+    ordenes = ordenRegistro.objects.get(id = orden_id)
+    msalida = salidasDetalle.objects.get(id_orden=orden_id)
     #verificar aqui el id
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
 
@@ -68,8 +68,8 @@ def entradaRadios(request, id):
                 
 
 
-            ordenes = ordenRegistro.objects.get(id = id)
-            msalida = salidasDetalle.objects.get(id_orden=id)
+            ordenes = ordenRegistro.objects.get(id = orden_id)
+            msalida = salidasDetalle.objects.get(id_orden=orden_id)
 
             radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
             return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
