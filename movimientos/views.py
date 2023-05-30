@@ -586,7 +586,7 @@ def generarPDFGuia(request, id):
     for i in rx:
         pdf.drawString(x, 110, str(i))
         #y += 20
-        x += 60
+        x += 30
     
     
 
