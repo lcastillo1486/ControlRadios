@@ -37,9 +37,9 @@ def entradaRadios(request, id):
                 return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                                         "error": "El serial ingresado no corresponde a la salida", "formEntrada":formEntrada})
             ##valida si ya fue agregado
-            if movimientoRadios.objects.filter(serial = a, id_salida = id, estado = "D").exists():
-                return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
-                                                        "error": "El serial ingresado ya fue agregado", "formEntrada":formEntrada})
+            # if movimientoRadios.objects.filter(serial = a, id_salida = id, estado = "D").exists():
+            #     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
+            #                                             "error": "El serial ingresado ya fue agregado", "formEntrada":formEntrada})
             
             else:
                 valExisteRxSalida = movimientoRadios.objects.get(serial = a, id_salida = id, estado = "F")
