@@ -595,10 +595,10 @@ def generarPDFGuia(request, id):
             if indice <15:
                 pdf.drawString(x, 110, str(i))
                 x += 30
-            if indice >15 and indice <32:
+            if indice >15 and indice <31:
                 pdf.drawString(h, 100, str(i))
                 h += 30
-            if indice >32 and indice <50:
+            if indice >31 and indice <50:
                 pdf.drawString(f, 90, str(i))
                 f += 30
     else:
