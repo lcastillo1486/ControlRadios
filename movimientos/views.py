@@ -585,6 +585,7 @@ def generarPDFGuia(request, id):
     x = 60
     h = 60
     f = 60
+    g = 60
     # for i in rx:
     #     pdf.drawString(x, 110, str(i))
     #     #y += 20
@@ -598,9 +599,12 @@ def generarPDFGuia(request, id):
             if indice >15 and indice <31:
                 pdf.drawString(h, 100, str(i))
                 h += 30
-            if indice >31 and indice <50:
+            if indice >31 and indice <47:
                 pdf.drawString(f, 90, str(i))
                 f += 30
+            if indice >47 and indice <60:
+                pdf.drawString(g, 90, str(i))
+                g += 30
     else:
         for i in rx[:cuenta_serial]:
             pdf.drawString(x, 110, str(i))
