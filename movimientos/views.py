@@ -583,11 +583,28 @@ def generarPDFGuia(request, id):
     font_size = 9
     pdf.setFont("Helvetica", font_size)
     x = 60
-    for i in rx:
-        pdf.drawString(x, 110, str(i))
-        #y += 20
-        x += 30
-    
+    # for i in rx:
+    #     pdf.drawString(x, 110, str(i))
+    #     #y += 20
+    #     x += 30
+    cuenta_serial = len(rx)
+    if cuenta_serial > 16:
+        for indice, i in enumerate(rx):
+            if indice <15:
+                pdf.drawString(x, 110, str(i))
+                x += 30
+            if indice >15 and indice <32:
+                pdf.drawString(x, 120, str(i))
+                x += 30
+            if indice >32 and indice <50:
+                pdf.drawString(x, 130, str(i))
+                x += 30
+    else:
+        for i in rx[:cuenta_serial]:
+            pdf.drawString(x, 110, str(i))
+            #y += 20
+            x += 30
+
     
 
     pdf.showPage()
