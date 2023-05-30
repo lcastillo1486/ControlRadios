@@ -26,7 +26,7 @@ def entradaRadios(request, id):
     msalida = salidasDetalle.objects.get(id_orden=id)
     # radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
 
-    return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
+    return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "form":form, 
                                                     "formEntrada":formEntrada})
 
 
