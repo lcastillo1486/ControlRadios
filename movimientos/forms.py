@@ -38,15 +38,15 @@ class guardaEntradaRx(ModelForm):
 class formEntradaDetalle(ModelForm):
     class Meta:
         model = entradaDetalle
-        fields =  ['cobras','baterias','cargadores','handsfree','cascos','repetidoras','estaciones','observaciones']
+        fields =  ['cobras','handsfree','estaciones','cascos','baterias','cargadores','repetidoras','observaciones']
         labels = {
             'cobras':'Cobras',
+            'handsfree': 'HandsFree',
+            'estaciones':'Handsfree Tipo Escolta',
+            'cascos':'Cascos',
             'baterias':'Baterias',
             'cargadores':'Cargadores',
-            'handsfree': 'HandsFree',
-            'cascos':'Cascos',
             'repetidoras':'Repetidoras',
-            'estaciones':'Estaciones',
             'observaciones':'Observaciones'
         }    
 
