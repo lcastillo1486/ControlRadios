@@ -24,13 +24,10 @@ def entradaRadios(request, id):
     formEntrada = formEntradaDetalle()
     ordenes = ordenRegistro.objects.get(id = id)
     msalida = salidasDetalle.objects.get(id_orden=id)
-    # radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
-
-    return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "form":form, 
-                                                    "formEntrada":formEntrada})
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
 
 
-    """ if request.method == 'POST':
+    if request.method == 'POST':
 
         form = guardaEntradaRx(request.POST)
         
@@ -75,7 +72,7 @@ def entradaRadios(request, id):
 
             radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
             return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
-                                                    "formEntrada":formEntrada}) """
+                                                    "formEntrada":formEntrada}) 
 
 def entradas(request, id):
 
