@@ -108,7 +108,7 @@
 
         <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4">
             <h5><b>Registrar Radios</h5></b>
-            <form action='/entradaRadios/{{listado_orden.id}}' method="POST">
+            <form action='/entradaRadios/{{listado_entrada.id}}/{{listado_orden.id}}' method="POST">
                 {% csrf_token %}
                 <h3><font color ="red">{{error}}</h3></font><br>
                 <!-- <input type="text" id="serialRx" name="serialRx" size="30" /> -->

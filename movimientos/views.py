@@ -24,6 +24,7 @@ def entradaRadios(request, id):
     formEntrada = formEntradaDetalle()
     ordenes = ordenRegistro.objects.get(id = id)
     msalida = salidasDetalle.objects.get(id_orden=id)
+    #verificar aqui el id
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
 
 
