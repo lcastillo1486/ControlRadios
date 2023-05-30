@@ -27,7 +27,7 @@ def ordenes(request):
             fecha_hora_peru = timezone.localtime(timezone.now())
             fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-            log = auditoria(accion = ultimo_id, usuario = user_nombre)
+            log = auditoria(fecha = fecha_hora_formateada, accion = f'Orden Creada N° {ultimo_id}', usuario = user_nombre)
             log.save()
 
 

@@ -120,6 +120,12 @@ class auditoria(models.Model):
     accion = models.CharField(max_length=200, blank=True, null=True)
     usuario = models.CharField(max_length=20, blank=True, null=True)
 
+    class Meta:
+        db_table = 'auditoria'
+
+
+
+
 
 
 
