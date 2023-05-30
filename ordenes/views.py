@@ -24,7 +24,8 @@ def ordenes(request):
             #capturar usuario actual
             user_nombre = request.user.username
             #fecha y hora actual
-            fecha_hora_peru = timezone.localtime(timezone.now())
+            tz_peru = timezone.pytz.timezone('America/Lima')
+            fecha_hora_peru = timezone.localtime(timezone.now(), tz_peru)
             fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
             log = auditoria(fecha = fecha_hora_formateada, accion = f'Orden Creada N° {ultimo_id}', usuario = user_nombre)
