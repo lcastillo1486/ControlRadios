@@ -203,6 +203,19 @@ def guardarDetalleRadio(request, id, id_orden):
                     a.estado = 'F'
                     a.save()
 
+#####AUDITORIA##########
+
+                    #buscar el ultimo id generado
+                    ser_rx = a
+                    #capturar usuario actual
+                    user_nombre = request.user.username
+                    #fecha y hora actual
+                    fecha_hora_peru = timezone.localtime(timezone.now())
+                    fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+
+                    log = auditoria(fecha = fecha_hora_formateada, accion = f'Agrega Serial N° {ser_rx} a la salida {id} ' , usuario = user_nombre)
+                    log.save()
+
 ##cambia el estado del radio despues de guardarlo para que no este disponible
                     c = form.cleaned_data['serial']
                     cambiaestado =  invSeriales.objects.get(codigo = c)
