@@ -124,9 +124,10 @@ def generarSalida(request, id):
         msalida = salidasDetalle.objects.get(id_orden=id)
         salida_id = msalida.id
         cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
+        serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
         form = radiotipos()
         context = {'formRadios': form}
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios})
 
     except:
         gsalidas = salidasDetalle(id_orden=id, cobras=detalle_salida.cantidad_cobras, cargadores=detalle_salida.cantidad_cargadores,
@@ -152,7 +153,7 @@ def generarSalida(request, id):
         form = radiotipos()
         context = {'formRadios': form}
         msalida = salidasDetalle.objects.get(id_orden=id)
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "serial_radios":serial_radios})
 
 def guardarDetalleRadio(request, id, id_orden):
 
@@ -173,7 +174,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_serial = invSeriales.objects.filter(codigo = a).count()
 
                 if valida_serial == 0:
-                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, 
+                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios,  
                 'error':'El serial que intenta agregar a la salida, no existe'})
 
 ##valida si la cantidad ingresada corresponde a la orden
