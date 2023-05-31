@@ -143,7 +143,6 @@ def generarSalida(request, id):
         #fecha y hora actual
         fecha_hora_peru = timezone.localtime(timezone.now())
         fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
-
         log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
         log.save()
 
@@ -154,7 +153,7 @@ def generarSalida(request, id):
         form = radiotipos()
         context = {'formRadios': form}
         msalida = salidasDetalle.objects.get(id_orden=id)
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "serial_radios":serial_radios})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
 
 def guardarDetalleRadio(request, id, id_orden):
 
