@@ -122,10 +122,9 @@ def generarSalida(request, id):
     try:
         detalle_salida = ordenRegistro.objects.get(id=id)
         msalida = salidasDetalle.objects.get(id_orden=id)
-        if salidasDetalle.objects.get(id_orden=id).exists():
-            salida_id = msalida.id
-            cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
-            serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
+        salida_id = msalida.id
+        cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
+        serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
         form = radiotipos()
         context = {'formRadios': form}
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios})
@@ -143,6 +142,7 @@ def generarSalida(request, id):
         #fecha y hora actual
         fecha_hora_peru = timezone.localtime(timezone.now())
         fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+
         log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
         log.save()
 
@@ -153,7 +153,7 @@ def generarSalida(request, id):
         form = radiotipos()
         context = {'formRadios': form}
         msalida = salidasDetalle.objects.get(id_orden=id)
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "serial_radios":serial_radios})
 
 def guardarDetalleRadio(request, id, id_orden):
 
