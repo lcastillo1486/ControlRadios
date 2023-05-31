@@ -4,12 +4,13 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria
 from cliente.models import cliente
 from django import forms
 from django.db import models
 from io import BytesIO
 import datetime
+from django.utils import timezone
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
@@ -131,6 +132,18 @@ def generarSalida(request, id):
                               handsfree=detalle_salida.cantidad_manos_libres, cascos=detalle_salida.cantidad_cascos, repetidoras=detalle_salida.cantidad_repetidoras,
                               estaciones=detalle_salida.cantidad_estaciones, baterias = detalle_salida.cantidad_baterias)
         gsalidas.save()
+#####AUDITORIA############
+        ultimo_id = salidasDetalle.objects.latest('id').id
+        numero_orden = id
+        #capturar usuario actual
+        user_nombre = request.user.username
+        #fecha y hora actual
+        fecha_hora_peru = timezone.localtime(timezone.now())
+        fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+
+        log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
+        log.save()
+
         # detalle_salida = ordenRegistro.objects.get(id=id)
         # b = detalle_salida
         # b.estado_id = 5
