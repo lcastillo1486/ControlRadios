@@ -89,7 +89,7 @@
     </div>
 
     <h1>
-        <font color=#151B54>Radios agregadas al pedido = {{cantidad_radios}}</font>
+        <font color=#151B54>Radios agregadas al pedido = {{cantidad_radios|default:0}}</font>
     </h1>
 
     <form action='/detalleradios/{{salidaGenerada.id}}/{{datosOrden.id}}' method="POST">
@@ -118,7 +118,7 @@
             {% for c in serial_radios %}
             <tr>
                 <td>
-                    {{c.serial}}
+                    {{c.serial|default:""}}
                 </td>
             </tr>
             {% endfor %}

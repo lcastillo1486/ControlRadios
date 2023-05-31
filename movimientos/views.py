@@ -128,7 +128,7 @@ def generarSalida(request, id):
             serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
         form = radiotipos()
         context = {'formRadios': form}
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios})
 
     except:
         gsalidas = salidasDetalle(id_orden=id, cobras=detalle_salida.cantidad_cobras, cargadores=detalle_salida.cantidad_cargadores,
