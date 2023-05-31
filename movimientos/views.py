@@ -206,7 +206,7 @@ def guardarDetalleRadio(request, id, id_orden):
 #####AUDITORIA##########
 
                     #buscar el ultimo id generado
-                    ser_rx = a
+                    ser_rx = b
                     #capturar usuario actual
                     user_nombre = request.user.username
                     #fecha y hora actual
