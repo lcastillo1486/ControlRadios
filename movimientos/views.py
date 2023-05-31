@@ -174,7 +174,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_serial = invSeriales.objects.filter(codigo = a).count()
 
                 if valida_serial == 0:
-                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios,  
+                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios, 
                 'error':'El serial que intenta agregar a la salida, no existe'})
 
 ##valida si la cantidad ingresada corresponde a la orden
@@ -187,7 +187,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_serial_salida = movimientoRadios.objects.filter(serial = b, id_salida = id).count()
 
                 if  valida_serial_salida == 1:
-                        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, 
+                        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios,
                         'error':'Este serial ya existe en la orden'})
 
 ##validar el estado del radio
@@ -195,7 +195,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_estado = invSeriales.objects.get(codigo = a)
 
                 if valida_estado.estado_id != 4:
-                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, 
+                    return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios,
                 'error':'El serial que intenta agregar no esta disponible'})
 
                 else:
