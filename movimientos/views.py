@@ -123,12 +123,12 @@ def generarSalida(request, id):
         detalle_salida = ordenRegistro.objects.get(id=id)
         msalida = salidasDetalle.objects.get(id_orden=id)
         salida_id = msalida.id
-        if movimientoRadios.objects.filter(id_salida = salida_id).exists():
-             cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
-             serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
+        # if movimientoRadios.objects.filter(id_salida = salida_id).exists():
+        #      cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
+        #      serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
         form = radiotipos()
         context = {'formRadios': form}
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
 
     except:
         gsalidas = salidasDetalle(id_orden=id, cobras=detalle_salida.cantidad_cobras, cargadores=detalle_salida.cantidad_cargadores,
@@ -154,7 +154,7 @@ def generarSalida(request, id):
         form = radiotipos()
         context = {'formRadios': form}
         msalida = salidasDetalle.objects.get(id_orden=id)
-        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form,"serial_radios":serial_radios})
+        return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
 
 def guardarDetalleRadio(request, id, id_orden):
 
