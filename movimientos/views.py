@@ -122,10 +122,10 @@ def generarSalida(request, id):
     try:
         detalle_salida = ordenRegistro.objects.get(id=id)
         msalida = salidasDetalle.objects.get(id_orden=id)
-        #salida_id = msalida.id
-        # if movimientoRadios.objects.filter(id_salida = salida_id).exists():
-        #      cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
-        #      serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
+        salida_id = msalida.id
+        if movimientoRadios.objects.filter(id_salida = salida_id).exists():
+             cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
+             serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
         form = radiotipos()
         context = {'formRadios': form}
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
