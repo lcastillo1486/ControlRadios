@@ -562,6 +562,9 @@ def generarPDFGuia(request, id):
 
     c = ordenes
 
+    color_mochila = mochila.objects.get(numero_orden = orden)
+    color_descrip = color_mochila.color
+
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
     radios = movimientoRadios.objects.filter(id_salida = salida_id).values_list('serial', flat=True)
@@ -613,6 +616,8 @@ def generarPDFGuia(request, id):
     pdf.drawString(3.5*cm, altura_pagina - 10.8*cm, str(linea_dir3))
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
+    l = 60
+    pdf.drawString(x, 40, str(color_descrip))
     if b.cobras > 0:
         pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
