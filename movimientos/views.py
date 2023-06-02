@@ -313,7 +313,20 @@ def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
     b = detalle_salida
     b.estado_id = 3
-    b.save() 
+    b.save()
+
+    #####AUDITORIA############
+    numero_orden = id
+    #capturar usuario actual
+    user_nombre = request.user.username
+    #fecha y hora actual
+    fecha_hora_peru = timezone.localtime(timezone.now())
+    fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+
+    log = auditoria(fecha = fecha_hora_formateada, accion = f'Se ha cambiado el estado a ENTREGADO a la orden N° {numero_orden}', usuario = user_nombre)
+    log.save()
+
+
 
     ordenes = ordenRegistro.objects.filter(estado_id = 3)
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
