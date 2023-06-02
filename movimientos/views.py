@@ -390,9 +390,9 @@ def generarPDFPreparados(request, id):
     pdf.save()
 
     buffer.seek(0)
-
+    nombre_archivo = str(id)+'_'+str(cliente)+'.pdf'
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="archivo.pdf"'
+    response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
 
 
     return response
