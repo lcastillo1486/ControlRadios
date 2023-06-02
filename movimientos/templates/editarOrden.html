@@ -113,7 +113,13 @@
                             <b><font color ="red">{{listaDetalles.fecha_retiro}}</b></font> 
                         </td>
                         <td>
-                            <input type="text" id="mochila" name="mochila" size="7" />
+                            <form action='#' method="POST" >
+                                {% csrf_token %}
+                                <input type="text" id="mochila" name="mochila" size="7" />
+                                <button class="btn btn-primary">
+                                    GUARDAR
+                                </button>
+                            </form> 
                         </td>
                         <td></td>
                     </tr>
