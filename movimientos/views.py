@@ -279,6 +279,9 @@ def movimientosRadios(request):
     cuenta_nodisponibles = invSeriales.objects.filter(estado_id =5).count()
     inv_malogrado = invSeriales.objects.filter(estado_id =6)
     cuenta_malogrado = invSeriales.objects.filter(estado_id =6).count()
+    amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
+    moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
+    plomo_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 3).count()
 
     form = agregarInven()
     context = {'form':form}
@@ -291,7 +294,8 @@ def movimientosRadios(request):
         valida_serial = invSeriales.objects.filter(codigo = serial).count()
         if valida_serial == 0:
             return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, 'error01':'el serial no existe'})
+                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"amarillasDisponibles":amarillas_disp, 
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "buscaradios":formBuscaRadio, 'error01':'el serial no existe'})
         else:
             estadorx = invSeriales.objects.get(codigo = serial)
             ultima_salida = movimientoRadios.objects.filter(serial = serial)
@@ -314,7 +318,7 @@ def movimientosRadios(request):
                 nombre_cliente = 'aun no tiene salidas'
 
         return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "estado":estadorx.estado,"buscaradios":formBuscaRadio, "ultima_salida":formatedDate, "cliente":nombre_cliente})
+                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"amarillasDisponibles":amarillas_disp, "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "estado":estadorx.estado,"buscaradios":formBuscaRadio, "ultima_salida":formatedDate, "cliente":nombre_cliente})
 
 def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
