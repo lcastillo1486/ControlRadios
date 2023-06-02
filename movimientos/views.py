@@ -244,6 +244,8 @@ def inventario(request):
     inv_malogrado = invSeriales.objects.filter(estado_id =6)
     cuenta_malogrado = invSeriales.objects.filter(estado_id =6).count()
     amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
+    moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
+
 
     form = agregarInven()
     context = {'form':form}
@@ -255,14 +257,17 @@ def inventario(request):
             b = form.cleaned_data['codigo']
             if invSeriales.objects.filter(codigo =b).exists():
                 return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp})
+                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
+                "moradasDisponibles":moradas_disp})
             else:           
                 form.save() 
                 return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp})         
+                "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
+                "moradasDisponibles":moradas_disp})         
 
     return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-    "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp})
+    "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
+    "moradasDisponibles":moradas_disp})
 
 def movimientosRadios(request):
 
