@@ -646,7 +646,7 @@ def generarPDFGuia(request, id):
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
     font_size = 9
-    pdf.setFont("Bookman Old", font_size)
+    pdf.setFont("Helvetica", font_size)
     x = 60
     h = 60
     f = 60
