@@ -617,7 +617,7 @@ def generarPDFGuia(request, id):
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     l = 60
-    pdf.drawString(x, 40, str(color_descrip))
+    pdf.drawString(l, 40, str(color_descrip))
     if b.cobras > 0:
         pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
