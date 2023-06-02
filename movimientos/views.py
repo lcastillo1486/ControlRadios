@@ -136,16 +136,16 @@ def generarSalida(request, id):
                               estaciones=detalle_salida.cantidad_estaciones, baterias = detalle_salida.cantidad_baterias)
         gsalidas.save()
 #####AUDITORIA############
-        # ultimo_id = salidasDetalle.objects.latest('id').id
-        # numero_orden = id
-        # #capturar usuario actual
-        # user_nombre = request.user.username
-        # #fecha y hora actual
-        # fecha_hora_peru = timezone.localtime(timezone.now())
-        # fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+        ultimo_id = salidasDetalle.objects.latest('id').id
+        numero_orden = id
+        #capturar usuario actual
+        user_nombre = request.user.username
+        #fecha y hora actual
+        fecha_hora_peru = timezone.localtime(timezone.now())
+        fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-        # log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
-        # log.save()
+        log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
+        log.save()
 
         # detalle_salida = ordenRegistro.objects.get(id=id)
         # b = detalle_salida
