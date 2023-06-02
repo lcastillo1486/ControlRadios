@@ -696,8 +696,13 @@ def guardarcolormochila(request, id):
         guardamochila.color = mochila_color 
         guardamochila.save()
 
+        color = ""
+        if mochila.objects.filter(numero_orden=id).exists():
+            mochila_guardada = mochila.objects.get(numero_orden=id)
+            color = mochila_guardada.color
+
         detalle = ordenRegistro.objects.get(id=id)
-        return render(request, 'editarOrden.html', {"listaDetalles": detalle})
+        return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":color})
 
 
 
