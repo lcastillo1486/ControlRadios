@@ -112,7 +112,7 @@ def ordenesDevueltas(request):
 def ordenDetalle(request, id):
     detalle = ordenRegistro.objects.get(id=id)
     color = ""
-    if mochila.objects.get(numero_orden=id).exists():
+    if mochila.objects.filter(numero_orden=id).exists():
         mochila_guardada = mochila.objects.get(numero_orden=id)
         color = mochila_guardada.color
     return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":color})
