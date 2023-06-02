@@ -113,9 +113,9 @@
                             <b><font color ="red">{{listaDetalles.fecha_retiro}}</b></font> 
                         </td>
                         <td>
-                            <form action='#' method="POST" >
+                            <form action='/guardamochila/{{listaDetalles.id}}' method="POST" >
                                 {% csrf_token %}
-                                <input type="text" id="mochila" name="mochila" size="7" />
+                                <input type="text" id="mochila" name="mochila" size="14" />
                                 <button class="btn btn-primary">
                                     GUARDAR
                                 </button>

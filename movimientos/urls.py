@@ -19,6 +19,7 @@ urlpatterns = [
     path('generarEntrada/<int:id>/<int:orden_id>',views.generarEntrada),
     path('verFaltante/',views.verFaltante),
     path('generaPDFGuia/<int:id>',views.generarPDFGuia),
+    path('guardamochila/<int:id>',views.guardarcolormochila),
 
 
 

@@ -123,6 +123,14 @@ class auditoria(models.Model):
     class Meta:
         db_table = 'auditoria'
 
+class mochila(models.Model):
+    id = models.AutoField(primary_key=True)
+    numero_orden = models.CharField(max_length=200)
+    color = models.CharField(max_length=200)
+
+    class Meta:
+        db_table = 'colormochila'
+
 
 
 

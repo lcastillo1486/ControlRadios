@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -682,6 +682,19 @@ def generarPDFGuia(request, id):
 
 
     return response
+
+def guardarcolormochila(request, id):
+
+    if request.method == 'POST':
+        mochila = request.POST.get('mochila')
+        guardamochila = mochila()
+        guardamochila.numero_orden = id
+        guardamochila.color = mochila 
+        guardamochila.save()
+
+        detalle = ordenRegistro.objects.get(id=id)
+        return render(request, 'editarOrden.html', {"listaDetalles": detalle})
+
 
 
 
