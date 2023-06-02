@@ -686,10 +686,10 @@ def generarPDFGuia(request, id):
 def guardarcolormochila(request, id):
 
     if request.method == 'POST':
-        mochila = request.POST.get('mochila')
+        mochila_color = request.POST.get('mochila')
         guardamochila = mochila()
         guardamochila.numero_orden = id
-        guardamochila.color = mochila 
+        guardamochila.color = mochila_color 
         guardamochila.save()
 
         detalle = ordenRegistro.objects.get(id=id)
