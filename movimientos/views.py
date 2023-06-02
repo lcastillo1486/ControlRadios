@@ -111,7 +111,12 @@ def ordenesDevueltas(request):
 
 def ordenDetalle(request, id):
     detalle = ordenRegistro.objects.get(id=id)
-    return render(request, 'editarOrden.html', {"listaDetalles": detalle})
+    if mochila.objects.get(numero_orden=id).exists():
+        mochila_guardada = mochila.objects.get(numero_orden=id)
+        return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":mochila_guardada})
+    else:
+        mochila_guardada = ""
+    return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":mochila_guardada})
 
 def detalleOrdenCerrada(request, id):
     detalle = ordenRegistro.objects.get(id=id)
