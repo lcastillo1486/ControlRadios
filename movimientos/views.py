@@ -313,7 +313,7 @@ def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
     b = detalle_salida
     b.estado_id = 3
-    b.save()
+    b.save() 
 
     #####AUDITORIA############
     numero_orden = id
