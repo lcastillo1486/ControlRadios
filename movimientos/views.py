@@ -245,6 +245,7 @@ def inventario(request):
     cuenta_malogrado = invSeriales.objects.filter(estado_id =6).count()
     amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
     moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
+    plomo_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 3).count()
 
 
     form = agregarInven()
@@ -258,16 +259,16 @@ def inventario(request):
             if invSeriales.objects.filter(codigo =b).exists():
                 return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-                "moradasDisponibles":moradas_disp})
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})
             else:           
                 form.save() 
                 return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-                "moradasDisponibles":moradas_disp})         
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})         
 
     return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
     "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-    "moradasDisponibles":moradas_disp})
+    "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})
 
 def movimientosRadios(request):
 
