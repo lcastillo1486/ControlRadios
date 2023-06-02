@@ -157,7 +157,7 @@ def generarSalida(request, id):
         if movimientoRadios.objects.filter(id_salida = salida_id).exists():
             cuenta_radios = movimientoRadios.objects.filter(id_salida = salida_id).count()
             serial_radios = movimientoRadios.objects.filter(id_salida = salida_id)
-            return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios})
+            return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
         
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
             
