@@ -763,11 +763,11 @@ def pdfguiadevueltos(request, id):
     tamano_direccion = len(direccion)
 
     ruta_imagen = static('radios/backtrak_logo.png')
-    imagen = utils.ImageReader(ruta_imagen)
-    imagen_width, imagen_height = imagen.getSize()
-    imagen_draw_width = 200  # Ancho de la imagen en el PDF
-    imagen_draw_height = (imagen_height / imagen_width) * imagen_draw_width
-    pdf.drawImage(imagen, x=100, y=100, width=imagen_draw_width, height=imagen_draw_height)
+    # imagen = utils.ImageReader(ruta_imagen)
+    # imagen_width, imagen_height = imagen.getSize()
+    # imagen_draw_width = 200  # Ancho de la imagen en el PDF
+    # imagen_draw_height = (imagen_height / imagen_width) * imagen_draw_width
+    # pdf.drawImage(imagen, x=100, y=100, width=imagen_draw_width, height=imagen_draw_height)
     
     if tamano_direccion > 44:
         linea_dir1 = direccion[:44]
