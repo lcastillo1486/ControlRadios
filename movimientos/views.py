@@ -709,6 +709,148 @@ def guardarcolormochila(request, id):
         detalle = ordenRegistro.objects.get(id=id)
         return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":color})
 
+def pdfguiadevueltos(request, id):
+
+    detalle_acce = salidasDetalle.objects.get(id_orden = id)
+    b = detalle_acce
+
+    orden = b.id_orden
+    salida_id = b.id
+
+    ordenes = ordenRegistro.objects.get(id = orden)
+
+    c = ordenes
+
+    color_mochila = mochila.objects.get(numero_orden = orden)
+    color_descrip = color_mochila.color
+
+    fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
+
+    radios = movimientoRadios.objects.filter(id_salida = salida_id).values_list('serial', flat=True)
+
+    d = radios
+
+    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'EP 450 (Amarillas)').count()
+    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Moradas)').count()
+    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Plomo)').count()
+
+    amarillas = rx_amarillas
+    moradas = rx_moradas
+    plomo = rx_plomo
+
+
+
+    cliente = str(c.cliente)
+    cobras = str(b.cobras)
+    cargadores = str(b.cargadores)
+    handsfree = str(b.handsfree)
+    cascos = str(b.cascos)
+    estaciones = str(b.estaciones)
+    repetidoras = str(b.repetidoras)
+    baterias = str(b.baterias)
+    fecha_entrega = str(c.fecha_entrega)
+    fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
+    direccion = str(c.direccion_entrega)
+    rx = d
+
+    buffer = BytesIO()
+
+    pdf = canvas.Canvas(buffer)
+    ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+    tamano_direccion = len(direccion)
+    
+    if tamano_direccion > 44:
+        linea_dir1 = direccion[:44]
+        linea_dir2 = direccion[45:88]
+        linea_dir3 = direccion[89:133]
+    else:
+        linea_dir1 = direccion[:44]
+        linea_dir2 = ""
+        linea_dir3 = "" 
+
+    pdf.drawString(18*cm, altura_pagina - 6.05*cm, str(id))
+    pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
+    pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(linea_dir1))
+    pdf.drawString(3.5*cm, altura_pagina - 10.4*cm, str(linea_dir2))
+    pdf.drawString(3.5*cm, altura_pagina - 10.8*cm, str(linea_dir3))
+    pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
+    pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
+    l = 60
+    pdf.drawString(l, 40, str(color_descrip))
+    if b.cobras > 0:
+        pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
+    if b.handsfree > 0:
+        pdf.drawString(14*cm, altura_pagina - 15.95*cm, str(handsfree) + ' UND')
+    if b.cascos > 0:
+        pdf.drawString(5*cm, altura_pagina - 17.45*cm, str('Headset Antiruido'))
+        pdf.drawString(14*cm, altura_pagina - 17.45*cm, str(cascos + ' UND'))
+    if b.baterias > 0:
+        pdf.drawString(14*cm, altura_pagina - 19.45*cm, str(baterias) + ' UND')
+    if b.cargadores > 0:
+        pdf.drawString(14*cm, altura_pagina - 20.15*cm, str(cargadores + ' UND'))
+    if b.estaciones >0:
+        pdf.drawString(14*cm, altura_pagina - 16.75*cm, str(estaciones + ' UND'))
+    if b.repetidoras > 0:
+        pdf.drawString(5*cm, altura_pagina - 20.85*cm, str('Repetidoras'))
+        pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
+    #radios
+    if rx_amarillas > 0:
+        pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(amarillas))
+        pdf.drawString(14.5*cm, altura_pagina - 11.95*cm, str(' UND'))
+    if rx_moradas > 0:
+        pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(moradas))
+        pdf.drawString(14.5*cm, altura_pagina - 13.45*cm, str(' UND'))
+    if rx_plomo > 0:
+        pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(plomo))
+        pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
+    # #y = 110
+    font_size = 9
+    pdf.setFont("Helvetica", font_size)
+    x = 60
+    h = 60
+    f = 60
+    g = 60
+    # for i in rx:
+    #     pdf.drawString(x, 110, str(i))
+    #     #y += 20
+    #     x += 30
+    cuenta_serial = len(rx)
+    if cuenta_serial > 16:
+        for indice, i in enumerate(rx):
+            if indice <15:
+                pdf.drawString(x, 80, str(i))
+                x += 30
+            if indice >15 and indice <31:
+                pdf.drawString(h, 70, str(i))
+                h += 30
+            if indice >31 and indice <47:
+                pdf.drawString(f, 60, str(i))
+                f += 30
+            if indice >47 and indice <60:
+                pdf.drawString(g, 50, str(i))
+                g += 30
+    else:
+        for i in rx[:cuenta_serial]:
+            pdf.drawString(x, 80, str(i))
+            #y += 20
+            x += 30
+
+    
+
+    pdf.showPage()
+
+    pdf.save()
+
+    buffer.seek(0)
+
+    nombre_archivo = str(id)+'_'+str(fecha_entrega)+'.pdf'
+   
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+
+
+    return response
+
 
 
 

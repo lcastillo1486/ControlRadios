@@ -20,6 +20,7 @@ urlpatterns = [
     path('verFaltante/',views.verFaltante),
     path('generaPDFGuia/<int:id>',views.generarPDFGuia),
     path('guardamochila/<int:id>',views.guardarcolormochila),
+    path('guiadevueltos/<int:id>',views.pdfguiadevueltos),
 
 
 
