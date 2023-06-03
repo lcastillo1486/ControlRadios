@@ -769,6 +769,7 @@ def pdfguiadevueltos(request, id):
         linea_dir3 = "" 
 
     pdf.drawString(18*cm, altura_pagina - 6.05*cm, str(id))
+    pdf.drawString(1*cm, altura_pagina - 9.35*cm, 'Cliente: ')
     pdf.drawString(5*cm, altura_pagina - 9.35*cm, str(cliente))
     pdf.drawString(3.5*cm, altura_pagina - 10*cm, str(linea_dir1))
     pdf.drawString(3.5*cm, altura_pagina - 10.4*cm, str(linea_dir2))
