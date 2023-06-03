@@ -780,18 +780,18 @@ def pdfguiadevueltos(request, id):
     l = 60
     pdf.drawString(l, 40, str(color_descrip))
     if b.cobras > 0:
-        pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 15.25*cm, 'Cobras: '+ str(cobras) + ' UND')
     if b.handsfree > 0:
-        pdf.drawString(14*cm, altura_pagina - 15.95*cm, str(handsfree) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 15.95*cm, 'HandsFree: '+ str(handsfree) + ' UND')
     if b.cascos > 0:
         pdf.drawString(5*cm, altura_pagina - 17.45*cm, str('Headset Antiruido'))
         pdf.drawString(14*cm, altura_pagina - 17.45*cm, str(cascos + ' UND'))
     if b.baterias > 0:
-        pdf.drawString(14*cm, altura_pagina - 19.45*cm, str(baterias) + ' UND')
+        pdf.drawString(14*cm, altura_pagina - 19.45*cm, 'Baterias: '+ str(baterias) + ' UND')
     if b.cargadores > 0:
-        pdf.drawString(14*cm, altura_pagina - 20.15*cm, str(cargadores + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 20.15*cm, 'Cargadores: '+ str(cargadores + ' UND'))
     if b.estaciones >0:
-        pdf.drawString(14*cm, altura_pagina - 16.75*cm, str(estaciones + ' UND'))
+        pdf.drawString(14*cm, altura_pagina - 16.75*cm, 'HandsFree Tipo Escolta: '+ str(estaciones + ' UND'))
     if b.repetidoras > 0:
         pdf.drawString(5*cm, altura_pagina - 20.85*cm, str('Repetidoras'))
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
