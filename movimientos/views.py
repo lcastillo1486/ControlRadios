@@ -816,7 +816,7 @@ def pdfguiadevueltos(request, id):
     #     x += 30
     cuenta_serial = len(rx)
     if cuenta_serial > 16:
-        for indice, i in enumerate(rx):
+        for indice, i in enumerate(rx): 
             if indice <15:
                 pdf.drawString(x, 80, str(i))
                 x += 30
