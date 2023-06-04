@@ -526,7 +526,7 @@ def generarEntrada(request, id, orden_id):
             client.estado_id = 4
             client.save()
 
-            if not guardaEntrada.objects.filter(id_salida = id).exists():
+            if not entradaDetalle.objects.filter(id_salida = id).exists():
                 guardaEntrada = entradaDetalle(id_salida = id, id_orden = numordena, cobras = cobras, baterias = baterias, cargadores = cargadores,
                                            handsfree = handsfree, cascos = cascos, repetidoras = repetidoras, estaciones = estaciones, cliente = client_id,
                                             observaciones = observaciones)
