@@ -525,22 +525,24 @@ def generarEntrada(request, id, orden_id):
             client_id = client.cliente
             client.estado_id = 4
             client.save()
-            guardaEntrada = entradaDetalle(id_salida = id, id_orden = numordena, cobras = cobras, baterias = baterias, cargadores = cargadores,
+
+            if not guardaEntrada.objects.filter(id_salida = id).exists():
+                guardaEntrada = entradaDetalle(id_salida = id, id_orden = numordena, cobras = cobras, baterias = baterias, cargadores = cargadores,
                                            handsfree = handsfree, cascos = cascos, repetidoras = repetidoras, estaciones = estaciones, cliente = client_id,
                                             observaciones = observaciones)
             
-            guardaEntrada.save()
+                guardaEntrada.save()
 
-            #####AUDITORIA############
-            numero_orden = numordena
-            #capturar usuario actual
-            user_nombre = request.user.username
-            #fecha y hora actual
-            fecha_hora_peru = timezone.localtime(timezone.now())
-            fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+                #####AUDITORIA############
+                numero_orden = numordena
+                #capturar usuario actual
+                user_nombre = request.user.username
+                #fecha y hora actual
+                fecha_hora_peru = timezone.localtime(timezone.now())
+                fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-            log = auditoria(fecha = fecha_hora_formateada, accion = f'Pedido recibido de salida N° {id} de la orden {numero_orden}', usuario = user_nombre)
-            log.save()
+                log = auditoria(fecha = fecha_hora_formateada, accion = f'Pedido recibido de salida N° {id} de la orden {numero_orden}', usuario = user_nombre)
+                log.save()
 
             return redirect('/ordenesCerradas/')
 
