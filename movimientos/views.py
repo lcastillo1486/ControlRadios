@@ -703,12 +703,12 @@ def guardarcolormochila(request, id):
             mochila_guardada = mochila.objects.get(numero_orden=id)
             mochila_guardada.color = mochila_color
             mochila_guardada.save()
-
-        mochila_color = request.POST.get('mochila')
-        guardamochila = mochila()
-        guardamochila.numero_orden = id
-        guardamochila.color = mochila_color 
-        guardamochila.save()
+        else:
+            mochila_color = request.POST.get('mochila')
+            guardamochila = mochila()
+            guardamochila.numero_orden = id
+            guardamochila.color = mochila_color 
+            guardamochila.save()
 
         color = ""
         if mochila.objects.filter(numero_orden=id).exists():
