@@ -728,7 +728,7 @@ def pdfguiadevueltos(request, id):
 
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
-    radios = movimientoRadios.objects.filter(id_salida = salida_id).values_list('serial', flat=True)
+    radios = movimientoRadios.objects.filter(id_salida = salida_id, estado = 'F').values_list('serial', flat=True)
 
     d = radios
 
