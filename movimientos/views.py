@@ -777,7 +777,7 @@ def pdfguiadevueltos(request, id):
     image_width = 100
     image_height = 100
     o = 160
-    z = 160
+    z = letter[1] - image_height
 
     # Agrega la imagen al documento PDF
     pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
