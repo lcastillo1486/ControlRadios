@@ -779,7 +779,7 @@ def pdfguiadevueltos(request, id):
     # Calcula el tamaño y posición de la imagen
     image_width = 60
     image_height = 60
-    o = 16
+    o = 24
     z = letter[1] - image_height
 
     image_width01 = 300
