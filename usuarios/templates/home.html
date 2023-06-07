@@ -122,14 +122,14 @@ padding: 2px;
 }
 
 h1 {
-position: absolute;
-top: 0;
-left: 0;
+position: absolute; 
+top: 0; 
+left: 0; 
 }
 </style>
 <body>
   <div>
-    <img src="{% static 'backtrak_logo.png' %}" width="150" height="150">
+    <img src="{% static 'logo.png' %}" width="150" height="150">
       <form class="form" method="POST">
           {% csrf_token %}
           {{form.as_p}}
