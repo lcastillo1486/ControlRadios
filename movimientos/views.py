@@ -770,7 +770,7 @@ def pdfguiadevueltos(request, id):
     ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     tamano_direccion = len(direccion)
 
-    image_filename = 'logo.png'
+    image_filename = 'logo02.png'
     image_path = f'radios/static/{image_filename}'
 
     # Calcula el tamaño y posición de la imagen
