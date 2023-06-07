@@ -791,7 +791,7 @@ def pdfguiadevueltos(request, id):
 
     # Agrega la imagen al documento PDF
     pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
-    pdf.drawImage(image_path, o, z2, width=image_width01, height=image_height01)
+    pdf.drawImage(image_path1, o, z2, width=image_width01, height=image_height01)
     
     if tamano_direccion > 44:
         linea_dir1 = direccion[:44]
