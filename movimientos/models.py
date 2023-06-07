@@ -131,7 +131,7 @@ class mochila(models.Model):
     class Meta:
         db_table = 'colormochila'
 
-class ordenerdevueltasbusca(models.Model):
+class vista_ordenes_devueltas(models.Model):
     id_salida = models.CharField(max_length=20)
     id_orden = models.CharField(max_length=20)
     fecha_creacion = models.DateField()
