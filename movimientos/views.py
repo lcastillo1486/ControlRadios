@@ -786,7 +786,7 @@ def pdfguiadevueltos(request, id):
     image_height01 = 100
 
     o1 = 60
-    z2 = z - image_height -45
+    z2 = z - image_height -20
     
 
     # Agrega la imagen al documento PDF
