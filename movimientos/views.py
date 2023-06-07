@@ -773,7 +773,7 @@ def pdfguiadevueltos(request, id):
     image_filename = 'logo02.jpg'
     image1_filename = 'logo_cortado.jpg'
     image_path = f'radios/static/{image_filename}'
-    image_path1 = f'radios/static/{image_filename}'
+    image_path1 = f'radios/static/{image1_filename}'
 
 
     # Calcula el tamaño y posición de la imagen
@@ -791,7 +791,7 @@ def pdfguiadevueltos(request, id):
 
     # Agrega la imagen al documento PDF
     pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
-    pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
+    pdf.drawImage(image_path, o, z2, width=image_width01, height=image_height01)
     
     if tamano_direccion > 44:
         linea_dir1 = direccion[:44]
