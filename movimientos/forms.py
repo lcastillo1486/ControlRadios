@@ -52,9 +52,10 @@ class formEntradaDetalle(ModelForm):
 
 
 class formbuscadevueltos(ModelForm):
-    model = ordenerdevueltasbusca
-    fields = ['cliente', 'fecha_creacion']
-    labels = {'cliente': 'Cliente',
+    class Meta:
+        model = ordenerdevueltasbusca
+        fields = ['cliente', 'fecha_creacion']
+        labels = {'cliente': 'Cliente',
               'fecha_creacion': 'fecha'}           
 
         
