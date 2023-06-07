@@ -106,10 +106,10 @@ def ordenesCerradas(request):
 
 def ordenesDevueltas(request):
     
-    form = formbuscadevueltos()
+    #form = formbuscadevueltos()
     devueltas = entradaDetalle.objects.all()
 
-    return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, 'form':form})
+    return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas})
 
 def ordenDetalle(request, id):
     detalle = ordenRegistro.objects.get(id=id)

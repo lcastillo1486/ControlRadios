@@ -132,7 +132,6 @@ class mochila(models.Model):
         db_table = 'colormochila'
 
 class ordenerdevueltasbusca(models.Model):
-    id = models.CharField()
     id_salida = models.CharField(max_length=20)
     id_orden = models.CharField(max_length=20)
     fecha_creacion = models.DateField()
