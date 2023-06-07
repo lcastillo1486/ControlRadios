@@ -774,8 +774,8 @@ def pdfguiadevueltos(request, id):
     image_path = f'radios/static/{image_filename}'
 
     # Calcula el tamaño y posición de la imagen
-    image_width = 200
-    image_height = 150
+    image_width = 100
+    image_height = 100
     o = 100
     z = 100
 
