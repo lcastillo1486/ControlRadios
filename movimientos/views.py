@@ -776,8 +776,8 @@ def pdfguiadevueltos(request, id):
     # Calcula el tamaño y posición de la imagen
     image_width = 100
     image_height = 100
-    o = 100
-    z = 100
+    o = 50
+    z = 50
 
     # Agrega la imagen al documento PDF
     pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
