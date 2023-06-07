@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import movimientoRadios, invSeriales, entradaDetalle
+from .models import movimientoRadios, invSeriales, entradaDetalle, ordenerdevueltasbusca
 from django.forms import widgets
 from django import forms
 
@@ -51,8 +51,11 @@ class formEntradaDetalle(ModelForm):
         }    
 
 
-
-           
+class formbuscadevueltos(ModelForm):
+    model = ordenerdevueltasbusca
+    fields = ['cliente', 'fecha_creacion']
+    labels = {'cliente': 'Cliente',
+              'fecha_creacion': 'fecha'}           
 
         
         
