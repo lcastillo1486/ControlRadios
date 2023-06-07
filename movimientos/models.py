@@ -131,24 +131,6 @@ class mochila(models.Model):
     class Meta:
         db_table = 'colormochila'
 
-class vista_ordenes_devueltas(models.Model):
-    id_salida = models.CharField(max_length=20)
-    id_orden = models.CharField(max_length=20)
-    fecha_creacion = models.DateField()
-    cobras = models.CharField(max_length=200)
-    cargadores = models.CharField(max_length=200)
-    handsfree = models.CharField(max_length=200)
-    cascos = models.CharField(max_length=200)
-    repetidoras = models.CharField(max_length=200)
-    estaciones = models.CharField(max_length=200)
-    observaciones = models.CharField(max_length=200)
-    cliente = models.CharField(max_length=200)
-    baterias = models.CharField(max_length=200)
-
-    class Meta:
-        db_table = 'vista_ordenes_devueltas'
-
-
 
 
 

@@ -49,14 +49,7 @@ class formEntradaDetalle(ModelForm):
             'repetidoras':'Repetidoras',
             'observaciones':'Observaciones'
         }    
-
-
-class formbuscadevueltos(ModelForm):
-    class Meta:
-        model = vista_ordenes_devueltas
-        fields = ['cliente', 'fecha_creacion']
-        labels = {'cliente': 'Cliente',
-              'fecha_creacion': 'fecha'}           
+       
 
         
         
