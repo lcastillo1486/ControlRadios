@@ -15,6 +15,7 @@ from django.utils import timezone
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
+import os
 
 
 # Create your views here.
@@ -768,6 +769,18 @@ def pdfguiadevueltos(request, id):
     pdf = canvas.Canvas(buffer)
     ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     tamano_direccion = len(direccion)
+
+    image_filename = 'logo.png'
+    image_path = os.path.abspath(os.path.join('static', image_filename))
+
+    # Calcula el tamaño y posición de la imagen
+    image_width = 200
+    image_height = 150
+    o = 100
+    z = 100
+
+    # Agrega la imagen al documento PDF
+    pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
     
     if tamano_direccion > 44:
         linea_dir1 = direccion[:44]
