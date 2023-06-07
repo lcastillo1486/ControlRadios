@@ -779,7 +779,7 @@ def pdfguiadevueltos(request, id):
     # Calcula el tamaño y posición de la imagen
     image_width = 60
     image_height = 60
-    o = 13
+    o = 16
     z = letter[1] - image_height
 
     image_width01 = 300
@@ -830,12 +830,15 @@ def pdfguiadevueltos(request, id):
         pdf.drawString(14*cm, altura_pagina - 20.85*cm, str(repetidoras + ' UND'))
     #radios
     if rx_amarillas > 0:
+        pdf.drawString(10*cm, altura_pagina - 11.95*cm, str('EP 450 (Amarillas)'))
         pdf.drawString(14*cm, altura_pagina - 11.95*cm, str(amarillas))
         pdf.drawString(14.5*cm, altura_pagina - 11.95*cm, str(' UND'))
     if rx_moradas > 0:
+        pdf.drawString(10*cm, altura_pagina - 13.45*cm, str('DEP 450 (Moradas)'))
         pdf.drawString(14*cm, altura_pagina - 13.45*cm, str(moradas))
         pdf.drawString(14.5*cm, altura_pagina - 13.45*cm, str(' UND'))
     if rx_plomo > 0:
+        pdf.drawString(10*cm, altura_pagina - 12.65*cm, str('DEP 450 (Plomo)'))
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(plomo))
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
