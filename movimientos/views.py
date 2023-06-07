@@ -771,7 +771,7 @@ def pdfguiadevueltos(request, id):
     tamano_direccion = len(direccion)
 
     image_filename = 'logo02.jpg'
-    image1_filename = 'logo_cortado.jpg'
+    image1_filename = 'logo_22.jpg'
     image_path = f'radios/static/{image_filename}'
     image_path1 = f'radios/static/{image1_filename}'
 
@@ -785,13 +785,13 @@ def pdfguiadevueltos(request, id):
     image_width01 = 300
     image_height01 = 100
 
-    o = 180
+    o1 = 60
     z2 = z - image_height -45
     
 
     # Agrega la imagen al documento PDF
-    pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
-    pdf.drawImage(image_path1, o, z2, width=image_width01, height=image_height01)
+    #pdf.drawImage(image_path, o, z, width=image_width, height=image_height)
+    pdf.drawImage(image_path1, o1, z2, width=image_width01, height=image_height01)
     
     if tamano_direccion > 44:
         linea_dir1 = direccion[:44]
