@@ -132,6 +132,13 @@ class mochila(models.Model):
         db_table = 'colormochila'
 
 
+class buscaentregados(models.Model):
+    cliente = models.CharField(max_length=100)
+
+    class Meta:
+        managed = False
+        db_table = 'vista_ordenes_devueltas'
+        auto_created = True
 
 
 
