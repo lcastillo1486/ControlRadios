@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from .models import movimientoRadios, invSeriales, entradaDetalle, vista_ordenes_devueltas
+from .models import movimientoRadios, invSeriales, entradaDetalle
 from django.forms import widgets
 from django import forms
 
