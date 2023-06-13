@@ -21,6 +21,7 @@ urlpatterns = [
     path('generaPDFGuia/<int:id>',views.generarPDFGuia),
     path('guardamochila/<int:id>',views.guardarcolormochila),
     path('guiadevueltos/<int:id>',views.pdfguiadevueltos),
+    path('buscaOrdenesDevueltas/',views.buscaOrdenesDevueltas),
 
 
 

@@ -22,7 +22,7 @@
         </div>
         </div>
         <div style="text-align: center;" class="col-sm-12 col-md-6 col-lg-4 col-xl-6">
-            <form action='#' method="POST">
+            <form action='/buscaOrdenesDevueltas/' method="POST">
                 {% csrf_token %}
             <select name="clienteNombre" style="width: 300px;">
                 {% for d in lista_cliente %}

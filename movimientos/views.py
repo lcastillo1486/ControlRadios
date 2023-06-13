@@ -902,6 +902,17 @@ def pdfguiadevueltos(request, id):
 
     return response
 
+def buscaOrdenesDevueltas(request):
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+
+        nombre_cliente = cliente.objects.all()
+    
+        devueltas = entradaDetalle.objects.filter(cliente = nombre)
+
+        return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
+
 
 
 
