@@ -18,7 +18,7 @@ from reportlab.lib.units import cm
 import os
 
 
-# Create your views here.
+# Create your views here. 
 
 def entradaRadios(request, id, orden_id):
 
