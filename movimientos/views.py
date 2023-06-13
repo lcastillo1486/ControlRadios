@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -97,7 +97,9 @@ def salidas(request):
     return render(request, 'salidas.html', {"listaOrdenes": ordenes})
 
 def ordenesProcesadas(request):
-    ordenes = ordenRegistro.objects.filter(estado_id = 5)
+    # ordenes = ordenRegistro.objects.filter(estado_id = 5)
+    # return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
+    ordenes = vista_ordenes_procesadas.objects.all()
     return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
 
 def ordenesCerradas(request):
@@ -564,8 +566,11 @@ def generarPDFGuia(request, id):
 
     c = ordenes
 
-    color_mochila = mochila.objects.get(numero_orden = orden)
-    color_descrip = color_mochila.color
+    if mochila.objects.filter(numero_orden = orden).exists(): 
+        color_mochila = mochila.objects.get(numero_orden = orden)
+        color_descrip = color_mochila.color
+    else:
+        color_descrip = ""
 
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
