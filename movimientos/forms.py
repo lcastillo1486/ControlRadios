@@ -5,6 +5,7 @@ from django import forms
 
 
 class radiotipos(ModelForm):
+
     class Meta:
         model = movimientoRadios
         fields = ['id_tipo', 'serial']

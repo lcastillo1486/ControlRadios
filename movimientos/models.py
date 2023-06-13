@@ -166,6 +166,31 @@ class vista_ordenes_procesadas(models.Model):
         db_table = 'vista_ordenes_procesadas'
         auto_created = True
 
+class vista_ordenes_cerradas(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_creacion = models.DateTimeField(blank=True, null=True)
+    fecha_entrega = models.DateTimeField(blank=True, null=True)
+    fecha_evento_desde = models.DateTimeField(blank=True, null=True)
+    fecha_retiro = models.DateTimeField(blank=True, null=True)
+    cantidad_radios = models.CharField(max_length=150)
+    cantidad_cobras = models.CharField(max_length=150)
+    cantidad_baterias = models.CharField(max_length=150)
+    cantidad_cargadores = models.CharField(max_length=150)
+    cantidad_manos_libres = models.CharField(max_length=150)
+    cantidad_cascos = models.CharField(max_length=150)
+    cantidad_repetidoras = models.CharField(max_length=150)
+    cantidad_estaciones = models.CharField(max_length=150)
+    observaciones = models.CharField(max_length=150)
+    direccion_entrega = models.CharField(max_length=150)
+    fecha_evento_hasta = models.DateTimeField(blank=True, null=True)
+    telefono = models.CharField(max_length=150)
+    cliente = models.CharField(max_length=150)
+
+    class Meta:
+        managed = False
+        db_table = 'vista_ordenes_cerradas'
+        auto_created = True
+
 
 
 

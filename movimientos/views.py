@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -103,8 +103,11 @@ def ordenesProcesadas(request):
     return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
 
 def ordenesCerradas(request):
-    ordenes = ordenRegistro.objects.filter(estado_id = 3)
+    # ordenes = ordenRegistro.objects.filter(estado_id = 3)
+    # return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
+    ordenes = ordenRegistro.objects.all()
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
+
 
 def ordenesDevueltas(request):
     

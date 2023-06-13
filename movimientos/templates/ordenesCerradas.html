@@ -30,6 +30,9 @@
                             Cliente
                         </th>
                         <th>
+                            Teléfono
+                        </th>
+                        <th>
                             Creada el:
                         </th>
                         <th>
@@ -37,12 +40,6 @@
                         </th>
                         <th>
                             Retirar el:
-                        </th>
-                        <th>
-                            Estado:
-                        </th>
-                        <th>
-                            Observaciones:
                         </th>
                         <th colspan="2"></th>
 
@@ -54,11 +51,10 @@
                     <tr>
                         <td>{{c.id}}</td>
                         <td>{{c.cliente}}</td>
+                        <td>{{c.telefono}}</td>
                         <td>{{c.fecha_creacion}}</td>
                         <td>{{c.fecha_entrega}}</td>
                         <td><font color = "red">{{c.fecha_retiro}}</td></font>
-                        <td>{{c.estado}}</td>
-                        <td>{{c.observaciones}}</td>
                         <td><a href='/entradas/{{c.id}}' class="btn btn-success">Recibir</a></td>
                         <td><a href='/generaPDFGuia/{{c.id}}' target="_blank" class="btn btn-success">Guia</a></td>
                     </tr>
