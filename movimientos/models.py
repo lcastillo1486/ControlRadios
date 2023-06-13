@@ -191,6 +191,26 @@ class vista_ordenes_cerradas(models.Model):
         db_table = 'vista_ordenes_cerradas'
         auto_created = True
 
+class vista_entrada_detalle(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_orden = models.CharField(max_length=150)
+    fecha_creacion = models.DateField(blank=True, null=True)
+    cobras = models.CharField(max_length=150)
+    cargadores = models.CharField(max_length=150)
+    handsfree = models.CharField(max_length=150)
+    cascos = models.CharField(max_length=150)
+    repetidoras = models.CharField(max_length=150)
+    estaciones = models.CharField(max_length=150)
+    observaciones = models.CharField(max_length=150)
+    cliente = models.CharField(max_length=150)
+    baterias = models.CharField(max_length=150)
+    fecha_evento = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'vista_entrada_detalle'
+        auto_created = True
+
 
 
 
