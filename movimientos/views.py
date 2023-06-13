@@ -10,7 +10,7 @@ from django import forms
 from django.db import models
 from io import BytesIO
 import datetime
-from django.utils import timezone
+from django.utils import timezone 
 
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
@@ -92,20 +92,20 @@ def entradas(request, id):
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
-def salidas(request):
+def salidas(request): 
     ordenes = ordenRegistro.objects.filter(estado_id = 2)
     return render(request, 'salidas.html', {"listaOrdenes": ordenes})
 
 def ordenesProcesadas(request):
     # ordenes = ordenRegistro.objects.filter(estado_id = 5)
     # return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
-    ordenes = vista_ordenes_procesadas.objects.all()
+    ordenes = vista_ordenes_procesadas.objects.all() 
     return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
 
-def ordenesCerradas(request):
+def ordenesCerradas(request): 
     # ordenes = ordenRegistro.objects.filter(estado_id = 3)
     # return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
-    ordenes = vista_ordenes_cerradas.all()
+    ordenes = vista_ordenes_cerradas.objects.all()
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
 
 
