@@ -110,9 +110,11 @@ def ordenesCerradas(request):
 
 
 def ordenesDevueltas(request):
+
+    nombre_cliente = cliente.objects.all()
     
     devueltas = entradaDetalle.objects.all()
-    return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas})
+    return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
 
 def ordenDetalle(request, id):
     detalle = ordenRegistro.objects.get(id=id)
