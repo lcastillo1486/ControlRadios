@@ -187,7 +187,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_serial = invSeriales.objects.filter(codigo = a).count()
 
                 if valida_serial == 0:
-                    form = radiotipos(initial={'serial': ''})
+                    # form = radiotipos(initial={'serial': ''})
                     return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios, 
                 'error':'El serial que intenta agregar a la salida, no existe'})
 
@@ -201,7 +201,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_serial_salida = movimientoRadios.objects.filter(serial = b, id_salida = id).count()
 
                 if  valida_serial_salida == 1:
-                        form = radiotipos(initial={'serial': ''})
+                        # form = radiotipos(initial={'serial': ''})
                         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios,
                         'error':'Este serial ya existe en la orden'})
 
@@ -210,7 +210,7 @@ def guardarDetalleRadio(request, id, id_orden):
                 valida_estado = invSeriales.objects.get(codigo = a)
 
                 if valida_estado.estado_id != 4:
-                    form = radiotipos(initial={'serial': ''})
+                    # form = radiotipos(initial={'serial': ''})
                     return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida,"formRadios": form, "datosOrden": detalle_salida, "cantidad_radios":cuenta_radios, "serial_radios":serial_radios,
                 'error':'El serial que intenta agregar no esta disponible'})
 
@@ -241,11 +241,11 @@ def guardarDetalleRadio(request, id, id_orden):
                         e.estado_id = 5
                         e.save() 
                         return redirect('ordenesProcesadas')
-                    form = radiotipos(initial={'serial': ''})
+                    # form = radiotipos(initial={'serial': ''})
                     return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, "formRadios": form, "cantidad_radios":cuenta_radios,"serial_radios":serial_radios})
                     
     else:
-        form = radiotipos(initial={'serial': ''})
+        # form = radiotipos(initial={'serial': ''})
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, "formRadios": form, "cantidad_radios":cuenta_radios,"serial_radios":serial_radios})
             
 def inventario(request):
