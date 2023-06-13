@@ -57,10 +57,10 @@
                 <tbody>
                     {% for c in listaOrdenes %}   
                     <tr>
-                        <td>{{c.id}}</td>
+                        <td>{{c.id_orden}}</td>
                         <td>{{c.cliente}}</td>
                         <td>{{c.fecha_evento}}</td>
-                        <td><a href='#' class="btn btn-success">Ver Detalle</a></td> 
+                        <td><a href='/guiadevueltos/{{c.id}}' class="btn btn-success">Ver Detalle</a></td> 
                     </tr>
                     {% endfor %}        
                 </tbody>
