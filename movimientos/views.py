@@ -105,7 +105,7 @@ def ordenesProcesadas(request):
 def ordenesCerradas(request):
     # ordenes = ordenRegistro.objects.filter(estado_id = 3)
     # return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
-    ordenes = ordenRegistro.objects.all()
+    ordenes = vista_ordenes_cerradas.all()
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
 
 
