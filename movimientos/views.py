@@ -744,8 +744,11 @@ def pdfguiadevueltos(request, id):
 
     c = ordenes
 
-    color_mochila = mochila.objects.get(numero_orden = orden)
-    color_descrip = color_mochila.color
+    if mochila.objects.filter(numero_orden = orden).exists(): 
+        color_mochila = mochila.objects.get(numero_orden = orden)
+        color_descrip = color_mochila.color
+    else:
+        color_descrip = ""
 
     fecha_actual = datetime.date.today().strftime('%d/%m/%Y')
 
