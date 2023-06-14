@@ -17,6 +17,10 @@ from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
 import os
 
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
+from reportlab.lib import fonts
+
 
 # Create your views here. 
 
@@ -565,6 +569,10 @@ def verFaltante(request):
     return render(request,"faltantes.html",{"listAccFaltante":listadoFantante, "listadorxfaltante":rx_listado_faltante})
 
 def generarPDFGuia(request, id):
+
+    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
+    registerFont(fonts.tt2ps('TimesNewRoman', font_path))
+    registerFontFamily('default', 'TimesNewRoman')
     
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
     b = detalle_acce
