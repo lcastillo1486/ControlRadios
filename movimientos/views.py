@@ -570,9 +570,9 @@ def verFaltante(request):
 
 def generarPDFGuia(request, id):
 
-    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
-    registerFont(fonts.tt2ps('TimesNewRoman', font_path))
-    registerFontFamily('default', 'TimesNewRoman')
+    # font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
+    # registerFont(fonts.tt2ps('TimesNewRoman', font_path))
+    # registerFontFamily('default', 'TimesNewRoman')
     
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
     b = detalle_acce
@@ -671,7 +671,7 @@ def generarPDFGuia(request, id):
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
     font_size = 9
-    pdf.setFont("TimesNewRoman", font_size)
+    pdf.setFont("Helvetica", font_size)
     x = 60
     h = 60
     f = 60
@@ -871,7 +871,7 @@ def pdfguiadevueltos(request, id):
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
     font_size = 9
-    pdf.setFont("TimesNewRoman", font_size)
+    pdf.setFont("Helvetica", font_size)
     x = 60
     h = 60
     f = 60
