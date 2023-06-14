@@ -85,10 +85,11 @@ def entradas(request, id):
 
     ordenes = ordenRegistro.objects.get(id = id)
     msalida = salidasDetalle.objects.get(id_orden=id)
+    salida_id = msalida.id
 
 #buscar las radios cargadas
 
-    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = salida_id, estado = "D")
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
