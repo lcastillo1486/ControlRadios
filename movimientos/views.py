@@ -776,7 +776,10 @@ def pdfguiadevueltos(request, id):
     baterias = str(b.baterias)
     fecha_entrega = str(c.fecha_entrega)
     fecha_evento = (c.fecha_evento_desde).strftime('%d/%m/%Y')
-    fecha_evento_hasta = (c.fecha_evento_hasta).strftime('%d/%m/%Y')
+    if c.fecha_evento_hasta is None:
+        fecha_evento_hasta = ""
+    else:
+        fecha_evento_hasta = (c.fecha_evento_hasta).strftime('%d/%m/%Y')
     direccion = str(c.direccion_entrega)
     rx = d
 
