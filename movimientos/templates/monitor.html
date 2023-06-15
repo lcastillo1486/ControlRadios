@@ -69,8 +69,14 @@
 
 <body style="background-color: rgb(201, 216, 216);">
     <div class="row">
+        <divc class="centrar" style="margin-top: 60px; background-color: #0047ab;">
+            <img src="{% static 'logo.png' %}" width="150" height="150">
+        </div>
+        
+    </div>
+    <div class="row">
 
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
 
 
 
@@ -79,7 +85,7 @@
                 <div class="table-responsive py-2">
 
                     <div class="centrar">
-                        <img src="{% static 'logo.png' %}" width="50" height="50">
+                        <!-- <img src="{% static 'backtrak_logo.png' %}" width="50" height="50"> -->
                         <h1>Listado de Pedidos procesados para entregar hoy</h1>
                     </div>
 
@@ -117,18 +123,18 @@
             </div>
         </div>
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
-            <h1>total por entregar: {{total_ordenes|default:0}}</h1>
+            <h1>total por entregar: {{total_ordenes}}</h1>
         </div>
         
     </div>
 
     <div class="row">
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
 
             <div class="table-responsive py-2">
 
                 <div class="centrar">
-                    <img src="{% static 'logo.png' %}" width="50" height="50">
+                    <!-- <img src="{% static 'backtrak_logo.png' %}" width="50" height="50"> -->
                     <h1>Listado de Pedidos pendiente por recojer hoy</h1>
                 </div>
                 <table class="table table-striped">
