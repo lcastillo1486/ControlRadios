@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
+  
 <head>
 	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,7 +10,6 @@
 </head>
 {% extends 'base.html' %}
 {% block content %}
-
 <style>
 	@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;900&display=swap');
   
@@ -54,14 +53,19 @@ box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
   button {
   color: white;
   margin-top: 20px;
-  background: #1d2931;
+  background: #0047ab;
   height: 40px;
-  border-radius: 20px;
+  border-radius: 1px;
   cursor: pointer;
   font-weight: 900;
-  box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px white;
+  box-shadow: 6px 6px 6px #cbced1, -6px -6px 6px #7ed957;
   transition: 0.5s;
   }
+
+  .campo-label {
+      color: #0047ab; /* Cambia el color al que desees, por ejemplo, azul eléctrico */
+      font-weight: bold;
+    }
   
   
   </style>
@@ -71,7 +75,7 @@ box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
 	{{error}}
 {% load crispy_forms_tags %}
 	<body>
-		<div style="height:10vh;width:50vw;">
+		<!-- <div style="height:10vh;width:50vw;">
 			<form class="form" method="POST">
 				{% csrf_token %}
 				{{form_orden|crispy}}
@@ -79,9 +83,101 @@ box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
 				<button>
 					Guardar
 				</button>
-			</form>
+			</form> -->
+		<!-- </div> -->
 
-		</div>
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="form-group col-md-3">
+          <label class="campo-label">{{ form_orden.cliente.label_tag }}</label>
+          {{ form_orden.cliente }}
+        </div>
+        <div class="form-group col-md-3">
+          <label class="campo-label">{{ form_orden.razon_Social.label_tag }}</label>
+          {{ form_orden.razon_Social }}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label class="campo-label">{{ form_orden.fecha_entrega.label_tag }}</label>
+          {{ form_orden.fecha_entrega }}
+        </div>
+        <div class="form-group col-md-2">
+          <label class="campo-label">{{ form_orden.fecha_evento_desde.label_tag }}</label>
+          {{ form_orden.fecha_evento_desde }}
+        </div>
+        <div class="form-group col-md-2">
+          <label class="campo-label">{{ form_orden.fecha_evento_hasta.label_tag }}</label>
+          {{ form_orden.fecha_evento_hasta }}
+        </div>
+        <div class="form-group col-md-2">
+          <label class="campo-label">{{ form_orden.fecha_retiro.label_tag }}</label>
+          {{ form_orden.fecha_retiro }}
+        </div>
+      </div>
+      <div class="form-row">
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_radios.label_tag }}</label>
+            {{ form_orden.cantidad_radios }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_cobras.label_tag }}</label>
+            {{ form_orden.cantidad_cobras }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_manos_libres.label_tag }}</label>
+            {{ form_orden.cantidad_manos_libres }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_estaciones.label_tag }}</label>
+            {{ form_orden.cantidad_estaciones }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_cascos.label_tag }}</label>
+            {{ form_orden.cantidad_cascos }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_baterias.label_tag }}</label>
+            {{ form_orden.cantidad_baterias }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_cargadores.label_tag }}</label>
+            {{ form_orden.cantidad_cargadores }}
+          </div>
+          <div class="form-group col-md-1">
+            <label class="campo-label">{{ form_orden.cantidad_repetidoras.label_tag }}</label>
+            {{ form_orden.cantidad_repetidoras }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+            <label class="campo-label">{{ form_orden.observaciones.label_tag }}</label>
+            {{ form_orden.observaciones }}
+          </div>
+          <div class="form-group col-md-4">
+            <label class="campo-label">{{ form_orden.direccion_entrega.label_tag }}</label>
+            {{ form_orden.direccion_entrega }}
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-4">
+
+          </div>
+          <div class="form-group col-md-4">
+            <button>
+              Guardar Orden
+            </button>
+          </div>
+          <div class="form-group col-md-4">
+
+          </div>
+
+        </div>
+      
+    </form>
+    
+    
 	</body>
 	{% endblock %}
 

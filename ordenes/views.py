@@ -72,7 +72,7 @@ def buscaEdit(request, id_orden):
     editCurso = ordenRegistro.objects.get(id = id_orden)
     form = formEdit(instance=editCurso)
 
-    return render(request,'modificaOrden.html',{"form":form})
+    return render(request,'modificaOrden.html',{"form_orden":form})
 
 
 
