@@ -21,6 +21,7 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import fonts
+from datetime import date, timedelta
 
 
 # Create your views here. 
@@ -98,9 +99,11 @@ def entradas(request, id):
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
-def salidas(request): 
+def salidas(request):
+    fecha_actual = datetime.date.today()
+    fecha_tope = datetime.date.today() + timedelta(days=2) 
     ordenes = ordenRegistro.objects.filter(estado_id = 2)
-    return render(request, 'salidas.html', {"listaOrdenes": ordenes})
+    return render(request, 'salidas.html', {"listaOrdenes": ordenes, "fecha_actal":fecha_actual, "fecha_tope":fecha_tope})
 
 def ordenesProcesadas(request):
     # ordenes = ordenRegistro.objects.filter(estado_id = 5)

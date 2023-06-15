@@ -89,7 +89,9 @@
 
                 <tbody>
                     {% for c in listaOrdenes %}
-                    <tr>
+                    {% if c.fecha_entrega == fecha_tope %}
+                    <tr style="background-color:  #FFA500">
+                    {% endif %}
                         <td>{{c.id}}</td>
                         <td>{{c.cliente}}</td>
                         <td>{{c.fecha_creacion}}</td>
