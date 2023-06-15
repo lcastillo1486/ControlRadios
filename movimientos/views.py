@@ -571,9 +571,9 @@ def verFaltante(request):
 
 def generarPDFGuia(request, id):
 
-    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
-    pdfmetrics.registerFont(TTFont('TimesNewRoman', font_path))
-    pdfmetrics.registerFontFamily('TimesNewRoman', normal='TimesNewRoman')
+    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'MS_Reference_Sans_Serif.ttf')
+    pdfmetrics.registerFont(TTFont('MS_Reference_Sans_Serif', font_path))
+    pdfmetrics.registerFontFamily('MS_Reference_Sans_Serif', normal='MS_Reference_Sans_Serif')
     
     
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
@@ -673,7 +673,7 @@ def generarPDFGuia(request, id):
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
     font_size = 9
-    pdf.setFont("TimesNewRoman", font_size)
+    pdf.setFont("MS_Reference_Sans_Serif", font_size)
     x = 60
     h = 60
     f = 60
