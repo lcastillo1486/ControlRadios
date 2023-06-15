@@ -574,9 +574,9 @@ def verFaltante(request):
 
 def generarPDFGuia(request, id):
 
-    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'MS_Reference_Sans_Serif.ttf')
-    pdfmetrics.registerFont(TTFont('MS_Reference_Sans_Serif', font_path))
-    pdfmetrics.registerFontFamily('MS_Reference_Sans_Serif', normal='MS_Reference_Sans_Serif')
+    # font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'MS_Reference_Sans_Serif.ttf')
+    # pdfmetrics.registerFont(TTFont('MS_Reference_Sans_Serif', font_path))
+    # pdfmetrics.registerFontFamily('MS_Reference_Sans_Serif', normal='MS_Reference_Sans_Serif')
     
     
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
@@ -647,7 +647,7 @@ def generarPDFGuia(request, id):
     pdf.drawString(15.5*cm, altura_pagina - 9.35*cm, str(fecha_actual))
     pdf.drawString(14*cm, altura_pagina - 10*cm, 'Evento: '+ str(fecha_evento))
     l = 60
-    pdf.drawString(l, 40, str(color_descrip))
+    pdf.drawString(l, 50, str(color_descrip))
     if b.cobras > 0:
         pdf.drawString(14*cm, altura_pagina - 15.25*cm, str(cobras) + ' UND')
     if b.handsfree > 0:
@@ -675,8 +675,8 @@ def generarPDFGuia(request, id):
         pdf.drawString(14*cm, altura_pagina - 12.65*cm, str(plomo))
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
-    font_size = 9
-    pdf.setFont("MS_Reference_Sans_Serif", font_size)
+    font_size = 10
+    pdf.setFont("Helvetica", font_size)
     x = 60
     h = 60
     f = 60
@@ -689,20 +689,20 @@ def generarPDFGuia(request, id):
     if cuenta_serial > 16:
         for indice, i in enumerate(rx):
             if indice <15:
-                pdf.drawString(x, 80, str(i))
+                pdf.drawString(x, 90, str(i))
                 x += 30
             if indice >15 and indice <31:
-                pdf.drawString(h, 70, str(i))
+                pdf.drawString(h, 80, str(i))
                 h += 30
             if indice >31 and indice <47:
-                pdf.drawString(f, 60, str(i))
+                pdf.drawString(f, 70, str(i))
                 f += 30
             if indice >47 and indice <60:
-                pdf.drawString(g, 50, str(i))
+                pdf.drawString(g, 60, str(i))
                 g += 30
     else:
         for i in rx[:cuenta_serial]:
-            pdf.drawString(x, 80, str(i))
+            pdf.drawString(x, 90, str(i))
             #y += 20
             x += 30
 
@@ -748,9 +748,9 @@ def guardarcolormochila(request, id):
 
 def pdfguiadevueltos(request, id):
 
-    font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
-    pdfmetrics.registerFont(TTFont('TimesNewRoman', font_path))
-    pdfmetrics.registerFontFamily('TimesNewRoman', normal='TimesNewRoman')
+    # font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
+    # pdfmetrics.registerFont(TTFont('TimesNewRoman', font_path))
+    # pdfmetrics.registerFontFamily('TimesNewRoman', normal='TimesNewRoman')
 
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
     b = detalle_acce
@@ -880,7 +880,7 @@ def pdfguiadevueltos(request, id):
         pdf.drawString(14.5*cm, altura_pagina - 12.65*cm, str(' UND'))
     # #y = 110
     font_size = 9
-    pdf.setFont("TimesNewRoman", font_size)
+    pdf.setFont("Helvetica", font_size)
     x = 60
     h = 60
     f = 60
