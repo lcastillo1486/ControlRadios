@@ -89,7 +89,7 @@
 
                 <tbody>
                     {% for c in listaOrdenes %}
-                    {% if c.fecha_entrega == fecha_tope %}
+                    {% if c.fecha_entrega <= fecha_tope %}
                     <tr style="background-color:  #FFA500">
                     {% endif %}
                         <td>{{c.id}}</td>
