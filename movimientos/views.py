@@ -934,6 +934,13 @@ def buscaOrdenesDevueltas(request):
 
         return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
 
+def monitor(request):
+    fecha_actual = datetime.date.today()
+
+    ordenes = ordenRegistro.objects.filter(estado_id = 2, fecha_entrega = fecha_actual)
+    ordenes_count = ordenRegistro.objects.filter(estado_id = 2, fecha_entrega = fecha_actual).count()
+    return render(request, 'monitor.html', {"listaOrdenes": ordenes, "total_ordenes":ordenes_count})
+
 
 
 
