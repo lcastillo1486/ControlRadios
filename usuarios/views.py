@@ -32,7 +32,7 @@ def logear(request):
             usuario = authenticate(username=nombre_usuario, password=contra)
             if usuario is not None:
                 login(request, usuario)
-                if nombre_usuario == 'luisc':
+                if nombre_usuario == 'monitor':
                     return redirect('monitor/')
                 return redirect('salidas/')
             else:
