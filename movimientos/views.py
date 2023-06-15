@@ -940,10 +940,12 @@ def buscaOrdenesDevueltas(request):
 def monitor(request):
     fecha_actual = datetime.date.today()
 
-    ordenes = ordenRegistro.objects.filter(estado_id = 2, fecha_entrega = fecha_actual)
-    ordenes_count = ordenRegistro.objects.filter(estado_id = 2, fecha_entrega = fecha_actual).count()
-    return render(request, 'monitor.html', {"listaOrdenes": ordenes, "total_ordenes":ordenes_count})
+    ordenes = ordenRegistro.objects.filter(estado_id=5, fecha_entrega=fecha_actual)
+    ordenes_count = ordenRegistro.objects.filter(estado_id = 5, fecha_entrega = fecha_actual).count()
 
+    ordenes_retiro = ordenRegistro.objects.filter(estado_id=3, fecha_retiro=fecha_actual)
+    ordenes_retiro_count = ordenRegistro.objects.filter(estado_id = 3, fecha_retiro = fecha_actual).count()
+    return render(request, 'monitor.html', {"listaOrdenesRetiro": ordenes_retiro, "total_ordenes_retiro":ordenes_retiro_count})
 
 
 
