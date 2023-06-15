@@ -921,7 +921,7 @@ def pdfguiadevueltos(request, id):
     nombre_archivo = str(id)+'_'+str(fecha_entrega)+'.pdf'
    
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+    response['Content-Disposition'] = f'attachment; filename= {nombre_archivo}'
 
 
     return response
@@ -943,8 +943,8 @@ def monitor(request):
     ordenes = ordenRegistro.objects.filter(estado_id=5, fecha_entrega=fecha_actual)
     ordenes_count = ordenRegistro.objects.filter(estado_id = 5, fecha_entrega = fecha_actual).count()
 
-    ordenes_retiro = ordenRegistro.objects.filter(estado_id=3, fecha_retiro=fecha_actual)
-    ordenes_retiro_count = ordenRegistro.objects.filter(estado_id = 3, fecha_retiro = fecha_actual).count()
+    ordenes_retiro = ordenRegistro.objects.filter(estado_id=3, fecha_retiro__lte = fecha_actual)
+    ordenes_retiro_count = ordenRegistro.objects.filter(estado_id = 3, fecha_retiro__lte = fecha_actual).count()
     return render(request, 'monitor.html', {"listaOrdenesRetiro": ordenes_retiro, "total_ordenes_retiro":ordenes_retiro_count, "listaOrdenes":ordenes, "total_ordenes":ordenes_count})
 
 
