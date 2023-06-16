@@ -71,8 +71,8 @@
     <div class="row">
         <divc class="centrar" style="margin-top: 10px; background-color: #0047ab;">
             <img src="{% static 'logo.png' %}" width="70" height="70">
-        </div>
-        
+    </div>
+
     </div>
     <div class="row">
 
@@ -119,16 +119,10 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    <h1>total por entregar: {{total_ordenes|default:0}}</h1>
                 </div>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
-            <h1>total por entregar: {{total_ordenes}}</h1>
-        </div>
-        
-    </div>
-
-    <div class="row">
         <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
 
             <div class="table-responsive py-2">
@@ -166,15 +160,22 @@
                         {% endfor %}
                     </tbody>
                 </table>
+                <h1>total por recojer: {{total_ordenes_retiro|default:0}}</h1>
             </div>
         </div>
-        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
-            <h1>total por recojer: {{total_ordenes_retiro}}</h1>
-        </div>
+
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-        crossorigin="anonymous"></script>
+
+    <div class="row">
+        <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
+
+            <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6" style="margin-top: 60px;">
+
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
 </body>
 {% endblock %}
 
