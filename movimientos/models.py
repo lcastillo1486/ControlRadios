@@ -185,6 +185,7 @@ class vista_ordenes_cerradas(models.Model):
     fecha_evento_hasta = models.DateTimeField(blank=True, null=True)
     telefono = models.CharField(max_length=150)
     cliente = models.CharField(max_length=150)
+    id_salida = models.CharField(max_length=150)
 
     class Meta:
         managed = False

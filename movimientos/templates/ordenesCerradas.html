@@ -94,7 +94,7 @@
                         <td>{{c.fecha_creacion}}</td>
                         <td>{{c.fecha_entrega}}</td>
                         <td><font color = "red">{{c.fecha_retiro}}</td></font>
-                        <td><a href='/entradas/{{c.id}}' class="btn btn-success">Recibir</a></td>
+                        <td><a href='/entradas/{{c.id_salida}}' class="btn btn-success">Recibir</a></td>
                         <td><a href='/generaPDFGuia/{{c.id}}' target="_blank" class="btn btn-success">Guia</a></td>
                     </tr>
                     {% endfor %}
