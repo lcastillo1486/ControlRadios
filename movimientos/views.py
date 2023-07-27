@@ -987,7 +987,7 @@ def generarPDFprint(request, id):
     cobras = str(b.cobras)
     baterias = str(b.baterias)
     cargadores = str(b.cargadores)
-    manos_libres = str(b.manos_libres)
+    manos_libres = str(b.handsfree)
     cascos = str(b.cascos)
     repetidoras = str(b.repetidoras)
     estaciones = str(b.estaciones)
@@ -1002,21 +1002,21 @@ def generarPDFprint(request, id):
     pdf.drawString(2*cm, 9*cm,"N° Pedido: "+ pedido)
     pdf.drawString(2*cm, 8*cm, "Cliente: "+ cliente)
     pdf.drawString(2*cm, 7*cm,"Fecha entrega: " +fentrega)
-    if b.cantidad_radios > 0:
+    if c.cantidad_radios > 0:
         pdf.drawString(2*cm, 6*cm, "Radios: "+ radios)
-    if b.cantidad_cobras > 0:
+    if b.cobras > 0:
         pdf.drawString(2*cm, 5.5*cm, "Cobras: "+ cobras)
-    if b.cantidad_baterias > 0:
+    if b.baterias > 0:
         pdf.drawString(2*cm, 5*cm, "Baterias extra: "+ baterias)
-    if b.cantidad_cargadores > 0:
+    if b.cargadores > 0:
         pdf.drawString(2*cm, 4.5*cm, "Cargadores: " + cargadores)
-    if b.cantidad_manos_libres > 0:
+    if b.handsfree > 0:
         pdf.drawString(2*cm, 4*cm,"Manos libres: " + manos_libres)
-    if b.cantidad_cascos > 0:
+    if b.cascos > 0:
         pdf.drawString(2*cm, 3.5*cm,"Cascos: " + cascos)
-    if b.cantidad_repetidoras > 0:
+    if b.repetidoras > 0:
         pdf.drawString(2*cm, 3*cm,"Repetidoras: " + repetidoras)
-    if b.cantidad_estaciones > 0:
+    if b.estaciones > 0:
         pdf.drawString(2*cm, 2.5*cm,"Estaciones: " + estaciones)
     
     
@@ -1031,6 +1031,7 @@ def generarPDFprint(request, id):
 
 
     return response
+
 
 
 
