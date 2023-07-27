@@ -983,14 +983,14 @@ def generarPDFprint(request, id):
     c = ordenes
 
     cliente = str(c.cliente)
-    radios = str(b.cantidad_radios)
-    cobras = str(b.cantidad_cobras)
-    baterias = str(b.cantidad_baterias)
-    cargadores = str(b.cantidad_cargadores)
-    manos_libres = str(b.cantidad_manos_libres)
-    cascos = str(b.cantidad_cascos)
-    repetidoras = str(b.cantidad_repetidoras)
-    estaciones = str(b.cantidad_estaciones)
+    radios = str(c.cantidad_radios)
+    cobras = str(b.cobras)
+    baterias = str(b.baterias)
+    cargadores = str(b.cargadores)
+    manos_libres = str(b.manos_libres)
+    cascos = str(b.cascos)
+    repetidoras = str(b.repetidoras)
+    estaciones = str(b.estaciones)
     fentrega = str(c.fecha_entrega)
     pedido = str(c.id)
 
