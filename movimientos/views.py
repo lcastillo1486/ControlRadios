@@ -711,16 +711,16 @@ def generarPDFGuia(request, id):
     cuenta_serial = len(rx)
     if cuenta_serial > 16:
         for indice, i in enumerate(rx):
-            if indice <15:
+            if indice <=15:
                 pdf.drawString(x, 90, str(i))
                 x += 30
             if indice >15 and indice <31:
                 pdf.drawString(h, 80, str(i))
                 h += 30
-            if indice >31 and indice <47:
+            if indice >=31 and indice <47:
                 pdf.drawString(f, 70, str(i))
                 f += 30
-            if indice >47 and indice <60:
+            if indice >=47 and indice <60:
                 pdf.drawString(g, 60, str(i))
                 g += 30
     else:
