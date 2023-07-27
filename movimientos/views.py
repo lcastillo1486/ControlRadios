@@ -970,6 +970,68 @@ def monitor(request):
     ordenes_retiro_count = ordenRegistro.objects.filter(estado_id = 3, fecha_retiro__lte = fecha_actual).count()
     return render(request, 'monitor.html', {"listaOrdenesRetiro": ordenes_retiro, "total_ordenes_retiro":ordenes_retiro_count, "listaOrdenes":ordenes, "total_ordenes":ordenes_count})
 
+def generarPDFprint(request, id):
+
+    detalle_acce = salidasDetalle.objects.get(id_orden = id)
+    b = detalle_acce
+
+    orden = b.id_orden
+    salida_id = b.id
+
+    ordenes = ordenRegistro.objects.get(id = orden)
+
+    c = ordenes
+
+    cliente = str(c.cliente)
+    radios = str(b.cantidad_radios)
+    cobras = str(b.cantidad_cobras)
+    baterias = str(b.cantidad_baterias)
+    cargadores = str(b.cantidad_cargadores)
+    manos_libres = str(b.cantidad_manos_libres)
+    cascos = str(b.cantidad_cascos)
+    repetidoras = str(b.cantidad_repetidoras)
+    estaciones = str(b.cantidad_estaciones)
+    fentrega = str(b.fecha_entrega)
+    pedido = str(c.id)
+
+    buffer = BytesIO()
+    tamano_pagina =  (20*cm, 10*cm)
+    pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+   
+
+    pdf.drawString(2*cm, 9*cm,"N° Pedido: "+ pedido)
+    pdf.drawString(2*cm, 8*cm, "Cliente: "+ cliente)
+    pdf.drawString(2*cm, 7*cm,"Fecha entrega: " +fentrega)
+    if b.cantidad_radios > 0:
+        pdf.drawString(2*cm, 6*cm, "Radios: "+ radios)
+    if b.cantidad_cobras > 0:
+        pdf.drawString(2*cm, 5.5*cm, "Cobras: "+ cobras)
+    if b.cantidad_baterias > 0:
+        pdf.drawString(2*cm, 5*cm, "Baterias extra: "+ baterias)
+    if b.cantidad_cargadores > 0:
+        pdf.drawString(2*cm, 4.5*cm, "Cargadores: " + cargadores)
+    if b.cantidad_manos_libres > 0:
+        pdf.drawString(2*cm, 4*cm,"Manos libres: " + manos_libres)
+    if b.cantidad_cascos > 0:
+        pdf.drawString(2*cm, 3.5*cm,"Cascos: " + cascos)
+    if b.cantidad_repetidoras > 0:
+        pdf.drawString(2*cm, 3*cm,"Repetidoras: " + repetidoras)
+    if b.cantidad_estaciones > 0:
+        pdf.drawString(2*cm, 2.5*cm,"Estaciones: " + estaciones)
+    
+    
+    pdf.showPage()
+
+    pdf.save()
+
+    buffer.seek(0)
+    nombre_archivo = str(id)+'_'+str(cliente)+'.pdf'
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+
+
+    return response
+
 
 
 
