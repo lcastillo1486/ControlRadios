@@ -991,7 +991,7 @@ def generarPDFprint(request, id):
     cascos = str(b.cantidad_cascos)
     repetidoras = str(b.cantidad_repetidoras)
     estaciones = str(b.cantidad_estaciones)
-    fentrega = str(b.fecha_entrega)
+    fentrega = str(c.fecha_entrega)
     pedido = str(c.id)
 
     buffer = BytesIO()
