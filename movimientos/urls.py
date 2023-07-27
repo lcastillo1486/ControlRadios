@@ -23,7 +23,7 @@ urlpatterns = [
     path('guiadevueltos/<int:id>',views.pdfguiadevueltos),
     path('buscaOrdenesDevueltas/',views.buscaOrdenesDevueltas),
     path('monitor/',views.monitor),
-    path('generaPDFprint/',views.generarPDFprint),
+    path('generaPDFprint/<int:id>',views.generarPDFprint),
 
 
 
