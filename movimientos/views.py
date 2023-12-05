@@ -1045,6 +1045,8 @@ def generarPDFprint(request, id):
 
     return response
 
+def generaInformes(request):
+    return render(request, 'informes.html')
 
 
 
