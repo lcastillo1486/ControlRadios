@@ -1046,6 +1046,20 @@ def generarPDFprint(request, id):
     return response
 
 def generaInformes(request):
+
+    #informes Total OJo con la cantidad de resultados
+
+    
+
+
+
+
+
+
+
+
+
+
     return render(request, 'informes.html')
 
 
