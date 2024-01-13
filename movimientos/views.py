@@ -1082,7 +1082,7 @@ def generaInformes(request):
             for i in agrupacion:
                 # cliente = str(i['nombre'])
                 cantidad = str(i['total_registros'])
-                fecha = str((i['fecha_creacion']))
+                fecha = str((i['fecha_salida']))
                 salida = str(i['id_salida'])
                 # pdf.drawString(2*cm, x,cliente )
                 pdf.drawString(4*cm, x,cantidad )
