@@ -1058,31 +1058,31 @@ def generaInformes(request):
             cliente = form_buscar.cleaned_data['cliente']
 
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__range=(desde,hasta), cliente = cliente)
-            # agrupacion = result_busqueda.values('id_salida', fecha_truncada=TruncDate('fecha_creacion')).annotate(total_registros=Count('serialrx'))
+            agrupacion = result_busqueda.values('id_salida', fecha_truncada=TruncDate('fecha_creacion')).annotate(total_registros=Count('serialrx'))
 
             
             # datos = agrupacion
 
             # #generar el PDF 
             buffer = BytesIO()
-            tamano_pagina =  (20*cm, 10*cm)
-            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+            # tamano_pagina =  (20*cm, 10*cm)
+            pdf = canvas.Canvas(buffer)
 
             # ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
             ####TITULO#########
-            titulo = "REPORTE"
-            ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
+            # titulo = "REPORTE"
+            # ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             
             x = 1.5*cm
-            cliente = str(i.nombre)
-            for i in result_busqueda:
-                cliente = str(i.nombre)
-                # pdf.drawString(2*cm, x,cliente )
-                # pdf.drawString(4*cm, x,cantidad )
-                # pdf.drawString(6*cm, x,fecha )
-                pdf.drawString(8*cm, x,cliente )
-                x += 0.5*cm
+            # cliente = str(i.nombre)
+            # for i in result_busqueda:
+            #     cliente = str(i.nombre)
+            #     # pdf.drawString(2*cm, x,cliente )
+            #     # pdf.drawString(4*cm, x,cantidad )
+            #     # pdf.drawString(6*cm, x,fecha )
+            #     pdf.drawString(8*cm, x,cliente )
+            #     x += 0.5*cm
             
             # # resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
