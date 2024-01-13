@@ -1070,7 +1070,7 @@ def generaInformes(request):
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
             ####TITULO#########
-            titulo = "REPORTE FINAL DE ACREDITACIÓN"
+            titulo = "REPORTE"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
             pos_x = (ancho_pagina - ancho_texto) / 2
@@ -1090,10 +1090,10 @@ def generaInformes(request):
                 pdf.drawString(8*cm, x,salida )
                 x += 0.5*cm
             
-            resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
+            # resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
 
-            pdf.drawString(10*cm, x,str(resultado_final) )
+            # pdf.drawString(10*cm, x,str(resultado_final) )
 
             pdf.showPage()
 

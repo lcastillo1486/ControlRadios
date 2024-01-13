@@ -108,6 +108,7 @@ class vista_movimiento_radios_tipos(models.Model):
     estado = models.CharField(max_length=150)
     tipo = models.CharField(max_length=150)
     fecha_creacion = models.CharField(max_length=150)
+    cliente = models.CharField(max_length=250)
 
     class Meta:
         managed = False
