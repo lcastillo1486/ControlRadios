@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -22,6 +22,8 @@ from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.lib import fonts
 from datetime import date, timedelta
+from django.db.models.functions import TruncDate
+from django.db.models import Count, Sum
 
 
 # Create your views here. 
@@ -1048,20 +1050,62 @@ def generarPDFprint(request, id):
 def generaInformes(request):
 
     form = formBuscarInformes()
-    #informes Total OJo con la cantidad de resultados
+    form_buscar = formBuscarInformes(request.POST)
+    if request.method == 'POST':
+        if form_buscar.is_valid():
+            desde = form_buscar.cleaned_data['fechaBInformeDesde']
+            hasta = form_buscar.cleaned_data['fechaBInformeHasta']
+            cliente = form_buscar.cleaned_data['cliente']
 
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__range=(desde,hasta), nombre = cliente)
+            agrupacion = result_busqueda.values('id_salida', fecha_truncada=TruncDate('fecha_creacion')).annotate(total_registros=Count('serialrx'))
+
+            datos = agrupacion
+
+            #generar el PDF 
+            buffer = BytesIO()
+            tamano_pagina =  (20*cm, 10*cm)
+            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+
+            ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
+            ####TITULO#########
+            titulo = "REPORTE FINAL DE ACREDITACIÓN"
+            ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
+            # Calcular la posición horizontal para centrar
+            pos_x = (ancho_pagina - ancho_texto) / 2
+            # Definir la posición vertical
+            pos_y = altura_pagina - 2*cm
+
+            x = 1.5*cm
+            # cliente = str(i.nombre)
+            for i in agrupacion:
+                # cliente = str(i['nombre'])
+                cantidad = str(i['total_registros'])
+                fecha = str((i['fecha_truncada']))
+                salida = str(i['id_salida'])
+                # pdf.drawString(2*cm, x,cliente )
+                pdf.drawString(4*cm, x,cantidad )
+                pdf.drawString(6*cm, x,fecha )
+                pdf.drawString(8*cm, x,salida )
+                x += 0.5*cm
+            
+            resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
 
+            pdf.drawString(10*cm, x,str(resultado_final) )
 
+            pdf.showPage()
 
+            pdf.save()
 
-
-
-
-
-
-    return render(request, 'informes.html', {'form':form})
+            buffer.seek(0)
+            nombre_archivo = str(cliente)+'.pdf'
+            response = HttpResponse(buffer, content_type='application/pdf')
+            response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+            return response
+        else:
+            return render(request, 'informes.html', {'form':form})
 
 
 
