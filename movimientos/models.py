@@ -104,11 +104,13 @@ class vista_accesorios_faltantes(models.Model):
 
 class vista_movimiento_radios_tipos(models.Model):
     id_salida = models.CharField(max_length=150)
+    id_orden = models.CharField(max_length=150)
     serialrx = models.CharField(max_length=150)
     estado = models.CharField(max_length=150)
     tipo = models.CharField(max_length=150)
     fecha_creacion = models.CharField(max_length=150)
     cliente = models.CharField(max_length=250)
+    razon_social = models.CharField(max_length=250)
 
     class Meta:
         managed = False
