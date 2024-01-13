@@ -1104,8 +1104,8 @@ def generaInformes(request):
             response = HttpResponse(buffer, content_type='application/pdf')
             response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
             return response
-        else:
-            return render(request, 'informes.html', {'form':form})
+    else:
+        return render(request, 'informes.html', {'form':form})
 
 
 
