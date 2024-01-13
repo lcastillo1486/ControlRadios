@@ -1076,10 +1076,11 @@ def generaInformes(request):
             # pos_x = (ancho_pagina - ancho_texto) / 2
             # # Definir la posición vertical
             # pos_y = altura_pagina - 2*cm
+            
 
             x = 25*cm 
             pdf.drawString(4*cm, x,titulo )
-            pdf.drawString(4*cm, 24*cm,cliente )
+            # pdf.drawString(4*cm, 24*cm,cliente )
 
 
             x = 20*cm
