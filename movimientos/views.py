@@ -1057,14 +1057,14 @@ def generaInformes(request):
             hasta = form_buscar.cleaned_data['fechaBInformeHasta']
             cliente = form_buscar.cleaned_data['cliente']
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(desde,hasta), cliente = cliente)
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(desde,hasta), cliente = cliente, estado = 'F')
             agrupacion = result_busqueda.values('id_salida', 'fecha_salida').annotate(total_registros=Count('serialrx'))
 
             datos = agrupacion
 
             #generar el PDF 
             buffer = BytesIO()
-            tamano_pagina =  (20*cm, 10*cm)
+            # tamano_pagina =  (20*cm, 10*cm)
             pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
@@ -1073,11 +1073,11 @@ def generaInformes(request):
             titulo = "REPORTE FINAL DE ACREDITACIÓN"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
-            pos_x = (ancho_pagina - ancho_texto) / 2
-            # Definir la posición vertical
-            pos_y = altura_pagina - 2*cm
+            # pos_x = (ancho_pagina - ancho_texto) / 2
+            # # Definir la posición vertical
+            # pos_y = altura_pagina - 2*cm
 
-            x = 1.5*cm
+            x = 10.5*cm
             # cliente = str(i.nombre)
             for i in agrupacion:
                 # cliente = str(i['nombre'])
