@@ -1057,8 +1057,8 @@ def generaInformes(request):
             hasta = form_buscar.cleaned_data['fechaBInformeHasta']
             cliente = form_buscar.cleaned_data['cliente']
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__range=(desde,hasta), cliente = cliente)
-            agrupacion = result_busqueda.values('id_salida', 'fecha_creacion').annotate(total_registros=Count('serialrx'))
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(desde,hasta), cliente = cliente)
+            agrupacion = result_busqueda.values('id_salida', 'fecha_salida').annotate(total_registros=Count('serialrx'))
 
             datos = agrupacion
 

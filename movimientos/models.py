@@ -111,6 +111,7 @@ class vista_movimiento_radios_tipos(models.Model):
     fecha_creacion = models.CharField(max_length=150)
     cliente = models.CharField(max_length=250)
     razon_social = models.CharField(max_length=250)
+    fecha_salida = models.CharField(max_length=150)
 
     class Meta:
         managed = False
