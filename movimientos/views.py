@@ -1077,7 +1077,7 @@ def generaInformes(request):
             # # Definir la posición vertical
             # pos_y = altura_pagina - 2*cm
 
-            x = 21*cm 
+            x = 25*cm 
             pdf.drawString(4*cm, x,titulo )
 
             x = 20*cm
@@ -1088,15 +1088,14 @@ def generaInformes(request):
                 fecha = str((i['fecha_salida']))
                 salida = str(i['id_salida'])
                 # pdf.drawString(2*cm, x,cliente )
-                pdf.drawString(4*cm, x,cantidad )
+                pdf.drawString(12*cm, x,cantidad )
                 pdf.drawString(6*cm, x,fecha )
-                pdf.drawString(12*cm, x,salida )
+                pdf.drawString(4*cm, x,salida )
                 x += 0.5*cm
             
             resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
-
-            pdf.drawString(15*cm, x,str(resultado_final) )
+            pdf.drawString(5*cm, x,str(resultado_final) )
 
             pdf.showPage()
 
