@@ -1065,7 +1065,7 @@ def generaInformes(request):
             #generar el PDF 
             buffer = BytesIO()
             tamano_pagina =  (20*cm, 10*cm)
-            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+            pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
@@ -1087,13 +1087,13 @@ def generaInformes(request):
                 # pdf.drawString(2*cm, x,cliente )
                 pdf.drawString(4*cm, x,cantidad )
                 pdf.drawString(6*cm, x,fecha )
-                pdf.drawString(8*cm, x,salida )
+                pdf.drawString(12*cm, x,salida )
                 x += 0.5*cm
             
             resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
 
-            pdf.drawString(10*cm, x,str(resultado_final) )
+            pdf.drawString(15*cm, x,str(resultado_final) )
 
             pdf.showPage()
 
