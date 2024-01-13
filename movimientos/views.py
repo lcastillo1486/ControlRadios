@@ -1060,50 +1060,51 @@ def generaInformes(request):
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__range=(desde,hasta), cliente = cliente)
             agrupacion = result_busqueda.values('id_salida', fecha_truncada=TruncDate('fecha_creacion')).annotate(total_registros=Count('serialrx'))
 
-            datos = agrupacion
+            return render(request, 'informes.html', {'form':form})
+            # datos = agrupacion
 
-            #generar el PDF 
-            buffer = BytesIO()
-            tamano_pagina =  (20*cm, 10*cm)
-            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+            # #generar el PDF 
+            # buffer = BytesIO()
+            # tamano_pagina =  (20*cm, 10*cm)
+            # pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
 
-            ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+            # ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
-            ####TITULO#########
-            titulo = "REPORTE"
-            ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
-            # Calcular la posición horizontal para centrar
-            pos_x = (ancho_pagina - ancho_texto) / 2
-            # Definir la posición vertical
-            pos_y = altura_pagina - 2*cm
+            # ####TITULO#########
+            # titulo = "REPORTE"
+            # ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
+            # # Calcular la posición horizontal para centrar
+            # pos_x = (ancho_pagina - ancho_texto) / 2
+            # # Definir la posición vertical
+            # pos_y = altura_pagina - 2*cm
 
-            x = 1.5*cm
-            # cliente = str(i.nombre)
-            for i in agrupacion:
-                # cliente = str(i['nombre'])
-                cantidad = str(i['total_registros'])
-                fecha = str((i['fecha_truncada']))
-                salida = str(i['id_salida'])
-                # pdf.drawString(2*cm, x,cliente )
-                pdf.drawString(4*cm, x,cantidad )
-                pdf.drawString(6*cm, x,fecha )
-                pdf.drawString(8*cm, x,salida )
-                x += 0.5*cm
+            # x = 1.5*cm
+            # # cliente = str(i.nombre)
+            # for i in agrupacion:
+            #     # cliente = str(i['nombre'])
+            #     cantidad = str(i['total_registros'])
+            #     fecha = str((i['fecha_truncada']))
+            #     salida = str(i['id_salida'])
+            #     # pdf.drawString(2*cm, x,cliente )
+            #     pdf.drawString(4*cm, x,cantidad )
+            #     pdf.drawString(6*cm, x,fecha )
+            #     pdf.drawString(8*cm, x,salida )
+            #     x += 0.5*cm
             
-            # resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
+            # # resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
 
-            # pdf.drawString(10*cm, x,str(resultado_final) )
+            # # pdf.drawString(10*cm, x,str(resultado_final) )
 
-            pdf.showPage()
+            # pdf.showPage()
 
-            pdf.save()
+            # pdf.save()
 
-            buffer.seek(0)
-            nombre_archivo = str(cliente)+'.pdf'
-            response = HttpResponse(buffer, content_type='application/pdf')
-            response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
-            return response
+            # buffer.seek(0)
+            # nombre_archivo = str(cliente)+'.pdf'
+            # response = HttpResponse(buffer, content_type='application/pdf')
+            # response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+            # return response
     else:
         return render(request, 'informes.html', {'form':form})
 
