@@ -1079,6 +1079,8 @@ def generaInformes(request):
 
             x = 25*cm 
             pdf.drawString(4*cm, x,titulo )
+            pdf.drawString(4*cm, 24*cm,cliente )
+
 
             x = 20*cm
             # cliente = str(i.nombre)
