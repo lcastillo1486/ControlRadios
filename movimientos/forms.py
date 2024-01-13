@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from .models import movimientoRadios, invSeriales, entradaDetalle, buscaentregados
 from django.forms import widgets
 from django import forms
+from cliente.models import cliente, razonSocial
 
 
 class radiotipos(ModelForm):
@@ -52,5 +53,9 @@ class formEntradaDetalle(ModelForm):
         }    
        
 
-        
+class formBuscarInformes(forms.Form):
+    cliente = forms.ModelChoiceField(queryset=cliente.objects.all(), label='Cliente')
+    # rsocial = forms.ModelChoiceField(queryset=razonSocial.objects.all(),label='Razón Social')
+    fechaBInformeDesde = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}), label='Desde:')
+    fechaBInformeHasta = forms.DateField(widget=forms.DateInput(attrs={'type':'date'}), label='Hasta:')            
         

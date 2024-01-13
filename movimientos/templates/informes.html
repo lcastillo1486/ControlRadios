@@ -14,62 +14,119 @@
 </head>
 <style>
     table {
-      border-collapse: collapse;
-      width: 100%;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Agregar una sombra a la tabla */
-      
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Agregar una sombra a la tabla */
+
     }
-  
+
     tr {
-      padding: 8px;
-      text-align: center;
-      border: 3px solid #7ed957; /* Agregar bordes a las celdas */
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
     }
+
     .centrar {
-    text-align: center;
-  }
-  th {
-        color: #0047ab;
-      padding: 8px;
-      text-align: center;
-      border: 3px solid #7ed957; /* Agregar bordes a las celdas */
-      background-color: white;
+        text-align: center;
     }
-   h1 {
-    color: #0047ab;
-    font-size: 36px; /* Tamaño de fuente */
-    text-align: center; /* Alineación del texto */
-    text-transform: uppercase; /* Transformación a mayúsculas */
-    letter-spacing: 2px; /* Espaciado entre letras */
-    font-weight: bold; /* Negrita */
-    text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);/* Sombra de texto */
-   }
-  </style>
+
+    th {
+        color: #0047ab;
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+        background-color: white;
+    }
+
+    h1 {
+        color: #0047ab;
+        font-size: 36px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+    h2 {
+        color: #0047ab;
+        font-size: 30px;
+        /* Tamaño de fuente */
+        text-align: left;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    input {
+        background: #e4dc6e;
+        padding: 10px;
+        padding-left: 20px;
+        height: 30px;
+        font-size: 14px;
+        border-radius: 10px;
+        box-shadow: inset 6px 6px 6px #cbced1, inset -6px -6px 6px white;
+    }
+</style>
 
 <body>
 
-<h1> Estadísticas </h1>
+    <h1> Estadísticas </h1>
 
-<div class="row">
-    <div style="text-align: center;" class="col-sm-12 col-md-6 col-lg-2 col-xl-2">
-        Parte 1 Total
+    <div class="row">
+        <div style="text-align: left;" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <h2>Reporte de Radios</h2>
+            <form action='/#informe/' method="POST">
+                {% csrf_token %}
+                {{form}}
+                <button type="submit" style="width: 140px; height: 40px; text-align: center;" name="menos"
+                    class="btn btn-warning">Generar Reporte</button>
+                <style>
+                    input[type="date"] {
+                        width: 250px;
+                        height: 40px;
+                    }
+                </style>
+            </form>
+        </div>
     </div>
 
-   
-</div>
+    <div class="row">
+        <div style="text-align: center;" class="col-sm-12 col-md-6 col-lg-2 col-xl-2">
 
-<div class="row">
-    <div style="text-align: center;" class="col-sm-12 col-md-6 col-lg-2 col-xl-2">
-        Parte 2 Parcial
+        </div>
     </div>
 
-</div>
+
+    </div>
+
+    <div class="row">
+        <div style="text-align: center;" class="col-sm-12 col-md-6 col-lg-2 col-xl-2">
+
+        </div>
+
+    </div>
 
 
-                
-                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-                    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-                    crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
 </body>
 {% endblock %}
+
 </html>
