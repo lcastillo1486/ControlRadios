@@ -1070,26 +1070,19 @@ def generaInformes(request):
 
             # ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
-            # ####TITULO#########
-            # titulo = "REPORTE"
-            # ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
-            # Calcular la posición horizontal para centrar
-            # pos_x = (ancho_pagina - ancho_texto) / 2
-            # # Definir la posición vertical
-            # pos_y = altura_pagina - 2*cm
-
-            # x = 1.5*cm
-            # cliente = str(i.nombre)
-            # for i in result_busqueda:
-            #     # cliente = str(i['nombre'])
-            #     # cantidad = str(i['total_registros'])
-            #     # fecha = str((i['fecha_truncada']))
-            #     salida = str(i.id_salida])
-            #     # pdf.drawString(2*cm, x,cliente )
-            #     # pdf.drawString(4*cm, x,cantidad )
-            #     # pdf.drawString(6*cm, x,fecha )
-            #     pdf.drawString(8*cm, x,salida )
-            #     x += 0.5*cm
+            ####TITULO#########
+            titulo = "REPORTE"
+            ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
+            
+            x = 1.5*cm
+            cliente = str(i.nombre)
+            for i in result_busqueda:
+                cliente = str(i.nombre)
+                # pdf.drawString(2*cm, x,cliente )
+                # pdf.drawString(4*cm, x,cantidad )
+                # pdf.drawString(6*cm, x,fecha )
+                pdf.drawString(8*cm, x,cliente )
+                x += 0.5*cm
             
             # # resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
 
