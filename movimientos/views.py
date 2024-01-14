@@ -1118,10 +1118,10 @@ def generarPDFtotales(request):
     form = formBuscarInformes()
 
     if request.method == 'POST':
-            anio = request.POST.get('years') 
-
-            # result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__years=(anio))
-            # agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
+            anio = request.POST.get('years')
+            
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__year=(anio))
+            agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
 
             #generar el PDF 
             buffer = BytesIO()
