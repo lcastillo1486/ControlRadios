@@ -1140,14 +1140,14 @@ def generarPDFtotales(request):
 
             x = 1.5*cm
 
-            for i in agrupacion:
-                # cliente = str(i['nombre'])
-                cliente = str(i['cliente'])
-                total = str((i['total_registros']))
-                # pdf.drawString(2*cm, x,cliente )
-                pdf.drawString(4*cm, x,cliente )
-                pdf.drawString(6*cm, x,total )
-                x += 0.5*cm
+            # for i in agrupacion:
+            #     # cliente = str(i['nombre'])
+            #     cliente = str(i['cliente'])
+            #     total = str((i['total_registros']))
+            #     # pdf.drawString(2*cm, x,cliente )
+            #     pdf.drawString(4*cm, x,cliente )
+            #     pdf.drawString(6*cm, x,total )
+            #     x += 0.5*cm
 
             pdf.showPage()
 
