@@ -1120,7 +1120,7 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years') 
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__year=(anio))
+            # result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__years=(anio))
             # agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
 
             #generar el PDF 
@@ -1134,9 +1134,9 @@ def generarPDFtotales(request):
             titulo = "REPORTE FINAL DE ACREDITACIÓN"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
-            pos_x = (ancho_pagina - ancho_texto) / 2
-            # Definir la posición vertical
-            pos_y = altura_pagina - 2*cm
+            # pos_x = (ancho_pagina - ancho_texto) / 2
+            # # Definir la posición vertical
+            # pos_y = altura_pagina - 2*cm
 
             x = 1.5*cm
 
