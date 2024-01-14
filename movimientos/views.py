@@ -1076,7 +1076,7 @@ def generaInformes(request):
             # pos_x = (ancho_pagina - ancho_texto) / 2
             # # Definir la posición vertical
             # pos_y = altura_pagina - 2*cm
-            
+
 
             x = 25*cm 
             pdf.drawString(4*cm, x,titulo )
@@ -1113,6 +1113,56 @@ def generaInformes(request):
         return render(request, 'informes.html', {'form':form})
 
 
+def generarPDFtotales(request):
+
+    form = formBuscarInformes()
+
+    if request.method == 'POST':
+            anio = request.POST.get('years') 
+
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__year=(anio))
+            agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
+
+            #generar el PDF 
+            buffer = BytesIO()
+            tamano_pagina =  (20*cm, 10*cm)
+            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+
+            ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+    
+            ####TITULO#########
+            titulo = "REPORTE FINAL DE ACREDITACIÓN"
+            ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
+            # Calcular la posición horizontal para centrar
+            pos_x = (ancho_pagina - ancho_texto) / 2
+            # Definir la posición vertical
+            pos_y = altura_pagina - 2*cm
+
+            x = 1.5*cm
+
+            for i in agrupacion:
+                # cliente = str(i['nombre'])
+                cliente = str(i['cliente'])
+                total = str((i['total_registros']))
+                # pdf.drawString(2*cm, x,cliente )
+                pdf.drawString(4*cm, x,cliente )
+                pdf.drawString(6*cm, x,total )
+                x += 0.5*cm
+
+            pdf.showPage()
+
+            pdf.save()
+
+            buffer.seek(0)
+            nombre_archivo = str('Totales_Por_Cliente')+'.pdf'
+            response = HttpResponse(buffer, content_type='application/pdf')
+            response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+            return response  
+
+            
+    else:
+
+        return render(request, 'informes.html', {'form':form})
 
 
     
