@@ -24,6 +24,7 @@ from reportlab.lib import fonts
 from datetime import date, timedelta
 from django.db.models.functions import TruncDate
 from django.db.models import Count, Sum
+from django.db.models import F
 
 
 # Create your views here. 
@@ -1132,6 +1133,8 @@ def generarPDFtotales(request):
 
     if request.method == 'POST':
             anio = request.POST.get('years')
+
+            result_busqueda = vista_movimiento_radios_tipos.objects.annotate(anio_salida=F('fecha_salida__year')).filter(anio_salida=anio)
             
             # result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__year=anio)
             # agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
