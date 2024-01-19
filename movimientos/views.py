@@ -1108,7 +1108,10 @@ def generaInformes(request):
             x += 1*cm
             resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
             total_final = resultado_final['total_final']
-            pdf.drawString(10*cm, altura_pagina - x,str(total_final) )
+
+            pdf.drawString(12*cm, altura_pagina - x,"_______________" )
+            x += 1*cm
+            pdf.drawString(13*cm, altura_pagina - x,str(total_final) )
             
             pdf.showPage()
 
