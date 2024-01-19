@@ -1059,7 +1059,7 @@ def generaInformes(request):
             cliente = form_buscar.cleaned_data['cliente']
 
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(desde,hasta), cliente = cliente, estado = 'F')
-            agrupacion = result_busqueda.values('id_salida', 'fecha_salida').annotate(total_registros=Count('serialrx'))
+            agrupacion = result_busqueda.values('id_orden', 'fecha_salida').annotate(total_registros=Count('serialrx'))
 
             datos = agrupacion
 
@@ -1090,7 +1090,7 @@ def generaInformes(request):
 
             ###### TITULOS COLUMNAS############
             x = 4.5*cm
-            pdf.drawString(3*cm, altura_pagina - x, "N° SALIDA")
+            pdf.drawString(3*cm, altura_pagina - x, "N° ORDEN")
             pdf.drawString(7*cm, altura_pagina - x, "FECHA")
             pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
 
@@ -1100,7 +1100,7 @@ def generaInformes(request):
             for i in agrupacion:
                 cantidad = str(i['total_registros'])
                 fecha = str((i['fecha_salida']))
-                salida = str(i['id_salida'])
+                salida = str(i['id_orden'])
                 pdf.drawString(4*cm, altura_pagina - x,salida )
                 pdf.drawString(6*cm, altura_pagina - x,fecha )
                 pdf.drawString(13*cm, altura_pagina - x,cantidad )
