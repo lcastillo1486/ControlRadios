@@ -1133,7 +1133,7 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
             
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_creacion__year=(anio))
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__year=(anio))
             agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
 
             #generar el PDF 
@@ -1141,17 +1141,31 @@ def generarPDFtotales(request):
             pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
-    
-            ####TITULO#########
-            titulo = "REPORTE RADIOS"
+
+           ####TITULO#########
+            titulo = "REPORTE SALIDAS RADIOS"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
             pos_x = (ancho_pagina - ancho_texto) / 2
             # Definir la posición vertical
-            pos_y = altura_pagina - 2*cm
-
+            pos_y = altura_pagina - 2*cm         
             
-            x = 1.5*cm
+            # ESCRIBIR DATOS DEL PDF ####
+            ####TITULO#########
+            pdf.setFillColorRGB(0, 0, 1)
+            pdf.drawString(pos_x, pos_y, titulo)
+
+            ####NOMBRE DEL CLIENTE#########
+            pos_y = altura_pagina - 3*cm
+            pdf.setFillColorRGB(1, 0, 0)
+            pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
+            pdf.setFillColorRGB(0, 0, 0)
+
+            ###### TITULOS COLUMNAS############
+            x = 4.5*cm
+            pdf.drawString(3*cm, altura_pagina - x, "N° SALIDA")
+            pdf.drawString(7*cm, altura_pagina - x, "FECHA")
+            pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
 
             # for i in agrupacion:
             #     # cliente = str(i['nombre'])
