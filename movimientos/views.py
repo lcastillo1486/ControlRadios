@@ -1064,42 +1064,52 @@ def generaInformes(request):
 
             #generar el PDF 
             buffer = BytesIO()
-            # tamano_pagina =  (20*cm, 10*cm)
             pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
-    
+
             ####TITULO#########
             titulo = "REPORTE SALIDAS RADIOS"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
-            # pos_x = (ancho_pagina - ancho_texto) / 2
-            # # Definir la posición vertical
-            # pos_y = altura_pagina - 2*cm
+            pos_x = (ancho_pagina - ancho_texto) / 2
+            # Definir la posición vertical
+            pos_y = altura_pagina - 2*cm         
+            
+            # ESCRIBIR DATOS DEL PDF ####
+            ####TITULO#########
+            pdf.setFillColorRGB(0, 0, 1)
+            pdf.drawString(pos_x, pos_y, titulo)
+
+            ####NOMBRE DEL CLIENTE#########
+            pos_y = altura_pagina - 3*cm
+            pdf.setFillColorRGB(1, 0, 0)
+            pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
+            pdf.setFillColorRGB(0, 0, 0)
+
+            ###### TITULOS COLUMNAS############
+            x = 4.5*cm
+            pdf.drawString(3*cm, altura_pagina - x, "N° SALIDA")
+            pdf.drawString(7*cm, altura_pagina - x, "FECHA")
+            pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
 
 
-            x = 25*cm 
-            pdf.drawString(4*cm, x,titulo )
-            # pdf.drawString(4*cm, 24*cm,cliente )
-
-
-            x = 20*cm
+            x = 5.0*cm
             # cliente = str(i.nombre)
             for i in agrupacion:
-                # cliente = str(i['nombre'])
                 cantidad = str(i['total_registros'])
                 fecha = str((i['fecha_salida']))
                 salida = str(i['id_salida'])
-                # pdf.drawString(2*cm, x,cliente )
-                pdf.drawString(12*cm, x,cantidad )
-                pdf.drawString(6*cm, x,fecha )
-                pdf.drawString(4*cm, x,salida )
+                pdf.drawString(4*cm, altura_pagina - x,salida )
+                pdf.drawString(6*cm, altura_pagina - x,fecha )
+                pdf.drawString(12*cm, altura_pagina - x,cantidad )
                 x += 0.5*cm
             
+            x += 1*cm
             resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
-
-            pdf.drawString(15*cm, 15*cm,str(resultado_final) )
-
+            total_final = resultado_final['total_final']
+            pdf.drawString(10*cm, altura_pagina - x,str(total_final) )
+            
             pdf.showPage()
 
             pdf.save()
@@ -1125,19 +1135,19 @@ def generarPDFtotales(request):
 
             #generar el PDF 
             buffer = BytesIO()
-            tamano_pagina =  (20*cm, 10*cm)
-            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+            pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
     
             ####TITULO#########
-            titulo = "REPORTE FINAL DE ACREDITACIÓN"
+            titulo = "REPORTE RADIOS"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
-            # pos_x = (ancho_pagina - ancho_texto) / 2
-            # # Definir la posición vertical
-            # pos_y = altura_pagina - 2*cm
+            pos_x = (ancho_pagina - ancho_texto) / 2
+            # Definir la posición vertical
+            pos_y = altura_pagina - 2*cm
 
+            
             x = 1.5*cm
 
             # for i in agrupacion:
