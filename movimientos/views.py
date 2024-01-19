@@ -1079,11 +1079,11 @@ def generaInformes(request):
             o = 60
             z = letter[1] - image_height
 
-            image_width01 = 200
-            image_height01 = 80
+            image_width01 = 150
+            image_height01 = 60
 
             o1 = 2*cm
-            z2 = 25*cm
+            z2 = 27*cm
             
             # Agrega la imagen al documento PDF
             pdf.drawImage(image_path1, o1, z2, width=image_width01, height=image_height01)
