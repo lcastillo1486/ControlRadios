@@ -1134,9 +1134,12 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.annotate(anio_salida=F('fecha_salida__year')).filter(anio_salida=anio)
             
-            # result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__year=anio)
+            
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
+        f'{anio}-01-01',
+        f'{anio}-12-31'
+    ))
             # agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
 
             #generar el PDF 
