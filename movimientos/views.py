@@ -1083,7 +1083,7 @@ def generaInformes(request):
             image_height01 = 80
 
             o1 = 60
-            z2 = 25
+            z2 = 1
             
             # Agrega la imagen al documento PDF
             pdf.drawImage(image_path1, o1, z2, width=image_width01, height=image_height01)
