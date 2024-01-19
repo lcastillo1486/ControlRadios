@@ -1105,6 +1105,8 @@ def generaInformes(request):
             pos_y = altura_pagina - 3*cm
             pdf.setFillColorRGB(1, 0, 0)
             pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
+            pos_y = altura_pagina - 3.5*cm
+            pdf.drawString(3*cm, pos_y, "Desde: "+ str(desde) + "Hasta:" + str(hasta))
             pdf.setFillColorRGB(0, 0, 0)
 
             ###### TITULOS COLUMNAS############
