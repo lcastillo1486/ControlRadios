@@ -1102,14 +1102,14 @@ def generaInformes(request):
                 salida = str(i['id_salida'])
                 pdf.drawString(4*cm, altura_pagina - x,salida )
                 pdf.drawString(6*cm, altura_pagina - x,fecha )
-                pdf.drawString(12*cm, altura_pagina - x,cantidad )
+                pdf.drawString(13*cm, altura_pagina - x,cantidad )
                 x += 0.5*cm
             
             x += 1*cm
             resultado_final = agrupacion.aggregate(total_final=Sum('total_registros'))
             total_final = resultado_final['total_final']
 
-            pdf.drawString(12*cm, altura_pagina - x,"_______________" )
+            pdf.drawString(12*cm, altura_pagina - x,"____________" )
             x += 1*cm
             pdf.drawString(13*cm, altura_pagina - x,str(total_final) )
             
