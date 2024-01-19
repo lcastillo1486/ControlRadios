@@ -1063,11 +1063,30 @@ def generaInformes(request):
 
             datos = agrupacion
 
+            #########IMAGEN#########
+
+            image1_filename = 'logo_22.jpg'
+            image_path1 = f'radios/static/{image1_filename}'
+
             #generar el PDF 
             buffer = BytesIO()
             pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+
+            # Calcula el tamaño y posición de la imagen
+            image_height = 60
+            o = 60
+            z = letter[1] - image_height
+
+            image_width01 = 200
+            image_height01 = 80
+
+            o1 = 60
+            z2 = z - image_height -20
+            
+            # Agrega la imagen al documento PDF
+            pdf.drawImage(image_path1, o1, z2, width=image_width01, height=image_height01)
 
             ####TITULO#########
             titulo = "REPORTE SALIDAS RADIOS"
