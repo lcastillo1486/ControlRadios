@@ -813,9 +813,9 @@ def pdfguiadevueltos(request, id):
 
     d = radios
 
-    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'EP 450 (Amarillas)').count()
-    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Moradas)').count()
-    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Plomo)').count()
+    rx_amarillas = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'EP 450 (Amarillas)', estado = 'F').count()
+    rx_moradas =  vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Moradas)', estado = 'F').count()
+    rx_plomo = vista_movimiento_radios_tipos.objects.filter(id_salida = salida_id, tipo = 'DEP 450 (Plomo)', estado = 'F').count()
 
     amarillas = rx_amarillas
     moradas = rx_moradas
