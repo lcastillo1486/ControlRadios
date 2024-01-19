@@ -1131,7 +1131,7 @@ def generaInformes(request):
 
             pdf.drawString(12*cm, altura_pagina - x,"____________" )
             x += 1*cm
-            pdf.drawString(13*cm, altura_pagina - x,str(total_final) )
+            pdf.drawString(13*cm, altura_pagina - x,"TOTAL: " + str(total_final) )
             
             pdf.showPage()
 
