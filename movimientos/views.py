@@ -1219,7 +1219,7 @@ def generarPDFtotales(request):
 
             ##########GRAFICO#################
 
-            etiquetas1 = [mes['meses'] for mes in agrupacion_por_mes]
+            etiquetas1 = [mes['mes'] for mes in agrupacion_por_mes]
             valores1 = [cantidad['total_registros'] for cantidad in agrupacion_por_mes]
             fig1, ax1 = ptl.subplots()
             fig1.set_facecolor('#000000')
