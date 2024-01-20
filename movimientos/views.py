@@ -1161,12 +1161,8 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
-            f'{anio}-01-01',
-            f'{anio}-12-31'))
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(f'{anio}-01-01', f'{anio}-12-31'))
 
-            for i in result_busqueda:
-                a = i['tipo']
 
 
             #generar el PDF 
@@ -1198,7 +1194,7 @@ def generarPDFtotales(request):
             x = 4.5*cm
             pdf.drawString(3*cm, altura_pagina - x, "N° SALIDA")
             pdf.drawString(7*cm, altura_pagina - x, "FECHA")
-            pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
+            pdf.drawString(12*cm, altura_pagina - x, result_busqueda)
 
             x = 5.5*cm
             # Extrae los meses y los totales por mes
