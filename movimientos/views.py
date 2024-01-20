@@ -1168,6 +1168,7 @@ def generarPDFtotales(request):
             f'{anio}-12-31' ), estado = 'F')
 
             agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+            agrupacion_por_tipo = result_busqueda.annotate(tipo = ('tipo')).values('tipo').annotate(total_registros=Count('serialrx')).values('tipo', 'total_registros')
 
 
 
@@ -1224,7 +1225,7 @@ def generarPDFtotales(request):
 
             pdf.drawString(3*cm, altura_pagina - x, "Total año "+ str(anio) + " = " + str(total_final))
 
-            ##########GRAFICO#################
+            ##########GRAFICO MES #################
 
             etiquetas1 = [mes['mes'].strftime('%B') for mes in agrupacion_por_mes]
             valores1 = [cantidad['total_registros'] for cantidad in agrupacion_por_mes]
@@ -1242,6 +1243,25 @@ def generarPDFtotales(request):
 
             x = 18*cm
             pdf.drawImage((grafico2), 300, x, width=250, height=200)
+
+             ##########GRAFICO TIPO #################
+
+            etiquetas2 = [tipo['tipo'].strftime('%B') for tipo in agrupacion_por_tipo]
+            valores2 = [cantidad['total_registros'] for cantidad in agrupacion_por_tipo]
+            fig2, ax2 = ptl.subplots()
+            fig2.set_facecolor('white')
+            ax2.pie(valores2, labels=etiquetas2,autopct='%1.1f%%',startangle=140, shadow=True, textprops={'color': 'black'})
+            ax2.axis('equal')
+            ax2.set_title('Distribución por Tipo', fontweight='bold', fontdict={'color': 'black', 'fontsize': 16})
+
+            buffer2 = BytesIO()
+            ptl.savefig(buffer2, format='png')
+            buffer2.seek(0)
+            image_base6412 = base64.b64encode(buffer2.read()).decode()
+            grafico3 = "data:image/png;base64," + image_base6412
+
+            x = 10*cm
+            pdf.drawImage((grafico3), 300, x, width=250, height=200)
 
             
 
