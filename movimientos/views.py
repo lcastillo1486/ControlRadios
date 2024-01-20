@@ -27,6 +27,7 @@ from django.db.models import Count, Sum
 from django.db.models import F
 from django.db.models.functions import TruncMonth
 from django.db.models.functions import ExtractMonth
+from django.db.models import Case, When, Value, IntegerField, CharField
 
 
 # Create your views here. 
@@ -1159,9 +1160,26 @@ def generarPDFtotales(request):
 
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
             f'{anio}-01-01',
-            f'{anio}-12-31' ))
+            f'{anio}-12-31' )).annotate(mes=Case(
+            When(fecha_salida__month=1, then=Value('Enero')),  # Domingo
+            When(fechasalida__month=2, then=Value('Febrero')),  # Lunes
+            When(fechasalida__month=3, then=Value('Marzo')),  # Martes
+            When(fechasalida__month=4, then=Value('Abril')),  # Miércoles
+            When(fechasalida__month=5, then=Value('Mayo')),  # Jueves
+            When(fechasalida__month=6, then=Value('Junio')),  # Viernes
+            When(fechasalida__month=7, then=Value('Julio')),
+            When(fechasalida__month=8, then=Value('Agosto')),  # Martes
+            When(fechasalida__month=9, then=Value('Septiembre')),  # Miércoles
+            When(fechasalida__month=10, then=Value('Octubre')),  # Jueves
+            When(fechasalida__month=11, then=Value('Noviembre')),  # Viernes
+            When(fechasalida__month=12, then=Value('Diciembre')),
+            output_field=CharField(),
+                )
+            ).values('mes').annotate(
+                total=Count('serialrx')
+            )
             
-            agrupacion_por_mes = result_busqueda.annotate(mes=ExtractMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+            # agrupacion_por_mes = result_busqueda.annotate(mes=ExtractMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
 
 
             #generar el PDF 
@@ -1197,12 +1215,12 @@ def generarPDFtotales(request):
 
             x = 5.5*cm
             # Extrae los meses y los totales por mes
-            for meses in agrupacion_por_mes:
-                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
-                pdf.drawString(3*cm, altura_pagina - x, result)
-                x += 0.5*cm
+            # for meses in agrupacion_por_mes:
+            #     result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
+            #     pdf.drawString(3*cm, altura_pagina - x, result)
+            #     x += 0.5*cm
 
-            x += 1*cm
+            # x += 1*cm
 
 
             pdf.showPage()
