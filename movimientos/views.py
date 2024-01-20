@@ -1219,10 +1219,10 @@ def generarPDFtotales(request):
 
             ##########GRAFICO#################
 
-            etiquetas1 = [mes['mes'] for mes in agrupacion_por_mes]
+            etiquetas1 = [mes['mes'].strftime('%B') for mes in agrupacion_por_mes]
             valores1 = [cantidad['total_registros'] for cantidad in agrupacion_por_mes]
             fig1, ax1 = ptl.subplots()
-            fig1.set_facecolor('#000000')
+            fig1.set_facecolor('white')
             ax1.pie(valores1, labels=etiquetas1,autopct='%1.1f%%',startangle=140, shadow=True, textprops={'color': 'white'})
             ax1.axis('equal')
             ax1.set_title('Distribución por Mes', fontweight='bold', fontdict={'color': 'white', 'fontsize': 16})
@@ -1233,8 +1233,8 @@ def generarPDFtotales(request):
             image_base641 = base64.b64encode(buffer1.read()).decode()
             grafico2 = "data:image/png;base64," + image_base641
 
-            x += 5*cm
-            pdf.drawImage((grafico2), 350, x, width=200, height=200)
+            x = 4.5*cm
+            pdf.drawImage((grafico2), 350, x, width=250, height=200)
 
             ###########MOSTRAR EL PDF###########
             pdf.showPage()
