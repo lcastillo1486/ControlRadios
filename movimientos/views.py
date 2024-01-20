@@ -1162,7 +1162,9 @@ def generarPDFtotales(request):
 
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
             f'{anio}-01-01',
-            f'{anio}-12-31' )).annotate(mes=Extract('fecha_salida')).values('mes')
+            f'{anio}-12-31' ))
+
+            agrupacion_por_mes = result_busqueda.annotate(mes=Extract('month', 'fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
 
 
 
