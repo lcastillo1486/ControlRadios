@@ -1222,7 +1222,7 @@ def generarPDFtotales(request):
             resultado_final = agrupacion_por_mes.aggregate(total_final=Sum('total_registros'))
             total_final = resultado_final['total_final']
 
-            pdf.drawString(3*cm, altura_pagina - x, "Total año "+ anio + "= " + total_final)
+            pdf.drawString(3*cm, altura_pagina - x, "Total año "+ str(anio) + "= " + str(total_final))
 
             ##########GRAFICO#################
 
