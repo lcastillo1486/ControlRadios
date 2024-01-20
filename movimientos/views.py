@@ -25,6 +25,7 @@ from datetime import date, timedelta
 from django.db.models.functions import TruncDate
 from django.db.models import Count, Sum
 from django.db.models import F
+from django.db.models.functions import TruncMonth
 
 
 # Create your views here. 
@@ -1155,13 +1156,12 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
 
-            
-            
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
-        f'{anio}-01-01',
-        f'{anio}-12-31'
-    ))
-            # agrupacion = result_busqueda.values('cliente').annotate(total_registros=Count('serialrx'))
+            f'{anio}-01-01',
+            f'{anio}-12-31' ))
+            
+            agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+
 
             #generar el PDF 
             buffer = BytesIO()
@@ -1170,7 +1170,7 @@ def generarPDFtotales(request):
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
 
            ####TITULO#########
-            titulo = "REPORTE SALIDAS RADIOS"
+            titulo = "REPORTE SALIDAS RADIOS TOTAL POR MES"
             ancho_texto = pdf.stringWidth(titulo, "Helvetica", 12)
             # Calcular la posición horizontal para centrar
             pos_x = (ancho_pagina - ancho_texto) / 2
@@ -1185,7 +1185,7 @@ def generarPDFtotales(request):
             ####NOMBRE DEL CLIENTE#########
             pos_y = altura_pagina - 3*cm
             pdf.setFillColorRGB(1, 0, 0)
-            pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
+            # pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
             pdf.setFillColorRGB(0, 0, 0)
 
             ###### TITULOS COLUMNAS############
@@ -1194,14 +1194,15 @@ def generarPDFtotales(request):
             pdf.drawString(7*cm, altura_pagina - x, "FECHA")
             pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
 
-            # for i in agrupacion:
-            #     # cliente = str(i['nombre'])
-            #     cliente = str(i['cliente'])
-            #     total = str((i['total_registros']))
-            #     # pdf.drawString(2*cm, x,cliente )
-            #     pdf.drawString(4*cm, x,cliente )
-            #     pdf.drawString(6*cm, x,total )
-            #     x += 0.5*cm
+            x = 5.5*cm
+            # Extrae los meses y los totales por mes
+            for meses in agrupacion_por_mes:
+                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
+                pdf.drawString(3*cm, altura_pagina - x, result)
+                x += 0.5*cm
+
+            x += 1*cm
+
 
             pdf.showPage()
 
