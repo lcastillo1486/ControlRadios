@@ -29,6 +29,7 @@ from django.db.models.functions import TruncMonth
 from django.db.models.functions import ExtractMonth
 from django.db.models import Case, When, Value, IntegerField, CharField
 from django.db.models.functions import Extract
+from collections import defaultdict
 
 
 
@@ -1165,8 +1166,18 @@ def generarPDFtotales(request):
             f'{anio}-12-31' ))
 
             ### hacer otra vista por mes 
+            agrupacion_por_mes1 = result_busqueda.annotate(total_registros=Count('serialrx')).values('total_registros')
+            agrupacion_por_mes = defaultdict(list)
 
-            agrupacion_por_mes = result_busqueda.annotate(total_registros=Count('serialrx')).values('total_registros')
+            for registro in agrupacion_por_mes1:
+                mes = registro['fecha_salida'].month
+                agrupacion_por_mes[mes].append(registro)
+            
+            # Mostrar el resultado
+            for mes, registros in agrupacion_por_mes.items():
+                total_registros = len(registros)
+                print(f'Mes: {mes}, Total de Registros: {total_registros}')
+
 
 
 
