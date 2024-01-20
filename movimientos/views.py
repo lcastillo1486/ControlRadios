@@ -1233,8 +1233,8 @@ def generarPDFtotales(request):
             image_base641 = base64.b64encode(buffer1.read()).decode()
             grafico2 = "data:image/png;base64," + image_base641
 
-            x = 17*cm
-            pdf.drawImage((grafico2), 350, x, width=250, height=200)
+            x = 18*cm
+            pdf.drawImage((grafico2), 300, x, width=250, height=200)
 
             ###########MOSTRAR EL PDF###########
             pdf.showPage()
