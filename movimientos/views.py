@@ -1215,7 +1215,14 @@ def generarPDFtotales(request):
                 pdf.drawString(3*cm, altura_pagina - x, result)
                 x += 0.5*cm
 
-            x += 1*cm
+            x += 2*cm
+
+            ##########TOTAL GENERAL#############
+
+            resultado_final = agrupacion_por_mes.aggregate(total_final=Sum('total_registros'))
+            total_final = resultado_final['total_final']
+
+            pdf.drawString(3*cm, altura_pagina - x, "Total año "+ anio + "= " + total_final)
 
             ##########GRAFICO#################
 
@@ -1235,6 +1242,8 @@ def generarPDFtotales(request):
 
             x = 18*cm
             pdf.drawImage((grafico2), 300, x, width=250, height=200)
+
+            
 
             ###########MOSTRAR EL PDF###########
             pdf.showPage()
