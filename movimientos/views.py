@@ -1161,16 +1161,12 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
 
-            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_normal__range=(
+            result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
             f'{anio}-01-01',
-            f'{anio}-12-31' ))
+            f'{anio}-12-31'))
 
-            # agrupacion_por_mes = vista_movimiento_radios_tipos.objects.filter(fecha_normal__range=(
-            # f'{anio}-01-01',
-            # f'{anio}-12-31' )).annotate(mes=TruncMonth('fecha_normal')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
-
-            # for i in result_busqueda:
-            #     a = i.fecha_salida
+            for i in result_busqueda:
+                a = i['tipo']
 
 
             #generar el PDF 
