@@ -31,8 +31,7 @@ from django.db.models import Case, When, Value, IntegerField, CharField
 from django.db.models.functions import Extract
 from collections import defaultdict
 import calendar
-import matplotlib.pyplot as ptl
-import base64
+
 
 # Create your views here. 
 
