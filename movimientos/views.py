@@ -1165,6 +1165,8 @@ def generarPDFtotales(request):
             f'{anio}-01-01',
             f'{anio}-12-31' ))
 
+            agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+
 
 
             #generar el PDF 
