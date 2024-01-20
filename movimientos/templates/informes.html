@@ -88,8 +88,8 @@
     <h1> Estadísticas </h1>
 
     <div class="row">
-        <div style="text-align: left;" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
-            <h2>Reporte de Radios</h2>
+        <div style="text-align: left; margin-left: 10px;" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <h2>Reporte de Salidas Radios Por Cliente</h2>
             <form action='/informe/' method="POST">
                 {% csrf_token %}
                 {{form}}
@@ -103,12 +103,14 @@
                 </style>
             </form>
         </div>
+        <br>
         <div style="background-color: #0047ab; text-align: right; color: #0047ab; margin-right: 0px;">.</div>
+        <br>
 
     </div>
     
     <div class="row">
-        <div style="text-align: left;" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+        <div style="text-align: left; margin-left: 10px;" class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
 
           <h2>Reporte de Totales por Mes</h2>
             <form action="/informePdfTotales/" method="POST">
