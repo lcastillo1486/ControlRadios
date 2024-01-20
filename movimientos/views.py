@@ -1221,7 +1221,8 @@ def generarPDFtotales(request):
             total_final = resultado_final['total_final']
 
             pdf.drawString(3*cm, altura_pagina - x, "Total año "+ str(anio) + " = " + str(total_final))
-
+            x += 2*cm
+            
              ##########TOTAL GENERAL TIPO#############
             for tipo in agrupacion_por_tipo:
                 result_tipo = f"{tipo['tipo']}    =     {tipo['total_registros']}"
@@ -1229,6 +1230,7 @@ def generarPDFtotales(request):
                 x += 0.5*cm
 
             x += 2*cm
+
 
 
             ##########GRAFICO MES #################
