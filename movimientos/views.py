@@ -1168,7 +1168,7 @@ def generarPDFtotales(request):
             f'{anio}-12-31' ), estado = 'F')
 
             agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
-            agrupacion_por_tipo = result_busqueda.annotate(tipo = ('tipo')).values('tipo').annotate(total_registros=Count('serialrx')).values('tipo', 'total_registros')
+            agrupacion_por_tipo = result_busqueda.values('tipo').annotate(total_registros=Count('serialrx')).values('tipo', 'total_registros')
 
 
 
@@ -1246,7 +1246,7 @@ def generarPDFtotales(request):
 
              ##########GRAFICO TIPO #################
 
-            etiquetas2 = [tipo['tipo'].strftime('%B') for tipo in agrupacion_por_tipo]
+            etiquetas2 = [tipo['tipo'] for tipo in agrupacion_por_tipo]
             valores2 = [cantidad['total_registros'] for cantidad in agrupacion_por_tipo]
             fig2, ax2 = ptl.subplots()
             fig2.set_facecolor('white')
