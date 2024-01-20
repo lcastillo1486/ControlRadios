@@ -1170,9 +1170,6 @@ def generarPDFtotales(request):
             agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
             agrupacion_por_tipo = result_busqueda.values('tipo').annotate(total_registros=Count('serialrx')).values('tipo', 'total_registros')
 
-
-
-
             #generar el PDF 
             buffer = BytesIO()
             pdf = canvas.Canvas(buffer)
@@ -1224,6 +1221,15 @@ def generarPDFtotales(request):
             total_final = resultado_final['total_final']
 
             pdf.drawString(3*cm, altura_pagina - x, "Total año "+ str(anio) + " = " + str(total_final))
+
+             ##########TOTAL GENERAL TIPO#############
+            for tipo in agrupacion_por_tipo:
+                result_tipo = f"{tipo['tipo']}    =     {tipo['total_registros']}"
+                pdf.drawString(3*cm, altura_pagina - x, result_tipo)
+                x += 0.5*cm
+
+            x += 2*cm
+
 
             ##########GRAFICO MES #################
 
