@@ -1169,6 +1169,7 @@ def generarPDFtotales(request):
 
 
 
+
             #generar el PDF 
             buffer = BytesIO()
             pdf = canvas.Canvas(buffer)
@@ -1202,12 +1203,12 @@ def generarPDFtotales(request):
 
             x = 5.5*cm
             # Extrae los meses y los totales por mes
-            # for meses in agrupacion_por_mes:
-            #     result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
-            #     pdf.drawString(3*cm, altura_pagina - x, result)
-            #     x += 0.5*cm
+            for meses in agrupacion_por_mes:
+                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
+                pdf.drawString(3*cm, altura_pagina - x, result)
+                x += 0.5*cm
 
-            # x += 1*cm
+            x += 1*cm
 
 
             pdf.showPage()
