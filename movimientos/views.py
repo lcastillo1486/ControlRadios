@@ -28,6 +28,8 @@ from django.db.models import F
 from django.db.models.functions import TruncMonth
 from django.db.models.functions import ExtractMonth
 from django.db.models import Case, When, Value, IntegerField, CharField
+from django.db.models.functions import Extract
+
 
 
 # Create your views here. 
@@ -1158,21 +1160,9 @@ def generarPDFtotales(request):
     if request.method == 'POST':
             anio = request.POST.get('years')
 
-            # result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
-            # f'{anio}-01-01',
-            # f'{anio}-12-31' )).annotate(mes=Case(
-            # When (ExtractMonth (fecha_salida = 1), then=Value('Enero')),  # Domingo
-            # output_field=CharField(),
-            #     )
-            # ).values('mes').annotate(
-            #     total=Count('serialrx')
-            # )
-            
-            # agrupacion_por_mes = result_busqueda.annotate(mes=ExtractMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
-
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(
             f'{anio}-01-01',
-            f'{anio}-12-31' )).annotate(mes=ExtractMonth('fecha_salida')).values('mes')
+            f'{anio}-12-31' )).annotate(mes=Extract('fecha_salida')).values('mes')
 
 
 
