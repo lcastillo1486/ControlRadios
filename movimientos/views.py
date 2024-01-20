@@ -26,6 +26,7 @@ from django.db.models.functions import TruncDate
 from django.db.models import Count, Sum
 from django.db.models import F
 from django.db.models.functions import TruncMonth
+from django.db.models.functions import ExtractMonth
 
 
 # Create your views here. 
@@ -1160,7 +1161,7 @@ def generarPDFtotales(request):
             f'{anio}-01-01',
             f'{anio}-12-31' ))
             
-            agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+            agrupacion_por_mes = result_busqueda.annotate(mes=ExtractMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
 
 
             #generar el PDF 
@@ -1196,12 +1197,12 @@ def generarPDFtotales(request):
 
             x = 5.5*cm
             # Extrae los meses y los totales por mes
-            # for meses in agrupacion_por_mes:
-            #     result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
-            #     pdf.drawString(3*cm, altura_pagina - x, result)
-            #     x += 0.5*cm
+            for meses in agrupacion_por_mes:
+                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
+                pdf.drawString(3*cm, altura_pagina - x, result)
+                x += 0.5*cm
 
-            # x += 1*cm
+            x += 1*cm
 
 
             pdf.showPage()
