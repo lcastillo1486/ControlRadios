@@ -1204,7 +1204,7 @@ def generarPDFtotales(request):
             x = 5.5*cm
             # Extrae los meses y los totales por mes
             for meses in agrupacion_por_mes:
-                result = f"Mes: {meses[calendar.month_name('mes')].strftime('%B')}    -    Cantidad: {meses['total_registros']}"
+                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
                 pdf.drawString(3*cm, altura_pagina - x, result)
                 x += 0.5*cm
 
