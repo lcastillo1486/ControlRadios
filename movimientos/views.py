@@ -1216,19 +1216,19 @@ def generarPDFtotales(request):
 
             x += 1*cm
 
-            etiquetas1 = [mes['meses'] for mes in agrupacion_por_mes]
-            valores1 = [cantidad['total_registros'] for cantidad in agrupacion_por_mes]
-            fig1, ax1 = ptl.subplots()
-            fig1.set_facecolor('#000000')
-            ax1.pie(valores1, labels=etiquetas1,autopct='%1.1f%%',startangle=140, shadow=True, textprops={'color': 'white'})
-            ax1.axis('equal')
-            ax1.set_title('Distribución por Mes', fontweight='bold', fontdict={'color': 'white', 'fontsize': 16})
+            # etiquetas1 = [mes['meses'] for mes in agrupacion_por_mes]
+            # valores1 = [cantidad['total_registros'] for cantidad in agrupacion_por_mes]
+            # fig1, ax1 = ptl.subplots()
+            # fig1.set_facecolor('#000000')
+            # ax1.pie(valores1, labels=etiquetas1,autopct='%1.1f%%',startangle=140, shadow=True, textprops={'color': 'white'})
+            # ax1.axis('equal')
+            # ax1.set_title('Distribución por Mes', fontweight='bold', fontdict={'color': 'white', 'fontsize': 16})
 
-            buffer1 = BytesIO()
-            ptl.savefig(buffer1, format='png')
-            buffer1.seek(0)
-            image_base641 = base64.b64encode(buffer1.read()).decode()
-            grafico2 = "data:image/png;base64," + image_base641
+            # buffer1 = BytesIO()
+            # ptl.savefig(buffer1, format='png')
+            # buffer1.seek(0)
+            # image_base641 = base64.b64encode(buffer1.read()).decode()
+            # grafico2 = "data:image/png;base64," + image_base641
 
 
 
