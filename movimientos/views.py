@@ -1234,7 +1234,7 @@ def generarPDFtotales(request):
             grafico2 = "data:image/png;base64," + image_base641
 
             x += 5*cm
-            pdf.drawImage((grafico2), 100, 500, width=100, height=100)
+            pdf.drawImage((grafico2), 350, x, width=200, height=200)
 
             ###########MOSTRAR EL PDF###########
             pdf.showPage()
