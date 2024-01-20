@@ -1162,17 +1162,17 @@ def generarPDFtotales(request):
             f'{anio}-01-01',
             f'{anio}-12-31' )).annotate(mes=Case(
             When(fecha_salida__month=1, then=Value('Enero')),  # Domingo
-            When(fechasalida__month=2, then=Value('Febrero')),  # Lunes
-            When(fechasalida__month=3, then=Value('Marzo')),  # Martes
-            When(fechasalida__month=4, then=Value('Abril')),  # Miércoles
-            When(fechasalida__month=5, then=Value('Mayo')),  # Jueves
-            When(fechasalida__month=6, then=Value('Junio')),  # Viernes
-            When(fechasalida__month=7, then=Value('Julio')),
-            When(fechasalida__month=8, then=Value('Agosto')),  # Martes
-            When(fechasalida__month=9, then=Value('Septiembre')),  # Miércoles
-            When(fechasalida__month=10, then=Value('Octubre')),  # Jueves
-            When(fechasalida__month=11, then=Value('Noviembre')),  # Viernes
-            When(fechasalida__month=12, then=Value('Diciembre')),
+            When(fecha_salida__month=2, then=Value('Febrero')),  # Lunes
+            When(fecha_salida__month=3, then=Value('Marzo')),  # Martes
+            When(fecha_salida__month=4, then=Value('Abril')),  # Miércoles
+            When(fecha_salida__month=5, then=Value('Mayo')),  # Jueves
+            When(fecha_salida__month=6, then=Value('Junio')),  # Viernes
+            When(fecha_salida__month=7, then=Value('Julio')),
+            When(fecha_salida__month=8, then=Value('Agosto')),  # Martes
+            When(fecha_salida__month=9, then=Value('Septiembre')),  # Miércoles
+            When(fecha_salida__month=10, then=Value('Octubre')),  # Jueves
+            When(fecha_salida__month=11, then=Value('Noviembre')),  # Viernes
+            When(fecha_salida__month=12, then=Value('Diciembre')),
             output_field=CharField(),
                 )
             ).values('mes').annotate(
