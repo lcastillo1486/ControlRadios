@@ -1164,7 +1164,9 @@ def generarPDFtotales(request):
             f'{anio}-01-01',
             f'{anio}-12-31' ))
 
-            agrupacion_por_mes = result_busqueda.annotate(mes=Extract('month', 'fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+            ### hacer otra vista por mes 
+
+            agrupacion_por_mes = result_busqueda.annotate(total_registros=Count('serialrx')).values('total_registros')
 
 
 
