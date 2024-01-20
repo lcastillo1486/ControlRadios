@@ -1175,6 +1175,17 @@ def generarPDFtotales(request):
             pdf = canvas.Canvas(buffer)
 
             ancho_pagina, altura_pagina = letter = (21.59*cm, 27.94*cm)
+            image1_filename = 'logo_22.jpg'
+            image_path1 = f'radios/static/{image1_filename}'
+
+            image_width01 = 150
+            image_height01 = 60
+
+            o1 = 2*cm
+            z2 = 27*cm
+            
+            # Agrega la imagen al documento PDF
+            pdf.drawImage(image_path1, o1, z2, width=image_width01, height=image_height01)
 
            ####TITULO#########
             titulo = "REPORTE SALIDAS RADIOS TOTAL POR MES"
@@ -1195,16 +1206,10 @@ def generarPDFtotales(request):
             # pdf.drawString(3*cm, pos_y, "CLIENTE: "+ str(cliente))
             pdf.setFillColorRGB(0, 0, 0)
 
-            ###### TITULOS COLUMNAS############
             x = 4.5*cm
-            pdf.drawString(3*cm, altura_pagina - x, "N° SALIDA")
-            pdf.drawString(7*cm, altura_pagina - x, "FECHA")
-            pdf.drawString(12*cm, altura_pagina - x, "CANTIDAD")
-
-            x = 5.5*cm
             # Extrae los meses y los totales por mes
             for meses in agrupacion_por_mes:
-                result = f"Mes: {meses['mes'].strftime('%B %Y')}    -    Cantidad: {meses['total_registros']}"
+                result = f"Mes: {meses['mes'].strftime('%B')}    -    Cantidad: {meses['total_registros']}"
                 pdf.drawString(3*cm, altura_pagina - x, result)
                 x += 0.5*cm
 
@@ -1216,7 +1221,7 @@ def generarPDFtotales(request):
             pdf.save()
 
             buffer.seek(0)
-            nombre_archivo = str('Totales_Por_Cliente')+'.pdf'
+            nombre_archivo = ('Totales_Por_Mes_')+ anio +'.pdf'
             response = HttpResponse(buffer, content_type='application/pdf')
             response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
             return response  
