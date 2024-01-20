@@ -1165,8 +1165,8 @@ def generarPDFtotales(request):
             f'{anio}-01-01',
             f'{anio}-12-31' ))
 
-            for i in result_busqueda:
-                a = i.fecha_salida
+            # for i in result_busqueda:
+            #     a = i.fecha_salida
 
 
             #generar el PDF 
