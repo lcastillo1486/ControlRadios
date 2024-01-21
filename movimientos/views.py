@@ -1173,7 +1173,7 @@ def generaInformes(request):
             grafico = "data:image/png;base64," + image_base641
 
             x = 10*cm
-            pdf.drawImage((grafico), 300, x, width=250, height=200)
+            pdf.drawImage((grafico), 300, x, width=300, height=250)
             
             pdf.showPage()
 
