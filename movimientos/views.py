@@ -1153,14 +1153,14 @@ def generaInformes(request):
 
             ############GRAFICO BARRAS######
 
-            meses = [item['mes'] for item in agrupacion_por_mes]
+            meses = [item['mes'].strftime('%B') for item in agrupacion_por_mes]
             total_registros_por_mes = [item['total_registros'] for item in agrupacion_por_mes]
 
             # Convertir las fechas a cadenas legibles (opcional)
-            meses_legibles = [datetime.strftime(mes, '%B') for mes in meses]
+            # meses_legibles = [datetime.strftime(mes, '%B') for mes in meses]
 
             # Crear el gráfico de barras
-            ptl.bar(meses_legibles, total_registros_por_mes, color='blue')
+            ptl.bar(meses, total_registros_por_mes, color='blue')
 
             # Personalizar el gráfico (opcional)
             ptl.xlabel('Meses')
