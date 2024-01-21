@@ -1069,7 +1069,8 @@ def generaInformes(request):
             result_busqueda = vista_movimiento_radios_tipos.objects.filter(fecha_salida__range=(desde,hasta), cliente = cliente, estado = 'F')
             agrupacion = result_busqueda.values('id_orden', 'fecha_salida').annotate(total_registros=Count('serialrx'))
 
-            datos = agrupacion
+            agrupacion_por_mes = result_busqueda.annotate(mes=TruncMonth('fecha_salida')).values('mes').annotate(total_registros=Count('serialrx')).values('mes', 'total_registros')
+
 
             #########IMAGEN#########
 
@@ -1142,6 +1143,14 @@ def generaInformes(request):
             pdf.drawString(12*cm, altura_pagina - x,"____________" )
             x += 1*cm
             pdf.drawString(13*cm, altura_pagina - x,"TOTAL: " + str(total_final) )
+
+            x += 2*cm
+            for meses in agrupacion_por_mes:
+                result = f"{meses['mes'].strftime('%B')}    =     {meses['total_registros']}"
+                pdf.drawString(3*cm, altura_pagina - x, result)
+                x += 0.5*cm
+
+            x += 2*cm
             
             pdf.showPage()
 
@@ -1222,7 +1231,7 @@ def generarPDFtotales(request):
 
             pdf.drawString(3*cm, altura_pagina - x, "Total año "+ str(anio) + " = " + str(total_final))
             x += 2*cm
-            
+
              ##########TOTAL GENERAL TIPO#############
             for tipo in agrupacion_por_tipo:
                 result_tipo = f"{tipo['tipo']}    =     {tipo['total_registros']}"
