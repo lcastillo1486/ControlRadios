@@ -1161,7 +1161,7 @@ def generaInformes(request):
 
             # Personalizar el gráfico (opcional)
             ptl.xlabel('Meses')
-            ptl.ylabel('Total de Registros')
+            ptl.ylabel('Total de Radios')
             ptl.title('Gráfico de Barras por Mes')
             ptl.xticks(rotation=45)  # Rotar las etiquetas del eje x para mayor legibilidad
             ptl.grid(axis='y', linestyle='--', alpha=0.7)
