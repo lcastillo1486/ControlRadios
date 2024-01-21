@@ -1149,8 +1149,34 @@ def generaInformes(request):
                 result = f"{meses['mes'].strftime('%B')}    =     {meses['total_registros']}"
                 pdf.drawString(3*cm, altura_pagina - x, result)
                 x += 0.5*cm
-
             x += 2*cm
+
+            ############GRAFICO BARRAS######
+
+            meses = [item['mes'] for item in agrupacion_por_mes]
+            total_registros_por_mes = [item['total_registros'] for item in agrupacion_por_mes]
+
+            # Convertir las fechas a cadenas legibles (opcional)
+            meses_legibles = [datetime.strftime(mes, '%B') for mes in meses]
+
+            # Crear el gráfico de barras
+            ptl.bar(meses_legibles, total_registros_por_mes, color='blue')
+
+            # Personalizar el gráfico (opcional)
+            ptl.xlabel('Meses')
+            ptl.ylabel('Total de Registros')
+            ptl.title('Gráfico de Barras por Mes')
+            ptl.xticks(rotation=45)  # Rotar las etiquetas del eje x para mayor legibilidad
+            ptl.grid(axis='y', linestyle='--', alpha=0.7)
+
+            buffer1 = BytesIO()
+            ptl.savefig(buffer1, format='png')
+            buffer1.seek(0)
+            image_base641 = base64.b64encode(buffer1.read()).decode()
+            grafico = "data:image/png;base64," + image_base641
+
+            x = 18*cm
+            pdf.drawImage((grafico), 300, x, width=250, height=200)
             
             pdf.showPage()
 
