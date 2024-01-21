@@ -1156,11 +1156,8 @@ def generaInformes(request):
             meses = [item['mes'].strftime('%B') for item in agrupacion_por_mes]
             total_registros_por_mes = [item['total_registros'] for item in agrupacion_por_mes]
 
-            # Convertir las fechas a cadenas legibles (opcional)
-            # meses_legibles = [datetime.strftime(mes, '%B') for mes in meses]
-
             # Crear el gráfico de barras
-            ptl.bar(meses, total_registros_por_mes, color='blue')
+            ptl.bar(meses, total_registros_por_mes)
 
             # Personalizar el gráfico (opcional)
             ptl.xlabel('Meses')
@@ -1175,7 +1172,7 @@ def generaInformes(request):
             image_base641 = base64.b64encode(buffer1.read()).decode()
             grafico = "data:image/png;base64," + image_base641
 
-            x = 18*cm
+            x = 10*cm
             pdf.drawImage((grafico), 300, x, width=250, height=200)
             
             pdf.showPage()
