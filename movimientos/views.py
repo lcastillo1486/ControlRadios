@@ -124,6 +124,36 @@ def entradas(request, id):
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
+def entradastotal(request, id):
+
+#cambiar el estatus en el inventario de radios
+
+    radios_inv = movimientoRadios.objects.filter(id_salida = id, estado = "F")
+    for i in radios_inv:
+        serial = i.serial
+        cambiaestado =  invSeriales.objects.get(codigo = serial)
+        cambiaestado.estado_id = 4
+        cambiaestado.save()
+
+#buscar en movimientosradios todas las radios cargadas que sean F y cambiar el estado a D
+
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "F").update(estado='D')
+
+#crear registro en movimientoentradadetalle igual a la salida 
+#busca en movimientosalidadetalle con el ID
+    
+    salida = salidasDetalle.objects.get(id = id)
+
+#agrega un registro en entrada detalle  
+    mov_ent_detalle = entradaDetalle(id_salida = id, id_orden = salida.id_orden, fecha_creacion = salida.fecha_creacion, cobras = salida.cobras, 
+                                     cargadores = salida.cargadores, hadnsfree = salida.handsfree, cascos = salida.cascos, repetidoras = salida.repetidoras,
+                                     estaciones = salida.estaciones, baterias = salida.baterias)
+    
+    mov_ent_detalle.save()
+
+
+    return redirect('/ordenesDevueltas/')
+
 def salidas(request):
     fecha_actual = datetime.date.today()
     fecha_tope = datetime.date.today() + timedelta(days=2) 
