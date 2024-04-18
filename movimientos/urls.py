@@ -26,7 +26,7 @@ urlpatterns = [
     path('generaPDFprint/<int:id>',views.generarPDFprint),
     path('informe/',views.generaInformes),
     path('informePdfTotales/',views.generarPDFtotales),
-    path('entradastotal/<int:id>',views.entradastotal),
+    path('entradatotal/<int:id>',views.entradatotal),
 
 
 

@@ -124,7 +124,7 @@ def entradas(request, id):
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
-def entradastotal(request, id):
+def entradatotal(request, id):
 
 #cambiar el estatus en el inventario de radios
 
