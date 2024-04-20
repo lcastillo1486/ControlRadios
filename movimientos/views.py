@@ -126,6 +126,9 @@ def entradas(request, id):
 
 def entradatotal(request, id):
 
+    if not request.user.is_superuser:
+        return redirect('/ordenesCerradas/')
+
 #cambiar el estatus en el inventario de radios
 
     radios_inv = movimientoRadios.objects.filter(id_salida = id, estado = "F")
