@@ -124,7 +124,7 @@ def entradas(request, id):
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
 
-def entradatotal(request, id):
+def entradatotal(request, id, id_orden):
 
     if not request.user.is_superuser:
         return redirect('/ordenesCerradas/')
@@ -145,7 +145,7 @@ def entradatotal(request, id):
 #crear registro en movimientoentradadetalle igual a la salida 
 #busca en movimientosalidadetalle con el ID
     
-    salida = salidasDetalle.objects.get(id = id)
+    salida = salidasDetalle.objects.get(id_orden = id_orden)
 
 #agrega un registro en entrada detalle  
     mov_ent_detalle = entradaDetalle(id_salida = id, id_orden = salida.id_orden, fecha_creacion = salida.fecha_creacion, cobras = salida.cobras, 
