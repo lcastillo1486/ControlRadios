@@ -97,7 +97,7 @@
                         <td><a href='/entradas/{{c.id_salida}}' class="btn btn-success">Recibir</a></td>
                         <td><a href='/generaPDFGuia/{{c.id}}' target="_blank" class="btn btn-success">Guia</a></td>
                         <td><a href='/generaPDFprint/{{c.id}}' target="_blank" class="btn btn-primary">Etiqueta</a></td>
-                        <td><a href='/entradatotal/{{c.id_salida}}/{{c.id}}' title="" id="devolucion"
+                        <td><a href='/entradatotal/{{c.id_salida}}/{{c.id}}' title="" 
                             class="btn btn-danger">Devolución Total</a></td>
                     </tr>
                     {% endfor %}
@@ -109,19 +109,6 @@
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
     
-        <script>
-            document.getElementById('devolucion').addEventListener('click', function (event) {
-            event.preventDefault(); // Evita que se siga el enlace automáticamente
-            var confirmacion = confirm('!ATENCIóN¡ \n\ ¿Está seguro que desea continuar?');
-            if (confirmacion) {
-                // Si el usuario confirma, redirige a la URL o ejecuta la acción deseada
-                window.location.href = event.target.href; // Redirige a la URL del enlace
-            } else {
-                // Si el usuario cancela, no se realiza ninguna acción
-                return;
-            }
-        });
-        </script>
 </body>
 {% endblock %}
 </html>
