@@ -149,8 +149,8 @@ def entradatotal(request, id):
 
 #agrega un registro en entrada detalle  
     mov_ent_detalle = entradaDetalle(id_salida = id, id_orden = salida.id_orden, fecha_creacion = salida.fecha_creacion, cobras = salida.cobras, 
-                                     cargadores = salida.cargadores, hadnsfree = salida.handsfree, cascos = salida.cascos, repetidoras = salida.repetidoras,
-                                     estaciones = salida.estaciones, baterias = salida.baterias)
+                                     cargadores = salida.cargadores, handsfree = salida.handsfree, cascos = salida.cascos, repetidoras = salida.repetidoras,
+                                     estaciones = salida.estaciones, baterias = salida.baterias, observaciones = 'Devolución Total')
     
     mov_ent_detalle.save()
 
