@@ -129,7 +129,7 @@ def entradatotal(request, id, id_orden):
     if not request.user.is_superuser:
         return redirect('/ordenesCerradas/')
 
-#cambiar el estatus en el inventario de radios
+#cambiar el estatus en el inventario de radios 
 
     radios_inv = movimientoRadios.objects.filter(id_salida = id, estado = "F")
     for i in radios_inv:
@@ -138,9 +138,17 @@ def entradatotal(request, id, id_orden):
         cambiaestado.estado_id = 4
         cambiaestado.save()
 
-#buscar en movimientosradios todas las radios cargadas que sean F y cambiar el estado a D
+#buscar en movimientosradios todas las radios cargadas y crear un registro nueno con D
 
-    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "F").update(estado='D')
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "F")
+    for i in radiosCargadas:
+        salida = i.id_salida
+        serial = i.serial
+        estado = 'D'
+        id_tipo = i.id_tipo_id
+
+        graba_radio = movimientoRadios(id_salida = salida, serial = serial, estado = estado, id_tipo_id = id_tipo)
+        graba_radio.save()
 
 # cambiar el estado de la orden 
 
