@@ -142,15 +142,23 @@ def entradatotal(request, id, id_orden):
 
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "F").update(estado='D')
 
-#crear registro en movimientoentradadetalle igual a la salida 
-#busca en movimientosalidadetalle con el ID
+# cambiar el estado de la orden 
+
+    cambiaestadoorden = ordenRegistro.objects.filter(id = id_orden).update(estado_id = 4)
+
+#Buscar el nombre del cliente 
+
+    client = ordenRegistro.objects.get(id=id_orden)
+    client_id = client.cliente
+
+#busca en movimientosalidadetalle con el ID_ORDEN
     
     salida = salidasDetalle.objects.get(id_orden = id_orden)
 
 #agrega un registro en entrada detalle  
     mov_ent_detalle = entradaDetalle(id_salida = id, id_orden = salida.id_orden, fecha_creacion = salida.fecha_creacion, cobras = salida.cobras, 
                                      cargadores = salida.cargadores, handsfree = salida.handsfree, cascos = salida.cascos, repetidoras = salida.repetidoras,
-                                     estaciones = salida.estaciones, baterias = salida.baterias, observaciones = 'Devolución Total')
+                                     estaciones = salida.estaciones, baterias = salida.baterias, observaciones = 'Devolución Total', cliente = client_id)
     
     mov_ent_detalle.save()
 
