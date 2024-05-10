@@ -27,6 +27,7 @@ urlpatterns = [
     path('informe/',views.generaInformes),
     path('informePdfTotales/',views.generarPDFtotales),
     path('entradatotal/<int:id>/<int:id_orden>',views.entradatotal),
+    path('auditoria/',views.auditoria),
 
 
 

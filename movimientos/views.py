@@ -1369,6 +1369,10 @@ def generarPDFtotales(request):
     else:
 
         return render(request, 'informes.html', {'form':form})
+    
+
+def auditoria(request):
+    return render(request, 'auditoria.html')
 
 
     
