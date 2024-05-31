@@ -366,6 +366,12 @@ def inventario(request):
     amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
     moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
     plomo_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 3).count()
+    amarillas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 1).count()
+    moradas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 2).count()
+    plomo_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 3).count()
+
+
+
 
 
     form = agregarInven()
@@ -379,16 +385,19 @@ def inventario(request):
             if invSeriales.objects.filter(codigo =b).exists():
                 return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
+                "plomonoDisponibles":plomo_nodisp})
             else:           
                 form.save() 
                 return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})         
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
+                "plomonoDisponibles":plomo_nodisp})         
 
     return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
     "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
-    "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp})
+    "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
+                "plomonoDisponibles":plomo_nodisp})
 
 def movimientosRadios(request):
 
