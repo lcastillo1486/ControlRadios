@@ -233,16 +233,16 @@ def generarSalida(request, id):
                               estaciones=detalle_salida.cantidad_estaciones, baterias = detalle_salida.cantidad_baterias)
         gsalidas.save()
 #####AUDITORIA############
-        ultimo_id = salidasDetalle.objects.latest('id').id
-        numero_orden = id
-        #capturar usuario actual
-        user_nombre = request.user.username
-        #fecha y hora actual
-        fecha_hora_peru = timezone.localtime(timezone.now())
-        fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+        # ultimo_id = salidasDetalle.objects.latest('id').id
+        # numero_orden = id
+        # #capturar usuario actual
+        # user_nombre = request.user.username
+        # #fecha y hora actual
+        # fecha_hora_peru = timezone.localtime(timezone.now())
+        # fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-        log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
-        log.save()
+        # log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
+        # log.save()
 
         # detalle_salida = ordenRegistro.objects.get(id=id)
         # b = detalle_salida
@@ -456,15 +456,15 @@ def cambiaEstadoEntregado(request, id):
     b.save() 
 
     #####AUDITORIA############
-    numero_orden = id
-    #capturar usuario actual
-    user_nombre = request.user.username
-    #fecha y hora actual
-    fecha_hora_peru = timezone.localtime(timezone.now())
-    fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+    # numero_orden = id
+    # #capturar usuario actual
+    # user_nombre = request.user.username
+    # #fecha y hora actual
+    # fecha_hora_peru = timezone.localtime(timezone.now())
+    # fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-    log = auditoria(fecha = fecha_hora_formateada, accion = f'Cambia estado a ENTREGADO a la orden N° {numero_orden}', usuario = user_nombre)
-    log.save()
+    # log = auditoria(fecha = fecha_hora_formateada, accion = f'Cambia estado a ENTREGADO a la orden N° {numero_orden}', usuario = user_nombre)
+    # log.save()
 
 
 
@@ -659,15 +659,15 @@ def generarEntrada(request, id, orden_id):
                 guardaEntrada.save()
 
                 #####AUDITORIA############
-                numero_orden = numordena
-                #capturar usuario actual
-                user_nombre = request.user.username
-                #fecha y hora actual
-                fecha_hora_peru = timezone.localtime(timezone.now())
-                fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+                # numero_orden = numordena
+                # #capturar usuario actual
+                # user_nombre = request.user.username
+                # #fecha y hora actual
+                # fecha_hora_peru = timezone.localtime(timezone.now())
+                # fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
 
-                log = auditoria(fecha = fecha_hora_formateada, accion = f'Pedido recibido de salida N° {id} de la orden {numero_orden}', usuario = user_nombre)
-                log.save()
+                # log = auditoria(fecha = fecha_hora_formateada, accion = f'Pedido recibido de salida N° {id} de la orden {numero_orden}', usuario = user_nombre)
+                # log.save()
 
             return redirect('/ordenesCerradas/')
 
