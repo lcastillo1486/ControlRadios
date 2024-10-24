@@ -176,13 +176,13 @@ def entradatotal(request, id, id_orden):
 def salidas(request):
     fecha_actual = datetime.date.today()
     fecha_tope = datetime.date.today() + timedelta(days=2) 
-    ordenes = ordenRegistro.objects.filter(estado_id = 2)
+    ordenes = ordenRegistro.objects.filter(estado_id = 2).order_by('fecha_entrega')
     return render(request, 'salidas.html', {"listaOrdenes": ordenes, "fecha_actal":fecha_actual, "fecha_tope":fecha_tope})
 
 def ordenesProcesadas(request):
     # ordenes = ordenRegistro.objects.filter(estado_id = 5)
     # return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
-    ordenes = vista_ordenes_procesadas.objects.all() 
+    ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
     return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
 
 def ordenesCerradas(request): 

@@ -79,9 +79,6 @@
                             Evento hasta:
                         </th>
                         <th>
-                            Estado:
-                        </th>
-                        <th>
                             Observaciones:
                         </th>
                     </tr>
@@ -98,7 +95,6 @@
                         <td>{{c.fecha_entrega}}</td>
                         <td>{{c.fecha_evento_desde}}</td>
                         <td>{{c.fecha_evento_hasta|default:""}}</td>
-                        <td>{{c.estado}}</td>
                         <td>{{c.observaciones}}</td>
                         <td><a href='/detalleOrden/{{c.id}}' class="btn btn-success">Ver Detalle y Procesar</a></td>
                         <td><a href='/editarOrden/{{c.id}}' class="btn btn-warning">Editar Pedido</a></td>
