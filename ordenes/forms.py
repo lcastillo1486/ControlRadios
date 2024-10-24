@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from .models import ordenRegistro
+from cliente.models import cliente
 from django.forms import widgets
 
 class formOrden(ModelForm):
@@ -29,6 +30,10 @@ class formOrden(ModelForm):
             'fecha_retiro':'Fecha de Recojo',
             'fecha_entrega':'Fecha de Entrega'         
         }
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ordenar alfabéticamente el campo cliente
+        self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
 
 class formEdit(ModelForm):
 
@@ -50,4 +55,9 @@ class formEdit(ModelForm):
             'fecha_retiro':'Fecha de Recojo',
             'fecha_entrega':'Fecha de Entrega'         
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ordenar alfabéticamente el campo cliente
+        self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
         
