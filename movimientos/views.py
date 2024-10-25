@@ -173,6 +173,44 @@ def entradatotal(request, id, id_orden):
 
     return redirect('/ordenesDevueltas/')
 
+def anularorden(request, id):
+
+    if not request.user.is_superuser:
+        return redirect('/ordenesProcesadas/')
+
+# Buscar id_salida 
+
+    salida = salidasDetalle.objects.get(id_orden = id)
+    id_salida = salida.id
+
+#cambiar el estatus en el inventario de radios 
+
+    radios_inv = movimientoRadios.objects.filter(id_salida = id_salida, estado = "F")
+    for i in radios_inv:
+        serial = i.serial
+        cambiaestado =  invSeriales.objects.get(codigo = serial)
+        cambiaestado.estado_id = 4
+        cambiaestado.save()
+
+#buscar en movimientosradios todas las radios cargadas y crear un registro nueno con D
+
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id_salida, estado = "F")
+    for i in radiosCargadas:
+        salida = i.id_salida
+        serial = i.serial
+        estado = 'D'
+        id_tipo = i.id_tipo_id
+
+        graba_radio = movimientoRadios(id_salida = salida, serial = serial, estado = estado, id_tipo_id = id_tipo)
+        graba_radio.save()
+
+# cambiar el estado de la orden 
+
+    cambiaestadoorden = ordenRegistro.objects.filter(id = id).update(estado_id = 1)
+
+    return redirect('/ordenesProcesadas/')
+#verifica esto en produccion con el datetime 
+
 def salidas(request):
     fecha_actual = datetime.date.today()
     fecha_tope = datetime.date.today() + timedelta(days=2) 

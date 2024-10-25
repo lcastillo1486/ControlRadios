@@ -82,7 +82,7 @@
                         <th>
                             Observaciones:
                         </th>
-                        <th colspan="2"></th>
+                        <th colspan="3"></th>
 
                     </tr>
                 </thead>
@@ -100,6 +100,8 @@
                         <!-- <td><a href='/detalleOrden/{{c.id}}' class="btn btn-success">Detall</a></td> -->
                         <td><a href='/cambiaEstadoEnt/{{c.id}}' class="btn btn-warning">Entregado</a></td>
                         <td><a href='/generaPDFGuia/{{c.id}}' target="_blank" class="btn btn-success">Guia</a></td>
+                        <td><a href='/anularorden/{{c.id}}' title="" onclick="return confirm('¿Estás seguro de que quieres anular esta orden? Esta acción no se puede deshacer.');"
+                            class="btn btn-danger">Anular</a></td>
 
                         
 
