@@ -12,11 +12,18 @@
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="navbar-nav">
         {% if user.is_staff %}
-        <a class="nav-item nav-link" href='/ordenes/' >Nuevo Pedido</a>
-        <a class="nav-item nav-link" href='/salidas/'>Pedidos</a>
-        <a class="nav-item nav-link" href='/ordenesProcesadas/'>Pedidos Preparados</a>
-        <a class="nav-item nav-link" href='/ordenesCerradas/'>Pedidos Entregados</a>
-        <a class="nav-item nav-link" href='/ordenesDevueltas/'>Pedidos Devueltos</a>
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="facturasBancoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Pedidos
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="pedidosBancoDropdown">
+          <li><a class="dropdown-item" href='/ordenes/' >Nuevo Pedido</a></li>
+          <li><a class="dropdown-item" href="/salidas/">Listado de Pedidos</a></li>
+          <li><a class="dropdown-item" href='/ordenesProcesadas/'>Pedidos Preparados</a></li>
+          <li><a class="dropdown-item" href='/ordenesCerradas/'>Pedidos Entregados</a></li>
+          <li><a class="dropdown-item" href='/ordenesDevueltas/'>Pedidos Devueltos</a></li>
+        </ul>
+        </div>
         <a class="nav-item nav-link" href='/verFaltante/'>Faltantes</a>
         <a class="nav-item nav-link" href='/inventario/'>Inventario</a>
         <a class="nav-item nav-link" href='/informe/'>Informes</a>
