@@ -219,8 +219,89 @@ class vista_entrada_detalle(models.Model):
 
 
 
+class contable(models.Model):
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    id_salida = models.PositiveIntegerField(null=False)
+    id_orden = models.PositiveIntegerField(null=False)
+    monto_base = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    igv = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    monto_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    saldo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    abono = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    porcentaje_detrac = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    detraccion = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null= True)
+    fecha_pago = models.DateField(blank=True, null=True)
+    referencia_pago = models.CharField(max_length=50, blank=True, null=True)
+    pagado = models.BooleanField(default=0)
+    comprobante_pago = models.FileField(upload_to='pdfs/', null=True, blank=True)
+    sunat = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'contable'
+        auto_created = True
 
 
+#modelo del abono
+
+class abono_factura(models.Model):
+
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
+    id_orden = models.PositiveIntegerField(null=False)
+    id_salida = models.PositiveIntegerField(null=False)
+    monto_abono = models.DecimalField(max_digits=10, decimal_places=2)
+    fecha_abono =  models.DateField(blank=True, null=True)
+    referencia_abono = models.CharField(max_length=50, blank=True, null=True)
+    comprobante_pago = models.FileField(upload_to='pdfs/', null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'abono_factura'
+        auto_created = True
+
+class vista_ordenes_cxc(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_creacion = models.DateTimeField(blank=True, null=True)
+    fecha_entrega = models.DateTimeField(blank=True, null=True)
+    fecha_evento_desde = models.DateTimeField(blank=True, null=True)
+    fecha_retiro = models.DateTimeField(blank=True, null=True)
+    cantidad_radios = models.CharField(max_length=150)
+    cantidad_cobras = models.CharField(max_length=150)
+    cantidad_baterias = models.CharField(max_length=150)
+    cantidad_cargadores = models.CharField(max_length=150)
+    cantidad_manos_libres = models.CharField(max_length=150)
+    cantidad_cascos = models.CharField(max_length=150)
+    cantidad_repetidoras = models.CharField(max_length=150)
+    cantidad_estaciones = models.CharField(max_length=150)
+    observaciones = models.CharField(max_length=150)
+    direccion_entrega = models.CharField(max_length=150)
+    fecha_evento_hasta = models.DateTimeField(blank=True, null=True)
+    telefono = models.CharField(max_length=150)
+    cliente = models.CharField(max_length=150)
+    ruc = models.CharField(max_length=50)
+    razon_social = models.CharField(max_length=150)
+    ruc_razon_social = models.CharField(max_length=50)
+    id_salida = models.CharField(max_length=150)
+    id_orden = models.CharField(max_length=150)
+    facturado = models.BooleanField(default=False)
+    factura_pdf = models.CharField(max_length=50)
+    saldo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    monto_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    monto_base = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    igv = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    abono = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
+    fecha_pago = models.DateField(blank=True, null=True)
+    referencia = models.CharField(max_length=50, blank=True, null=True)
+    comprobante_pago = models.CharField(max_length=50)
+    pagado = models.BooleanField(default=False)
+    
+
+
+    class Meta:
+        managed = False
+        db_table = 'vista_ordenes_cxc'
+        auto_created = True
     
 
 
