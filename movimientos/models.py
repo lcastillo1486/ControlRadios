@@ -217,36 +217,7 @@ class vista_entrada_detalle(models.Model):
         db_table = 'vista_entrada_detalle'
         auto_created = True
 
-class contable(models.Model):
 
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    id_salida = models.PositiveIntegerField(null=False)
-    id_orden = models.PositiveIntegerField(null=False)
-    monto_base = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    igv = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    monto_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    saldo = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    abono = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    porcentaje_detrac = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
-    detraccion = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null= True)
-    fecha_pago = models.DateField(blank=True, null=True)
-    referencia_pago = models.CharField(max_length=50, blank=True, null=True)
-    pagado = models.BooleanField(default=0)
-    comprobante_pago = models.FileField(upload_to='pdfs/', null=True, blank=True)
-    sunat = models.BooleanField(default=False)
-
-
-#modelo del abono
-
-class abono_factura(models.Model):
-
-    fecha_creacion = models.DateTimeField(auto_now_add=True)
-    id_orden = models.PositiveIntegerField(null=False)
-    id_salida = models.PositiveIntegerField(null=False)
-    monto_abono = models.DecimalField(max_digits=10, decimal_places=2)
-    fecha_abono =  models.DateField(blank=True, null=True)
-    referencia_abono = models.CharField(max_length=50, blank=True, null=True)
-    comprobante_pago = models.FileField(upload_to='pdfs/', null=True, blank=True)
 
 
 
