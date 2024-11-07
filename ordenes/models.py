@@ -47,6 +47,8 @@ class ordenRegistro(models.Model):
     observaciones = models.TextField (blank = True)
     direccion_entrega = models.TextField(blank = True)
     estado = models.ForeignKey(estado, on_delete=models.DO_NOTHING)
+    facturado = models.BooleanField(default=False)
+    factura_pdf = models.FileField(upload_to='pdfs/', null=True, blank=True)
 
 
     def __str__(self):
