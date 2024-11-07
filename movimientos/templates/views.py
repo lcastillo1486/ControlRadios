@@ -1,10 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from ordenes.models import ordenRegistro
-from movimientos.models import salidasDetalle
-from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat
+from movimientos.models import salidasDetalle, contable, abono_factura
+from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, formagregacxp, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, contable, abono_factura,vista_ordenes_cxc
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, cxp, vista_ordenes_cxc, salidasDetalle
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -34,6 +34,11 @@ import calendar
 import matplotlib.pyplot as ptl
 import base64
 from django.db.models import Q
+from reportlab.lib import utils
+from decimal import Decimal
+
+
+
 
 
 # Create your views here. 
@@ -211,7 +216,6 @@ def anularorden(request, id):
 
     return redirect('/ordenesProcesadas/')
 #verifica esto en produccion con el datetime 
-
 def salidas(request):
     fecha_actual = datetime.date.today()
     fecha_tope = datetime.date.today() + timedelta(days=2) 
@@ -229,7 +233,6 @@ def ordenesCerradas(request):
     # return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
     ordenes = vista_ordenes_cerradas.objects.all().order_by('-fecha_retiro')
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
-
 
 def ordenesDevueltas(request):
 
@@ -252,8 +255,9 @@ def detalleOrdenCerrada(request, id):
 
 def generarSalida(request, id):
     
-    try:
+    try: #esto hay que replantearlo
         detalle_salida = ordenRegistro.objects.get(id=id)
+        salidasDetalle.objects.get(id_orden=id)
         msalida = salidasDetalle.objects.get(id_orden=id)
         salida_id = msalida.id
         if movimientoRadios.objects.filter(id_salida = salida_id).exists():
@@ -277,8 +281,8 @@ def generarSalida(request, id):
         # #capturar usuario actual
         # user_nombre = request.user.username
         # #fecha y hora actual
-        # fecha_hora_peru = timezone.localtime(timezone.now())
-        # fecha_hora_formateada = fecha_hora_peru.strftime('%Y-%m-%d %H:%M:%S')
+        # # fecha_hora_peru = timezone.localtime(timezone.now())
+        # fecha_hora_formateada = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
 
         # log = auditoria(fecha = fecha_hora_formateada, accion = f'Genera Salida N° {ultimo_id} para la orden {numero_orden}', usuario = user_nombre)
         # log.save()
@@ -1284,7 +1288,6 @@ def generaInformes(request):
     else:
         return render(request, 'informes.html', {'form':form})
 
-
 def generarPDFtotales(request):
 
     form = formBuscarInformes()
@@ -1418,9 +1421,805 @@ def generarPDFtotales(request):
 
         return render(request, 'informes.html', {'form':form})
     
-
 def auditoria(request):
     return render(request, 'auditoria.html')
+
+def cxp(request):
+    form = formagregacxp()
+    context = {'form_cxp': form}
+    return render(request, 'cxp.html',context)
+
+def listadocxc(request):
+
+    form = FacturaPDFForm()
+    nombre_cliente = cliente.objects.all()
+    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+    return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def listadocxcfacturado(request):
+
+    form = FacturaPDFForm()
+    nombre_cliente = cliente.objects.all()
+    devueltas = vista_ordenes_cxc.objects.filter(facturado=1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')  # saldo igual a monto_total
+).order_by('id_orden')
+    return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def listadocxcfacturadoAbono(request):
+
+    form = FacturaPDFForm()
+    nombre_cliente = cliente.objects.all()
+    devueltas = vista_ordenes_cxc.objects.filter(facturado=1, pagado = 0).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo__lt=F('monto_total')
+).order_by('id_orden')
+    return render(request, 'listadocxcfacturadoabono.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def detalleabonado(request, id):
+
+    encabezado = get_object_or_404(vista_ordenes_cxc, id_orden=id)
+    orden = encabezado.id_orden
+    salida = encabezado.id_salida
+    nombre_cliente = encabezado.cliente
+    cliente_ruc = encabezado.ruc
+    razon_social = encabezado.razon_social
+    ruc_razon_s = encabezado.ruc_razon_social
+    monto_factura = encabezado.monto_total
+    fecha_evento = encabezado.fecha_evento_desde
+    archivo_factura = encabezado.factura_pdf
+    cantidad_radios = encabezado.cantidad_radios
+    saldo_restante = encabezado.saldo
+
+    abonos = abono_factura.objects.filter(id_orden = id).order_by('fecha_abono')
+    suma_montos_abonos = abono_factura.objects.filter(id_orden = id).aggregate(total_abono = Sum('monto_abono'))
+    total_abonos_facturas = round(suma_montos_abonos['total_abono'], 2)
+    
+    return render(request, 'detalleabonos.html', {"lista_cliente":nombre_cliente, 'cliente_ruc':cliente_ruc, 'razon_social':razon_social,
+                                                  'ruc_razon_s':ruc_razon_s, 'numero_orden':orden, 'numero_salida':salida,
+                                                   'monto_factura': monto_factura, 'fecha_evento': fecha_evento, 'saldo':saldo_restante,
+                                                    'lista_abonos':abonos, 'total_abonado':total_abonos_facturas})
+
+def listadocxcpagado(request):
+
+    nombre_cliente = cliente.objects.all()
+    devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
+    return render(request, 'listadocxcpagado.html',{"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente})
+
+def subir_factura_pdf(request, id, id_salida):
+    registro = get_object_or_404(ordenRegistro, id=id)
+
+    if request.method == 'POST':
+        form = FacturaPDFForm(request.POST, request.FILES, instance=registro)
+        form_datos_fact = formRegistroMontoFact(request.POST)
+
+        if form.is_valid():
+            registro.facturado = True  
+            registro.save()  
+            form.save(commit=False)  
+            form.instance = registro  
+            form.save()  
+            
+        
+        if form_datos_fact.is_valid():
+            monto_base = form_datos_fact.cleaned_data['monto_base']
+            igv = form_datos_fact.cleaned_data['igv']
+            monto_total = form_datos_fact.cleaned_data['monto_total']
+            detraccion = form_datos_fact.cleaned_data['detraccion']
+            porcentaje_detrac = request.POST.get('porc_detraccion')
+            sunat = 1
+            if not detraccion:
+                detraccion = 0
+                porcentaje_detrac = 0
+            guarda_datos_fact = contable(monto_base = monto_base, igv = igv, monto_total = monto_total, id_salida = id_salida,
+                                         id_orden = id, saldo = monto_total, porcentaje_detrac = porcentaje_detrac, detraccion = detraccion,
+                                         sunat = sunat)
+            guarda_datos_fact.save()
+            return redirect('/listadocxcfacturado/')  # Redirige a la vista 
+
+    else:
+        form = FacturaPDFForm(instance=registro)
+
+    return redirect('/listadocxcfacturado/')
+
+def subir_factura_pdf_no_sunat(request, id, id_salida):
+    registro = get_object_or_404(ordenRegistro, id=id)
+
+    if request.method == 'POST':
+        
+        form_datos_fact =  formRegistroMontoFactNoSunat(request.POST)
+
+        if form_datos_fact.is_valid():
+            registro.facturado = True  
+            registro.save()  
+        
+        if form_datos_fact.is_valid():
+            monto_base = 0
+            igv = 0
+            monto_total = form_datos_fact.cleaned_data['monto_total']
+            detraccion = 0
+            porcentaje_detrac = 0
+            sunat = 0
+            if not detraccion:
+                detraccion = 0
+                porcentaje_detrac = 0
+            guarda_datos_fact = contable(monto_base = monto_base, igv = igv, monto_total = monto_total, id_salida = id_salida,
+                                         id_orden = id, saldo = monto_total, porcentaje_detrac = porcentaje_detrac, detraccion = detraccion,
+                                         sunat = sunat)
+            guarda_datos_fact.save()
+            return redirect('/listadocxcfacturado/')  # Redirige a la vista 
+
+    else:
+
+        return redirect('/listadocxcfacturado/')
+
+def ver_factura_pdf(request, id):
+    registro = get_object_or_404(ordenRegistro, id=id)
+    
+    if registro.factura_pdf:
+        # Crea una respuesta HTTP
+        response = HttpResponse(
+            registro.factura_pdf,
+            content_type='application/pdf'
+        )
+        # Establece el encabezado para la descarga
+        response['Content-Disposition'] = f'attachment; filename="{registro.factura_pdf.name}"'
+        return response
+    else:
+        # Manejo si no hay PDF disponible
+        return HttpResponse("No hay archivo PDF disponible para descargar.")
+
+def ver_comprobante_pago(request, id):
+    registro = get_object_or_404(contable, id_orden=id)
+    
+    if registro.comprobante_pago:
+        # Crea una respuesta HTTP
+        response = HttpResponse(
+            registro.comprobante_pago,
+            content_type='application/pdf'
+        )
+        # Establece el encabezado para la descarga
+        response['Content-Disposition'] = f'attachment; filename="{registro.comprobante_pago.name}"'
+        return response
+    else:
+        # Manejo si no hay PDF disponible
+        return HttpResponse("No hay archivo disponible para descargar.")
+
+def ver_comprobante_pago_abono(request, id):
+    registro = get_object_or_404(abono_factura, id=id)
+    
+    if registro.comprobante_pago:
+        # Crea una respuesta HTTP
+        response = HttpResponse(
+            registro.comprobante_pago,
+            content_type='application/pdf'
+        )
+        # Establece el encabezado para la descarga
+        response['Content-Disposition'] = f'attachment; filename="{registro.comprobante_pago.name}"'
+        return response
+    else:
+        # Manejo si no hay PDF disponible
+        return HttpResponse("No hay archivo disponible para descargar.")
+    
+def form_registra_fact(request, id, cliente, ruc, id_salida):
+
+    form = FacturaPDFForm()
+    form_datos_fact = formRegistroMontoFact()
+    
+    return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact})
+
+def form_registra_fact_no_sunat(request, id, cliente, ruc, id_salida):
+
+    form_datos_fact = formRegistroMontoFactNoSunat()
+    
+    return render(request, 'formsubirfactNosunat.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'formDatosFact':form_datos_fact})
+
+def revertir_factura(request, id):
+    
+    registro = get_object_or_404(ordenRegistro, id=id)
+    registro.facturado = False
+    registro.factura_pdf = ''
+    registro.save()
+
+    registro_datos = get_object_or_404(contable, id_orden=id)
+    registro_datos.delete()
+
+    if abono_factura.objects.filter(id_orden = id).exists():
+        abono_factura.objects.filter(id_orden = id).delete()
+
+    return redirect('/listadocxc/')
+
+def revertir_abono(request, id):
+    
+    registro_datos = get_object_or_404(abono_factura, id=id)
+    monto_abono = registro_datos.monto_abono
+    id_orden = registro_datos.id_orden
+    registro_datos_contable = get_object_or_404(contable, id_orden=id_orden)
+    registro_datos_contable.saldo = registro_datos_contable.saldo + monto_abono
+    registro_datos_contable.save()
+    registro_datos.delete()
+
+    #buscar el saldo en contable y actualizar 
+    return redirect('/listadocxcfacturadoabono/')
+
+def form_registrar_pago(request, id, cliente, ruc, id_salida):
+
+    form_datos_pago = formRegistroMontopago()
+    form_comprobante_pago = comprobantePagoForm()
+    saldo_factura = get_object_or_404(contable, id_orden=id)
+    saldo = saldo_factura.saldo
+    monto_base = saldo_factura.monto_base
+    igv = saldo_factura.igv
+    monto_total = saldo_factura.monto_total
+    monto_detraccion = saldo_factura.detraccion
+
+    if abono_factura.objects.filter(id_orden = id).exists():
+                    suma_montos_abonos = abono_factura.objects.filter(id_orden = id).aggregate(total_abono = Sum('monto_abono'))
+                    total_abonos_facturas = suma_montos_abonos['total_abono']
+
+    else:
+        total_abonos_facturas = 0
+
+    
+    return render(request, 'formregistrapago.html',{'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,
+                                                    'form_datos_pago':form_datos_pago, 'saldo':saldo, 'form_comprobante_pago':form_comprobante_pago,
+                                                    'monto_base':monto_base, 'igv':igv, 'monto_total':monto_total, 
+                                                    'total_abonos_facturas':total_abonos_facturas, 'monto_detraccion':monto_detraccion})
+
+def registrar_pago(request, id, id_salida):
+
+    # validar si el monto abonado es igual al monto total de la factura, es pago total y va directo a contable. 
+    # si es menor debe verificar los abonos y comparar contra el  va contra la tabla abono y si es mayor da la alerta.
+    
+    registro = get_object_or_404(contable, id_orden=id)
+
+    if request.method == 'POST':
+        
+        form_datos_pago = formRegistroMontopago(request.POST)
+        form = comprobantePagoForm(request.POST, request.FILES, instance=registro)
+            
+        if form_datos_pago.is_valid():
+            abono = form_datos_pago.cleaned_data['abono']
+            fecha_pago = form_datos_pago.cleaned_data['fecha_pago']
+            referencia_pago = form_datos_pago.cleaned_data['referencia_pago']
+            nuevo_saldo = registro.saldo - abono
+            
+            # si monto es mayor
+            if nuevo_saldo < 0:
+                return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
+                <h2 style="color: red;">EL MONTO INGRESADO ES MAYOR AL MONTO TOTAL DE LA FACTURA.</h2>
+                <h2 style="color: red;">POR FAVOR VUELVE ATRÁS Y CORRIJE.</H2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
+            # si es pago total
+            if nuevo_saldo == 0:
+                if abono_factura.objects.filter(id_orden = id).exists():
+                    id_orden = id
+                    id_salida = id_salida
+                    monto_abono = form_datos_pago.cleaned_data['abono']
+                    fecha_abono = form_datos_pago.cleaned_data['fecha_pago']
+                    referencia_abono = form_datos_pago.cleaned_data['referencia_pago']
+                    mensaje = "PAGADO EN ABONOS"
+
+                    # VERIFICAR SI LA SUMATORIA DE LOS ABONOS NO SOBREPASA EL MONTO DE FACTURA
+
+                    registro = get_object_or_404(contable, id_orden=id)
+                    monto_total_factura = registro.monto_total
+
+                    if abono_factura.objects.filter(id_orden = id_orden).exists():
+                        suma_montos_abonos = abono_factura.objects.filter(id_orden = id_orden).aggregate(total_abono = Sum('monto_abono'))
+                        total_abonos_facturas = suma_montos_abonos['total_abono']
+                    else:
+                        total_abonos_facturas = 0
+                
+                    if (total_abonos_facturas + monto_abono) > monto_total_factura:
+                        return HttpResponse(f"""
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                    <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
+                    <h2 style="color: red;">LA SUMATORIA DE LOS ABONOS ES MAYOR AL MONTO TOTAL DE LA FACTURA.</h2>
+                    <h2 style="color: red;">POR FAVOR VUELVE ATRÁS Y CORRIJE.</H2>
+                    <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                    Volver atrás
+                    </button>
+                    </div>
+                    """)
+                    guarda_datos_abono = abono_factura(id_orden = id_orden, id_salida = id_salida, monto_abono = monto_abono,
+                                                   fecha_abono = fecha_abono, referencia_abono = referencia_abono)
+                    guarda_datos_abono.save()
+
+                    registro = get_object_or_404(contable, id_orden=id)
+                    nuevo_saldo = registro.saldo - abono
+                    registro.saldo = nuevo_saldo
+                    registro.pagado = True
+                    registro.fecha_pago = fecha_abono
+                    registro.referencia_pago = referencia_abono  
+                    registro.save()
+                # registro = get_object_or_404(abono_factura, id_orden=id_orden)
+                    form = comprobanteabonoForm(request.POST, request.FILES, instance=guarda_datos_abono)
+                    if form.is_valid():
+                # form.instance = registro
+                        form.save()
+                #AQUI UN RETURN AL TEMPLATE CON EL MENSAJE 
+                else:
+                    form = comprobantePagoForm(request.POST, request.FILES, instance=registro)
+                    monto_total_factura = registro.monto_total
+                    
+                    if abono == monto_total_factura:
+                        registro.abono = abono
+                    else:
+                        registro.abono = 0
+                    
+                    registro.fecha_pago = fecha_pago
+                    registro.referencia_pago = referencia_pago
+                    registro.saldo = nuevo_saldo 
+                    registro.save()
+                
+                    if form.is_valid():
+                        registro.pagado = True  
+                        registro.save()  # Guarda los cambios en el registro
+                        form.save(commit=False)  # Prepara el formulario para guardar
+                        form.instance = registro  # Asigna la instancia actualizada al formulario
+                        form.save()
+
+            # si es un abono va contra la tabla abono
+            if nuevo_saldo > 0:
+                id_orden = id
+                id_salida = id_salida
+                monto_abono = form_datos_pago.cleaned_data['abono']
+                fecha_abono = form_datos_pago.cleaned_data['fecha_pago']
+                referencia_abono = form_datos_pago.cleaned_data['referencia_pago']
+
+                # VERIFICAR SI LA SUMATORIA DE LOS ABONOS NO SOBREPASA EL MONTO DE FACTURA
+
+                registro = get_object_or_404(contable, id_orden=id)
+                monto_total_factura = registro.monto_total
+
+                if abono_factura.objects.filter(id_orden = id_orden).exists():
+                    suma_montos_abonos = abono_factura.objects.filter(id_orden = id_orden).aggregate(total_abono = Sum('monto_abono'))
+                    total_abonos_facturas = suma_montos_abonos['total_abono']
+                else:
+                    total_abonos_facturas = 0
+                
+                if (total_abonos_facturas + monto_abono) > monto_total_factura:
+                    return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
+                <h2 style="color: red;">LA SUMATORIA DE LOS ABONOS ES MAYOR AL MONTO TOTAL DE LA FACTURA.</h2>
+                <h2 style="color: red;">POR FAVOR VUELVE ATRÁS Y CORRIJE.</H2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
+
+                guarda_datos_abono = abono_factura(id_orden = id_orden, id_salida = id_salida, monto_abono = monto_abono,
+                                                   fecha_abono = fecha_abono, referencia_abono = referencia_abono)
+                guarda_datos_abono.save()
+
+                registro = get_object_or_404(contable, id_orden=id)
+                nuevo_saldo = registro.saldo - abono
+                registro.saldo = nuevo_saldo
+                registro.save()
+
+                # registro = get_object_or_404(abono_factura, id_orden=id_orden)
+                form = comprobanteabonoForm(request.POST, request.FILES, instance=guarda_datos_abono)
+                if form.is_valid():
+                # form.instance = registro
+                    form.save()
+            return redirect('/listadocxcfacturadoabono/')
+                
+                # tengo que ajustar el saldo en contable
+            
+        return redirect('/listadopagado/')  # Redirige a la vista que quieras después de guardar
+
+    else:
+        return redirect('/listadopagado/')
+
+def reportescxc(request):
+
+    #tab1- General - solo prueba
+    por_emitir = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden').count()
+
+    emitidas_por_cobrar = vista_ordenes_cxc.objects.filter(facturado=1).filter(Q(referencia__isnull=True) | Q(referencia='')).order_by('id_orden').count()
+    total_saldo = vista_ordenes_cxc.objects.filter(facturado=1).filter(Q(referencia__isnull=True) | Q(referencia='')).aggregate(Sum('saldo'))
+    total_saldo_value = total_saldo['saldo__sum']
+
+    cobradas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').count()
+    total_cobrado = vista_ordenes_cxc.objects.filter(pagado=1).aggregate(Sum('abono'))
+    total_cobrado_value = total_cobrado['abono__sum']
+
+    form = FacturaPDFForm()
+    nombre_cliente = cliente.objects.all()
+    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+
+    #tab2- General - solo prueba
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+           
+        por_emitir_detalle = vista_ordenes_cxc.objects.filter(facturado = 0, cliente = nombre).order_by('id_orden').count()
+
+        emitidas_por_cobrar_detalle = vista_ordenes_cxc.objects.filter(facturado=1, cliente = nombre, pagado = 0).order_by('id_orden').count()
+        total_saldo_detalle = vista_ordenes_cxc.objects.filter(facturado=1, cliente = nombre, pagado = 0).aggregate(Sum('saldo'))
+        total_saldo_value_detalle = total_saldo_detalle['saldo__sum']
+
+        cobradas_detalle = vista_ordenes_cxc.objects.filter(pagado = 1, cliente = nombre).order_by('id_orden').count()
+        total_cobrado_detalle = vista_ordenes_cxc.objects.filter(pagado=1, cliente = nombre).aggregate(Sum('abono'))
+        total_cobrado_value_detalle = total_cobrado_detalle['abono__sum']
+    else:
+        nombre = ""
+        por_emitir_detalle = 0
+        emitidas_por_cobrar_detalle = 0
+        total_saldo_value_detalle = 0.00
+        total_cobrado_value_detalle = 0.00
+        cobradas_detalle = 0
+
+    return render(request, 'reportescxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form,
+                                                 'emitir':por_emitir, 'por_cobrar':emitidas_por_cobrar, 'cobradas':cobradas , 'saldo':total_saldo_value,
+                                                 'total_cobrado':total_cobrado_value, 'nombre_cliente':nombre, 'emitir_detalle':por_emitir_detalle,
+                                                 'por_cobrar_detalle':emitidas_por_cobrar_detalle, 'saldo_detalle': total_saldo_value_detalle,
+                                                 'total_cobrado_detalle':total_cobrado_value_detalle, 'cobradas_detalle':cobradas_detalle })
+
+def buscarlistadocxccliente(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+
+        if nombre == " ":
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocxcruc(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        ruc = request.POST.get('ruc_cliente').strip()
+
+        if not ruc:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocxcidsalida(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        id_salida = request.POST.get('id_salida').strip()
+
+        if not id_salida:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocxcidorden(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        id_orden = request.POST.get('id_orden').strip()
+
+        if not id_orden:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(id_orden = id_orden, facturado = 0).order_by('id_orden')
+            return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadofacturadocliente(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+
+        if nombre == " ":
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, facturado = 1).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadofacturadoruc(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        ruc = request.POST.get('ruc_cliente').strip()
+
+        if not ruc:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadofacturadoidsalida(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        id_salida = request.POST.get('id_salida').strip()
+
+        if not id_salida:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadofacturadoidorden(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        id_orden = request.POST.get('id_orden').strip()
+
+        if not id_orden:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(id_orden = id_orden, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('id_orden')
+            return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocobradocliente(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+
+        if nombre == " ":
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, pagado =1).order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocobradoruc(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        ruc = request.POST.get('ruc_cliente').strip()
+
+        if not ruc:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, pagado = 1).order_by('id_orden').order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocobradoidsalida(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        id_salida = request.POST.get('id_salida').strip()
+
+        if not id_salida:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, pagado = 1).order_by('id_orden').order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def buscarlistadocobradoreferencia(request):
+
+    form = FacturaPDFForm()
+
+    if request.method == 'POST':
+        referencia = request.POST.get('referencia').strip()
+
+        if not referencia:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        else:
+            nombre_cliente = cliente.objects.all()
+            devueltas = vista_ordenes_cxc.objects.filter(referencia = referencia, pagado = 1).order_by('id_orden').order_by('id_orden')
+            return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+        
+    return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
+
+def pdfporcobrar_detalle(request, cliente):
+
+    if vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden').exists():
+        
+        devueltas = vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden')
+        total_saldo_detalle = vista_ordenes_cxc.objects.filter(facturado=1, cliente = cliente, pagado = 0).aggregate(Sum('saldo'))
+        total_saldo_value_detalle = total_saldo_detalle['saldo__sum']
+        total_saldo_value_detalle = format(total_saldo_value_detalle, ".2f")
+        ruc_unico = devueltas.values('ruc').distinct().first()
+        ruc_valor = ruc_unico['ruc']
+
+        buffer = BytesIO()
+        tamano_pagina =  (21.59*cm, 27.94*cm)
+        pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+
+        image_filename = 'logo_22.jpg'
+        image_path = f'radios/static/{image_filename}'
+
+        # Calcula el tamaño y posición de la imagen
+        image_width = 60
+        image_height = 60
+        o = 60
+        z = letter[1] - image_height
+
+        image_width01 = 250
+        image_height01 = 70
+
+        o1 = 60
+        z2 = z - image_height -20
+        
+        pdf.drawImage(image_path, o1, z2, width=image_width01, height=image_height01)
+
+        font_size = 14
+        pdf.setFont("Helvetica", font_size)
+        pdf.setFillColorRGB(0, 0, 1)
+        pdf.drawString(2*cm, 22*cm, "RELACIÓN DE FACTURAS PENDIENTE POR COBRAR")
+        pdf.setFillColorRGB(0, 0, 0)
+        pdf.setFont("Helvetica-Bold", font_size)
+        pdf.drawString(2*cm, 21*cm, "CLIENTE: "+ cliente)
+        pdf.drawString(2*cm, 20.5*cm, "RUC: "+ ruc_valor)
+        pdf.setFillColorRGB(0, 0, 0)
+        pdf.setFont("Helvetica", font_size)
+
+        font_size = 12
+        pdf.setFont("Helvetica", font_size)
+
+        h = 2*cm
+        v = 19*cm
+
+        for i in devueltas:
+            abonos = abono_factura.objects.filter(id_orden = i.id_orden).aggregate(Sum('monto_abono'))
+            total_abono_value = abonos['monto_abono__sum']
+            total_abono_value = format(total_abono_value, ".2f")
+            h = 2*cm
+            pdf.setFillColorRGB(0, 0, 1)
+            pdf.drawString(h, v, 'Fecha Evento:')
+            h += 3*cm
+            pdf.setFillColorRGB(0, 0, 0)
+            fecha_evento = str(i.fecha_evento_desde.date()) 
+            pdf.drawString(h, v, fecha_evento)
+            v -= 0.5*cm
+            h = 2*cm
+            pdf.drawString(h, v, 'N° Orden:')
+            salida = str(i.id_salida)
+            h += 3*cm
+            pdf.drawString(h, v, salida)
+            h += 6*cm
+            pdf.drawString(h, v, 'Monto Total Factura:')
+            h += 5*cm
+            monto_factura = str(i.monto_total)
+            pdf.drawString(h, v, 'S/' + ' ' + monto_factura)
+            v -= 0.5*cm
+            h = 2*cm
+            pdf.drawString(h, v, 'Cantidad Radios:')
+            h += 4*cm
+            radios_cantidad = str(i.cantidad_radios)
+            pdf.drawString(h, v, radios_cantidad)
+            h += 5*cm
+            pdf.drawString(h, v, 'Monto Total Abonado:')
+            h +=5*cm
+            pdf.drawString(h,v, 'S/' + ' ' + str(total_abono_value))
+            h = 2*cm
+            v -= 0.5*cm
+            if i.razon_social is not None:
+                pdf.drawString(h, v, 'Razon Social:')
+                h += 4*cm
+                razon_social = str(i.razon_social)
+                pdf.drawString(h, v, razon_social)
+                h = 2*cm
+                v -= 0.5*cm
+                pdf.drawString(h, v, 'RUC:')
+                h += 4*cm
+                ruc_razon_social = str(i.ruc_razon_social)
+                pdf.drawString(h, v, ruc_razon_social)
+
+            v -= 1*cm
+
+            #colocar Razon social 
+        
+        v -=2*cm
+        h = 2*cm
+        pdf.setFillColorRGB(1, 0, 0)
+        font_size = 14
+        pdf.setFont("Helvetica-Bold", font_size)
+        pdf.drawString(h, v, 'Total por Cobrar:')
+        h = 6.5*cm
+        pdf.drawString(h, v, 'S/' + ' ' + str(total_saldo_value_detalle))
+        pdf.setFillColorRGB(0, 0, 0)
+        
+        pdf.showPage()
+        pdf.save()
+
+        buffer.seek(0)
+        nombre_archivo = str(cliente)+'.pdf'
+        response = HttpResponse(buffer, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename= {nombre_archivo}'
+
+        return response
+    
+    else:
+        return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <h2 style="color: red;">EL CLIENTE NO TIENE FACTURAS PENDIENTE DE PAGO</h2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
+
+
+
+
+
 
 
     

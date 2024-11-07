@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html lang="es">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackTrack</title>
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Agregar una sombra a la tabla */
+        font-size: 12px;
+
+    }
+
+    tr {
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+    }
+
+    .centrar {
+        text-align: center;
+    }
+
+    th {
+        color: #0047ab;
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+        background-color: white;
+    }
+
+    h1 {
+        color: #0047ab;
+        font-size: 28px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    h5 {
+        font-size: 12px;
+        color: red;
+    }
+
+    .container {
+        position: relative;
+        width: 100%;
+        max-width: 1440px;
+        height: auto;
+        border-radius: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        background: white;
+    }
+
+    /* Pantallas medianas (tablets, pantallas de 1200px o menos) */
+    @media (max-width: 1200px) {
+        .container {
+            max-width: 1000px;
+            /* Ancho más adecuado para pantallas medianas */
+            padding: 15px;
+            /* Ajuste de padding */
+        }
+    }
+
+    /* Pantallas pequeñas (tablets verticales, smartphones grandes) */
+    @media (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            /* Ancho completo para pantallas pequeñas */
+            padding: 10px;
+            /* Relleno más pequeño */
+        }
+    }
+
+    /* Pantallas muy pequeñas (smartphones pequeños) */
+    @media (max-width: 480px) {
+        .container {
+            padding: 5px;
+            /* Relleno aún menor */
+            border-radius: 10px;
+            /* Bordes menos redondeados para espacio adicional */
+        }
+    }
+</style>
+
+<body>
+
+    <div class="container mt-4">
+
+        <div class="row">
+            <div class="table-responsive py-2">
+                <div class="centrar">
+                    <img src="{% static 'logo.png' %}" width="50" height="50"><br><br>
+                    <h1
+                        style="border: 2px solid #7ed957; padding: 15px; border-radius: 8px; background-color: #c7e0bb;">
+                        LISTADO DE PEDIDOS POR FACTURAR</h1>
+                </div>
+                <br>
+                <div class="row"
+                    style="border: 2px solid #7ed957; padding: 15px; border-radius: 8px; max-width: 100%; margin: 0 auto;">
+                    <div class="col-12 d-flex flex-column flex-md-row justify-content-start align-items-center">
+                        <!-- Formulario 1 -->
+                        <form action='/buscarlistadocxc/' method="POST" class="d-flex align-items-center mb-2 mb-md-0"
+                            style="margin-right: 15px;">
+                            {% csrf_token %}
+                            <select name="clienteNombre" style="width: 200px; margin-right: 10px;">
+                                <option value=" "> </option>
+                                {% for d in lista_cliente %}
+                                <option value="{{d.nombre}}"> {{d.nombre}}</option>
+                                {% endfor %}
+                            </select>
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Buscar</button>
+                        </form>
+
+                        <!-- Formulario 2 -->
+                        <form action='/buscarlistadocxcruc/' method="POST" class="d-flex align-items-center"
+                            style="margin-right: 15px;">
+                            {% csrf_token %}
+                            <input type="text" name="ruc_cliente" placeholder="Buscar por RUC"
+                                style="width: 200px; margin-right: 10px;">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Buscar</button>
+                        </form>
+
+                        <!-- Formulario 3 -->
+                        <form action='/buscarlistadocxcsalida/' method="POST" class="d-flex align-items-center"
+                            style="margin-right: 15px;">
+                            {% csrf_token %}
+                            <input type="text" name="id_salida" placeholder="Buscar por ID Salida"
+                                style="width: 200px; margin-right: 10px;">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Buscar</button>
+                        </form>
+
+                        <!-- Formulario 4 -->
+                        <form action='/buscarlistadocxcorden/' method="POST" class="d-flex align-items-center"
+                            style="margin-right: 15px;">
+                            {% csrf_token %}
+                            <input type="text" name="id_orden" placeholder="Buscar por ID Orden"
+                                style="width: 200px; margin-right: 10px;">
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Buscar</button>
+                        </form>
+
+
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="table-responsive py-2">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        N° Orden
+                                    </th>
+                                    <th>
+                                        N° Salida
+                                    </th>
+                                    <th>
+                                        Cliente
+                                    </th>
+                                    <th>
+                                        RUC
+                                    </th>
+                                    <th>
+                                        Fecha de entrega:
+                                    </th>
+                                    <th>
+                                        Facturar:
+                                    </th>
+                                    <th>
+                                        Acciones:
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% for c in listaOrdenescerradas %}
+                                <tr>
+                                    <td>{{c.id_orden}}</td>
+                                    <td>{{c.id_salida}}</td>
+                                    <td>{{c.cliente}}</td>
+                                    <td>{{c.ruc}}</td>
+                                    <td>{{c.fecha_entrega|date}}</td>
+                                    <td> <input type="checkbox" id="check1" name="opcion1" value="opcion1" onclick="mostrarboton()" checked> </td>
+                                    <td>
+                                        <!-- <input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled> -->
+                                        {% if not c.facturado %}
+                                        <a id="sunat" href='/formregistrafactura/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
+                                            class="btn btn-success"
+                                            style="background: url(/static/subir_factura.png); background-size: cover; width: 30px; height: 30px;"
+                                            title="Agregar Factura"></a>
+                                        <a id="no_sunat" href='/formregistrafacturanosunat/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
+                                            class="btn btn-success"
+                                            style="background: url(/static/no_sunat.png); background-size: cover; width: 30px; height: 30px;"
+                                            title="Agregar Factura"></a>
+                                        <a href='/guiadevueltos/{{c.id_orden}}' class="btn btn-success"
+                                            style="background: url(/static/pedido.png); background-size: cover; width: 30px; height: 30px;"
+                                            title="Descargar Orden"></a>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+    
+    <script>
+        function mostrarboton(){
+            var check = document.getElementById('check1');
+            var consunat = document.getElementById('sunat');
+            var sinsunat = document.getElementById('no_sunat');
+
+            if (check.checked) {
+                consunat.style.display = "inline-block";
+                sinsunat.style.display = "none";
+            }else{
+                consunat.style.display = "none";
+                sinsunat.style.display = "inline-block";
+            }
+        }
+
+        window.onload = function() {
+            mostrarboton();
+        };
+
+
+    </script>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+                integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+                crossorigin="anonymous"></script>
+</body>
+{% endblock %}
+
+</html>

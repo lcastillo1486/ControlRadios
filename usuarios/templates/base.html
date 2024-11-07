@@ -28,6 +28,20 @@
         <a class="nav-item nav-link" href='/inventario/'>Inventario</a>
         <a class="nav-item nav-link" href='/informe/'>Informes</a>
         <a class="nav-item nav-link" href='/auditoria/'>Auditoría</a>
+
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="facturasBancoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Facturación
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="facturasBancoDropdown">
+          <li><a class="dropdown-item" href="/listadocxc/">Pendiente Facturar</a></li>
+          <li><a class="dropdown-item" href="/listadocxcfacturado/">Facturado</a></li>
+          <li><a class="dropdown-item" href="/listadocxcfacturadoabono/">Abonado</a></li>
+          <li><a class="dropdown-item" href="/listadopagado/">Cobrado</a></li>
+          <li><a class="dropdown-item" href="/reportescxc/">Reportes</a></li>
+        </ul>
+        </div>
+        
         <a class="nav-item nav-link" href='/registro/'>Nuevo Usuario</a>
         <a class="nav-item nav-link" href='/logout/'>Cerrar Sesion</a>
         {% else %}
