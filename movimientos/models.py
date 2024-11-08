@@ -218,7 +218,8 @@ class vista_entrada_detalle(models.Model):
         auto_created = True
 
 class contable(models.Model):
-
+    id = models.AutoField(primary_key=True)
+    fecha_creacion = models.DateTimeField(auto_now_add=True)
     id_salida = models.PositiveIntegerField(blank=True,null=True)
     id_orden = models.PositiveIntegerField( blank=True,null=True)
     monto_base = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -243,7 +244,7 @@ class contable(models.Model):
 #modelo del abono
 
 class abono_factura(models.Model):
-
+    id = models.AutoField(primary_key=True)
     fecha_creacion = models.DateTimeField(auto_now_add=True)
     id_orden = models.PositiveIntegerField(null=False)
     id_salida = models.PositiveIntegerField(null=False)
