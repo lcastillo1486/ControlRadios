@@ -2145,6 +2145,8 @@ def pdfporcobrar_detalle(request, cliente):
                     abonos = abono_factura.objects.filter(id_orden = i.id_orden).aggregate(Sum('monto_abono'))
                     total_abono_value = abonos['monto_abono__sum']
                     total_abono_value = format(total_abono_value, ".2f")
+                else:
+                    total_abono_value = 0.00
                 h = 2*cm
                 pdf.setFillColorRGB(0, 0, 1)
                 pdf.drawString(h, v, 'Fecha Evento:')
