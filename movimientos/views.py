@@ -1500,14 +1500,14 @@ def subir_factura_pdf(request, id, id_salida):
             monto_total = form_datos_fact.cleaned_data['monto_total']
             detraccion = form_datos_fact.cleaned_data['detraccion']
             porcentaje_detrac = request.POST.get('porc_detraccion')
-            sunat = 1
+            sunat = True
             if not detraccion:
                 detraccion = 0
                 porcentaje_detrac = 0
-            # guarda_datos_fact = contable(monto_base = monto_base, igv = igv, monto_total = monto_total, id_salida = id_salida,
-            #                              id_orden = id, saldo = monto_total, porcentaje_detrac = porcentaje_detrac, detraccion = detraccion,
-            #                              sunat = sunat)
-            # guarda_datos_fact.save()
+            guarda_datos_fact = contable(monto_base = monto_base, igv = igv, monto_total = monto_total, id_salida = id_salida,
+                                         id_orden = id, saldo = monto_total, porcentaje_detrac = porcentaje_detrac, detraccion = detraccion,
+                                         sunat = sunat)
+            guarda_datos_fact.save()
             return redirect('/listadocxcfacturado/')  # Redirige a la vista 
 
     else:
