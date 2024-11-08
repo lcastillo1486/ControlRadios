@@ -3,6 +3,7 @@ from .models import movimientoRadios, invSeriales, entradaDetalle, buscaentregad
 from django.forms import widgets
 from django import forms
 from cliente.models import cliente, razonSocial
+from ordenes.models import ordenRegistro
 
 
 class radiotipos(ModelForm):
