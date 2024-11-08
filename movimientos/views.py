@@ -2150,7 +2150,7 @@ def pdfporcobrar_detalle(request, cliente):
                 pdf.drawString(h, v, 'Fecha Evento:')
                 h += 3*cm
                 pdf.setFillColorRGB(0, 0, 0)
-                fecha_evento = str(i.fecha_evento_desde.date()) 
+                fecha_evento = str(i.fecha_evento_desde) 
                 pdf.drawString(h, v, fecha_evento)
                 v -= 0.5*cm
                 h = 2*cm
