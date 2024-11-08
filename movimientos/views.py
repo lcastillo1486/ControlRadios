@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from ordenes.models import ordenRegistro
-from movimientos.models import salidasDetalle
+from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, contable, abono_factura,vista_ordenes_cxc
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -1506,8 +1506,16 @@ def subir_factura_pdf(request, id, id_salida):
             if not detraccion:
                 detraccion = 0
                 porcentaje_detrac = 0
-            guarda_datos_fact = contable(monto_base = 10)
-            guarda_datos_fact.save()
+            guarda_datos_fact = contable(monto_base = monto_base, igv = igv, monto_total = monto_total, id_salida = id_salida,
+                                         id_orden = id, saldo = monto_total, porcentaje_detrac = porcentaje_detrac, detraccion = detraccion,
+                                         sunat = sunat)
+            
+            try:
+                guarda_datos_fact.save()
+            except Exception as e:
+                error_message = f"Error al guardar los datos: {e}"
+                return HttpResponse(error_message) 
+            # guarda_datos_fact.save()
 
             return redirect('/listadocxcfacturado/')  # Redirige a la vista 
 
