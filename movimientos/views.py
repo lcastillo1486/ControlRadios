@@ -1507,7 +1507,7 @@ def subir_factura_pdf(request, id, id_salida):
                 detraccion = 0
                 porcentaje_detrac = 0
             guarda_datos_fact = contable(monto_base = 0.10)
-            guarda_datos_fact.save()
+            # guarda_datos_fact.save()
 
             return redirect('/listadocxcfacturado/')  # Redirige a la vista 
 
