@@ -1578,7 +1578,7 @@ def ver_comprobante_pago(request, id):
         # Crea una respuesta HTTP
         response = HttpResponse(
             registro.comprobante_pago,
-            content_type='application/pdf'
+            content_type='image/jpeg'
         )
         # Establece el encabezado para la descarga
         response['Content-Disposition'] = f'attachment; filename="{registro.comprobante_pago.name}"'
@@ -1594,7 +1594,7 @@ def ver_comprobante_pago_abono(request, id):
         # Crea una respuesta HTTP
         response = HttpResponse(
             registro.comprobante_pago,
-            content_type='application/pdf'
+            content_type='image/jpeg'
         )
         # Establece el encabezado para la descarga
         response['Content-Disposition'] = f'attachment; filename="{registro.comprobante_pago.name}"'
