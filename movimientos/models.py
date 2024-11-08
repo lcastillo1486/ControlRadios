@@ -217,12 +217,10 @@ class vista_entrada_detalle(models.Model):
         db_table = 'vista_entrada_detalle'
         auto_created = True
 
-
-
 class contable(models.Model):
 
-    id_salida = models.PositiveIntegerField(null=False)
-    id_orden = models.PositiveIntegerField(null=False)
+    id_salida = models.PositiveIntegerField(blank=True,null=True)
+    id_orden = models.PositiveIntegerField( blank=True,null=True)
     monto_base = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     igv = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
     monto_total = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True)
@@ -232,7 +230,7 @@ class contable(models.Model):
     detraccion = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null= True)
     fecha_pago = models.DateField(blank=True, null=True)
     referencia_pago = models.CharField(max_length=50, blank=True, null=True)
-    pagado = models.BooleanField(default=0)
+    pagado = models.BooleanField(default=False)
     comprobante_pago = models.FileField(upload_to='pdfs/', null=True, blank=True)
     sunat = models.BooleanField(default=False)
 
