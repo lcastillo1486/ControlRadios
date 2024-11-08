@@ -202,15 +202,15 @@
                                     <td>{{c.cliente}}</td>
                                     <td>{{c.ruc}}</td>
                                     <td>{{c.fecha_entrega|date}}</td>
-                                    <td> <input type="checkbox" id="check1" name="opcion1" value="opcion1" onclick="mostrarboton()" checked> </td>
+                                    <td> <input type="checkbox" id="check_{{c.id_orden}}" name="opcion1" value="opcion1" onclick="mostrarboton('{{c.id_orden}}')" checked> </td>
                                     <td>
                                         <!-- <input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled> -->
                                         {% if not c.facturado %}
-                                        <a id="sunat" href='/formregistrafactura/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
+                                        <a id="sunat_{{c.id_orden}}" href='/formregistrafactura/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
                                             class="btn btn-success"
                                             style="background: url(/static/subir_factura.png); background-size: cover; width: 30px; height: 30px;"
                                             title="Agregar Factura"></a>
-                                        <a id="no_sunat" href='/formregistrafacturanosunat/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
+                                        <a id="no_sunat_{{c.id_orden}}" href='/formregistrafacturanosunat/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'
                                             class="btn btn-success"
                                             style="background: url(/static/no_sunat.png); background-size: cover; width: 30px; height: 30px;"
                                             title="Agregar Factura"></a>
@@ -228,10 +228,10 @@
             </div>
     
     <script>
-        function mostrarboton(){
-            var check = document.getElementById('check1');
-            var consunat = document.getElementById('sunat');
-            var sinsunat = document.getElementById('no_sunat');
+        function mostrarboton(id){
+            var check = document.getElementById("check_" + id);
+            var consunat = document.getElementById("sunat_" + id);
+            var sinsunat = document.getElementById("no_sunat_" + id);
 
             if (check.checked) {
                 consunat.style.display = "inline-block";
@@ -243,8 +243,11 @@
         }
 
         window.onload = function() {
-            mostrarboton();
-        };
+    document.querySelectorAll('input[type="checkbox"][id^="check_"]').forEach(function(checkbox) {
+        var id = checkbox.id.split("_")[1];  // Extrae el ID único del checkbox
+        mostrarboton(id);
+    });
+};
 
 
     </script>
