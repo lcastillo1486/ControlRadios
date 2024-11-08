@@ -16,7 +16,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter, legal, portrait
 from reportlab.lib.units import cm
 import os
-
+from django.contrib.auth.decorators import login_required
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.pdfmetrics import registerFont, registerFontFamily
 from reportlab.pdfbase.ttfonts import TTFont
@@ -37,7 +37,7 @@ from django.db.models import Q
 
 
 # Create your views here. 
-
+@login_required
 def entradaRadios(request, id, orden_id):
 
     form = guardaEntradaRx()
@@ -107,7 +107,7 @@ def entradaRadios(request, id, orden_id):
             radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
             return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                                     "formEntrada":formEntrada}) 
-
+@login_required
 def entradas(request, id):
 
     form = guardaEntradaRx()
@@ -124,7 +124,7 @@ def entradas(request, id):
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
-
+@login_required
 def entradatotal(request, id, id_orden):
 
     if not request.user.is_superuser:
@@ -173,7 +173,7 @@ def entradatotal(request, id, id_orden):
 
 
     return redirect('/ordenesDevueltas/')
-
+@login_required
 def anularorden(request, id):
 
     if not request.user.is_superuser:
@@ -211,33 +211,33 @@ def anularorden(request, id):
 
     return redirect('/ordenesProcesadas/')
 #verifica esto en produccion con el datetime 
-
+@login_required
 def salidas(request):
     fecha_actual = datetime.date.today()
     fecha_tope = datetime.date.today() + timedelta(days=2) 
     ordenes = ordenRegistro.objects.filter(estado_id = 2).order_by('fecha_entrega')
     return render(request, 'salidas.html', {"listaOrdenes": ordenes, "fecha_actal":fecha_actual, "fecha_tope":fecha_tope})
-
+@login_required
 def ordenesProcesadas(request):
     # ordenes = ordenRegistro.objects.filter(estado_id = 5)
     # return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
     ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
     return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
-
+@login_required
 def ordenesCerradas(request): 
     # ordenes = ordenRegistro.objects.filter(estado_id = 3)
     # return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
     ordenes = vista_ordenes_cerradas.objects.all().order_by('-fecha_retiro')
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
 
-
+@login_required
 def ordenesDevueltas(request):
 
     nombre_cliente = cliente.objects.all()
     
     devueltas = vista_entrada_detalle.objects.all()
     return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
-
+@login_required
 def ordenDetalle(request, id):
     detalle = ordenRegistro.objects.get(id=id)
     color = ""
@@ -245,11 +245,11 @@ def ordenDetalle(request, id):
         mochila_guardada = mochila.objects.get(numero_orden=id)
         color = mochila_guardada.color
     return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":color})
-
+@login_required
 def detalleOrdenCerrada(request, id):
     detalle = ordenRegistro.objects.get(id=id)
     return render(request, 'editarOrden.html', {"listaDetalles": detalle})
-
+@login_required
 def generarSalida(request, id):
     
     try:
@@ -291,7 +291,7 @@ def generarSalida(request, id):
         context = {'formRadios': form}
         msalida = salidasDetalle.objects.get(id_orden=id)
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, 'formRadios': form})
-
+@login_required
 def guardarDetalleRadio(request, id, id_orden):
 
     form = radiotipos()
@@ -393,7 +393,7 @@ def guardarDetalleRadio(request, id, id_orden):
     else:
         # form = radiotipos(initial={'serial': ''})
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, "formRadios": form, "cantidad_radios":cuenta_radios,"serial_radios":serial_radios})
-            
+@login_required           
 def inventario(request):
 
     inv_disp = invSeriales.objects.filter(estado_id =4)
@@ -437,7 +437,7 @@ def inventario(request):
     "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
     "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
                 "plomonoDisponibles":plomo_nodisp})
-
+@login_required
 def movimientosRadios(request):
 
 
@@ -487,7 +487,7 @@ def movimientosRadios(request):
 
         return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"amarillasDisponibles":amarillas_disp, "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "estado":estadorx.estado,"buscaradios":formBuscaRadio, "ultima_salida":formatedDate, "cliente":nombre_cliente})
-
+@login_required
 def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
     b = detalle_salida
@@ -509,7 +509,7 @@ def cambiaEstadoEntregado(request, id):
 
     ordenes = ordenRegistro.objects.filter(estado_id = 3)
     return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
-
+@login_required
 def generarPDFPreparados(request, id):
 
     ordenes = ordenRegistro.objects.get(id = id)
@@ -564,7 +564,7 @@ def generarPDFPreparados(request, id):
 
 
     return response
-
+@login_required
 def generarEntrada(request, id, orden_id):
 
     if request.method == 'POST':
@@ -709,13 +709,13 @@ def generarEntrada(request, id, orden_id):
                 # log.save()
 
             return redirect('/ordenesCerradas/')
-
+@login_required
 def verFaltante(request):
     
     rx_listado_faltante = vista_radios_faltantes.objects.all()
     listadoFantante = vista_accesorios_faltantes.objects.all()
     return render(request,"faltantes.html",{"listAccFaltante":listadoFantante, "listadorxfaltante":rx_listado_faltante})
-
+@login_required
 def generarPDFGuia(request, id):
 
     # font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'MS_Reference_Sans_Serif.ttf')
@@ -865,7 +865,7 @@ def generarPDFGuia(request, id):
 
 
     return response
-
+@login_required
 def guardarcolormochila(request, id):
 
     if request.method == 'POST':
@@ -889,7 +889,7 @@ def guardarcolormochila(request, id):
 
         detalle = ordenRegistro.objects.get(id=id)
         return render(request, 'editarOrden.html', {"listaDetalles": detalle, "mochilaguardada":color})
-
+@login_required
 def pdfguiadevueltos(request, id):
 
     # font_path = os.path.join(os.path.dirname(__file__), 'fonts', 'times.ttf')
@@ -1069,7 +1069,7 @@ def pdfguiadevueltos(request, id):
 
 
     return response
-
+@login_required
 def buscaOrdenesDevueltas(request):
 
     if request.method == 'POST':
@@ -1080,7 +1080,7 @@ def buscaOrdenesDevueltas(request):
         devueltas = vista_entrada_detalle.objects.filter(cliente = nombre)
 
         return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
-
+@login_required
 def monitor(request):
     fecha_actual = datetime.date.today()
 
@@ -1090,7 +1090,7 @@ def monitor(request):
     ordenes_retiro = ordenRegistro.objects.filter(estado_id=3, fecha_retiro__lte = fecha_actual)
     ordenes_retiro_count = ordenRegistro.objects.filter(estado_id = 3, fecha_retiro__lte = fecha_actual).count()
     return render(request, 'monitor.html', {"listaOrdenesRetiro": ordenes_retiro, "total_ordenes_retiro":ordenes_retiro_count, "listaOrdenes":ordenes, "total_ordenes":ordenes_count})
-
+@login_required
 def generarPDFprint(request, id):
 
     detalle_acce = salidasDetalle.objects.get(id_orden = id)
@@ -1152,7 +1152,7 @@ def generarPDFprint(request, id):
 
 
     return response
-
+@login_required
 def generaInformes(request):
 
     form = formBuscarInformes()
@@ -1284,7 +1284,7 @@ def generaInformes(request):
     else:
         return render(request, 'informes.html', {'form':form})
 
-
+@login_required
 def generarPDFtotales(request):
 
     form = formBuscarInformes()
@@ -1418,19 +1418,19 @@ def generarPDFtotales(request):
 
         return render(request, 'informes.html', {'form':form})
     
-
+@login_required
 def auditoria(request):
     return render(request, 'auditoria.html')
 
 
-    
+@login_required    
 def listadocxc(request):
 
     form = FacturaPDFForm()
     nombre_cliente = cliente.objects.all().order_by('nombre')
     devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def listadocxcfacturado(request):
 
     form = FacturaPDFForm()
@@ -1439,7 +1439,7 @@ def listadocxcfacturado(request):
     saldo=F('monto_total')  # saldo igual a monto_total
 ).order_by('id_orden')
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def listadocxcfacturadoAbono(request):
 
     form = FacturaPDFForm()
@@ -1448,7 +1448,7 @@ def listadocxcfacturadoAbono(request):
     saldo__lt=F('monto_total')
 ).order_by('id_orden')
     return render(request, 'listadocxcfacturadoabono.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def detalleabonado(request, id):
 
     encabezado = get_object_or_404(vista_ordenes_cxc, id_orden=id)
@@ -1472,13 +1472,13 @@ def detalleabonado(request, id):
                                                   'ruc_razon_s':ruc_razon_s, 'numero_orden':orden, 'numero_salida':salida,
                                                    'monto_factura': monto_factura, 'fecha_evento': fecha_evento, 'saldo':saldo_restante,
                                                     'lista_abonos':abonos, 'total_abonado':total_abonos_facturas})
-
+@login_required
 def listadocxcpagado(request):
 
     nombre_cliente = cliente.objects.all().order_by('nombre')
     devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
     return render(request, 'listadocxcpagado.html',{"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente})
-
+@login_required
 def subir_factura_pdf(request, id, id_salida):
     registro = get_object_or_404(ordenRegistro, id=id)
 
@@ -1523,7 +1523,7 @@ def subir_factura_pdf(request, id, id_salida):
         form = FacturaPDFForm(instance=registro)
 
     return redirect('/listadocxcfacturado/')
-
+@login_required
 def subir_factura_pdf_no_sunat(request, id, id_salida):
     registro = get_object_or_404(ordenRegistro, id=id)
 
@@ -1554,7 +1554,7 @@ def subir_factura_pdf_no_sunat(request, id, id_salida):
     else:
 
         return redirect('/listadocxcfacturado/')
-
+@login_required
 def ver_factura_pdf(request, id):
     registro = get_object_or_404(ordenRegistro, id=id)
     
@@ -1570,7 +1570,7 @@ def ver_factura_pdf(request, id):
     else:
         # Manejo si no hay PDF disponible
         return HttpResponse("No hay archivo PDF disponible para descargar.")
-
+@login_required
 def ver_comprobante_pago(request, id):
     registro = get_object_or_404(contable, id_orden=id)
     
@@ -1586,7 +1586,7 @@ def ver_comprobante_pago(request, id):
     else:
         # Manejo si no hay PDF disponible
         return HttpResponse("No hay archivo disponible para descargar.")
-
+@login_required
 def ver_comprobante_pago_abono(request, id):
     registro = get_object_or_404(abono_factura, id=id)
     
@@ -1602,20 +1602,20 @@ def ver_comprobante_pago_abono(request, id):
     else:
         # Manejo si no hay PDF disponible
         return HttpResponse("No hay archivo disponible para descargar.")
-    
+@login_required    
 def form_registra_fact(request, id, cliente, ruc, id_salida):
 
     form = FacturaPDFForm()
     form_datos_fact = formRegistroMontoFact()
     
     return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact})
-
+@login_required
 def form_registra_fact_no_sunat(request, id, cliente, ruc, id_salida):
 
     form_datos_fact = formRegistroMontoFactNoSunat()
     
     return render(request, 'formsubirfactNosunat.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'formDatosFact':form_datos_fact})
-
+@login_required
 def revertir_factura(request, id):
     
     registro = get_object_or_404(ordenRegistro, id=id)
@@ -1630,7 +1630,7 @@ def revertir_factura(request, id):
         abono_factura.objects.filter(id_orden = id).delete()
 
     return redirect('/listadocxc/')
-
+@login_required
 def revertir_abono(request, id):
     
     registro_datos = get_object_or_404(abono_factura, id=id)
@@ -1643,7 +1643,7 @@ def revertir_abono(request, id):
 
     #buscar el saldo en contable y actualizar 
     return redirect('/listadocxcfacturadoabono/')
-
+@login_required
 def form_registrar_pago(request, id, cliente, ruc, id_salida):
 
     form_datos_pago = formRegistroMontopago()
@@ -1667,7 +1667,7 @@ def form_registrar_pago(request, id, cliente, ruc, id_salida):
                                                     'form_datos_pago':form_datos_pago, 'saldo':saldo, 'form_comprobante_pago':form_comprobante_pago,
                                                     'monto_base':monto_base, 'igv':igv, 'monto_total':monto_total, 
                                                     'total_abonos_facturas':total_abonos_facturas, 'monto_detraccion':monto_detraccion})
-
+@login_required
 def registrar_pago(request, id, id_salida):
 
     # validar si el monto abonado es igual al monto total de la factura, es pago total y va directo a contable. 
@@ -1821,7 +1821,7 @@ def registrar_pago(request, id, id_salida):
 
     else:
         return redirect('/listadopagado/')
-
+@login_required
 def reportescxc(request):
 
     #tab1- General - solo prueba
@@ -1866,7 +1866,7 @@ def reportescxc(request):
                                                  'total_cobrado':total_cobrado_value, 'nombre_cliente':nombre, 'emitir_detalle':por_emitir_detalle,
                                                  'por_cobrar_detalle':emitidas_por_cobrar_detalle, 'saldo_detalle': total_saldo_value_detalle,
                                                  'total_cobrado_detalle':total_cobrado_value_detalle, 'cobradas_detalle':cobradas_detalle })
-
+@login_required
 def buscarlistadocxccliente(request):
 
     form = FacturaPDFForm()
@@ -1884,7 +1884,7 @@ def buscarlistadocxccliente(request):
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocxcruc(request):
 
     form = FacturaPDFForm()
@@ -1902,7 +1902,7 @@ def buscarlistadocxcruc(request):
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocxcidsalida(request):
 
     form = FacturaPDFForm()
@@ -1920,7 +1920,7 @@ def buscarlistadocxcidsalida(request):
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocxcidorden(request):
 
     form = FacturaPDFForm()
@@ -1938,7 +1938,7 @@ def buscarlistadocxcidorden(request):
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadofacturadocliente(request):
 
     form = FacturaPDFForm()
@@ -1958,7 +1958,7 @@ def buscarlistadofacturadocliente(request):
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadofacturadoruc(request):
 
     form = FacturaPDFForm()
@@ -1978,7 +1978,7 @@ def buscarlistadofacturadoruc(request):
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadofacturadoidsalida(request):
 
     form = FacturaPDFForm()
@@ -1998,7 +1998,7 @@ def buscarlistadofacturadoidsalida(request):
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadofacturadoidorden(request):
 
     form = FacturaPDFForm()
@@ -2018,7 +2018,7 @@ def buscarlistadofacturadoidorden(request):
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocobradocliente(request):
 
     form = FacturaPDFForm()
@@ -2036,7 +2036,7 @@ def buscarlistadocobradocliente(request):
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocobradoruc(request):
 
     form = FacturaPDFForm()
@@ -2054,7 +2054,7 @@ def buscarlistadocobradoruc(request):
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocobradoidsalida(request):
 
     form = FacturaPDFForm()
@@ -2072,7 +2072,7 @@ def buscarlistadocobradoidsalida(request):
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def buscarlistadocobradoreferencia(request):
 
     form = FacturaPDFForm()
@@ -2090,126 +2090,129 @@ def buscarlistadocobradoreferencia(request):
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
-
+@login_required
 def pdfporcobrar_detalle(request, cliente):
+    try:
+        if vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden').exists():
+            
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden')
+            total_saldo_detalle = vista_ordenes_cxc.objects.filter(facturado=1, cliente = cliente, pagado = 0).aggregate(Sum('saldo'))
+            total_saldo_value_detalle = total_saldo_detalle['saldo__sum']
+            total_saldo_value_detalle = format(total_saldo_value_detalle, ".2f")
+            ruc_unico = devueltas.values('ruc').distinct().first()
+            ruc_valor = ruc_unico['ruc']
 
-    if vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden').exists():
-        
-        devueltas = vista_ordenes_cxc.objects.filter(cliente = cliente, facturado = 1, pagado = 0).order_by('id_orden')
-        total_saldo_detalle = vista_ordenes_cxc.objects.filter(facturado=1, cliente = cliente, pagado = 0).aggregate(Sum('saldo'))
-        total_saldo_value_detalle = total_saldo_detalle['saldo__sum']
-        total_saldo_value_detalle = format(total_saldo_value_detalle, ".2f")
-        ruc_unico = devueltas.values('ruc').distinct().first()
-        ruc_valor = ruc_unico['ruc']
+            buffer = BytesIO()
+            tamano_pagina =  (21.59*cm, 27.94*cm)
+            pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
 
-        buffer = BytesIO()
-        tamano_pagina =  (21.59*cm, 27.94*cm)
-        pdf = canvas.Canvas(buffer, pagesize=tamano_pagina)
+            image_filename = 'logo_22.jpg'
+            image_path = f'radios/static/{image_filename}'
 
-        image_filename = 'logo_22.jpg'
-        image_path = f'radios/static/{image_filename}'
+            # Calcula el tamaño y posición de la imagen
+            image_width = 60
+            image_height = 60
+            o = 60
+            z = letter[1] - image_height
 
-        # Calcula el tamaño y posición de la imagen
-        image_width = 60
-        image_height = 60
-        o = 60
-        z = letter[1] - image_height
+            image_width01 = 250
+            image_height01 = 70
 
-        image_width01 = 250
-        image_height01 = 70
+            o1 = 60
+            z2 = z - image_height -20
+            
+            pdf.drawImage(image_path, o1, z2, width=image_width01, height=image_height01)
 
-        o1 = 60
-        z2 = z - image_height -20
-        
-        pdf.drawImage(image_path, o1, z2, width=image_width01, height=image_height01)
-
-        font_size = 14
-        pdf.setFont("Helvetica", font_size)
-        pdf.setFillColorRGB(0, 0, 1)
-        pdf.drawString(2*cm, 22*cm, "RELACIÓN DE FACTURAS PENDIENTE POR COBRAR")
-        pdf.setFillColorRGB(0, 0, 0)
-        pdf.setFont("Helvetica-Bold", font_size)
-        pdf.drawString(2*cm, 21*cm, "CLIENTE: "+ cliente)
-        pdf.drawString(2*cm, 20.5*cm, "RUC: "+ ruc_valor)
-        pdf.setFillColorRGB(0, 0, 0)
-        pdf.setFont("Helvetica", font_size)
-
-        font_size = 12
-        pdf.setFont("Helvetica", font_size)
-
-        h = 2*cm
-        v = 19*cm
-
-        for i in devueltas:
-            abonos = abono_factura.objects.filter(id_orden = i.id_orden).aggregate(Sum('monto_abono'))
-            total_abono_value = abonos['monto_abono__sum']
-            total_abono_value = format(total_abono_value, ".2f")
-            h = 2*cm
+            font_size = 14
+            pdf.setFont("Helvetica", font_size)
             pdf.setFillColorRGB(0, 0, 1)
-            pdf.drawString(h, v, 'Fecha Evento:')
-            h += 3*cm
+            pdf.drawString(2*cm, 22*cm, "RELACIÓN DE FACTURAS PENDIENTE POR COBRAR")
             pdf.setFillColorRGB(0, 0, 0)
-            fecha_evento = str(i.fecha_evento_desde.date()) 
-            pdf.drawString(h, v, fecha_evento)
-            v -= 0.5*cm
+            pdf.setFont("Helvetica-Bold", font_size)
+            pdf.drawString(2*cm, 21*cm, "CLIENTE: "+ cliente)
+            pdf.drawString(2*cm, 20.5*cm, "RUC: "+ ruc_valor)
+            pdf.setFillColorRGB(0, 0, 0)
+            pdf.setFont("Helvetica", font_size)
+
+            font_size = 12
+            pdf.setFont("Helvetica", font_size)
+
             h = 2*cm
-            pdf.drawString(h, v, 'N° Orden:')
-            salida = str(i.id_salida)
-            h += 3*cm
-            pdf.drawString(h, v, salida)
-            h += 6*cm
-            pdf.drawString(h, v, 'Monto Total Factura:')
-            h += 5*cm
-            monto_factura = str(i.monto_total)
-            pdf.drawString(h, v, 'S/' + ' ' + monto_factura)
-            v -= 0.5*cm
-            h = 2*cm
-            pdf.drawString(h, v, 'Cantidad Radios:')
-            h += 4*cm
-            radios_cantidad = str(i.cantidad_radios)
-            pdf.drawString(h, v, radios_cantidad)
-            h += 5*cm
-            pdf.drawString(h, v, 'Monto Total Abonado:')
-            h +=5*cm
-            pdf.drawString(h,v, 'S/' + ' ' + str(total_abono_value))
-            h = 2*cm
-            v -= 0.5*cm
-            if i.razon_social is not None:
-                pdf.drawString(h, v, 'Razon Social:')
+            v = 19*cm
+
+            for i in devueltas:
+                abonos = abono_factura.objects.filter(id_orden = i.id_orden).aggregate(Sum('monto_abono'))
+                total_abono_value = abonos['monto_abono__sum']
+                total_abono_value = format(total_abono_value, ".2f")
+                h = 2*cm
+                pdf.setFillColorRGB(0, 0, 1)
+                pdf.drawString(h, v, 'Fecha Evento:')
+                h += 3*cm
+                pdf.setFillColorRGB(0, 0, 0)
+                fecha_evento = str(i.fecha_evento_desde.date()) 
+                pdf.drawString(h, v, fecha_evento)
+                v -= 0.5*cm
+                h = 2*cm
+                pdf.drawString(h, v, 'N° Orden:')
+                salida = str(i.id_salida)
+                h += 3*cm
+                pdf.drawString(h, v, salida)
+                h += 6*cm
+                pdf.drawString(h, v, 'Monto Total Factura:')
+                h += 5*cm
+                monto_factura = str(i.monto_total)
+                pdf.drawString(h, v, 'S/' + ' ' + monto_factura)
+                v -= 0.5*cm
+                h = 2*cm
+                pdf.drawString(h, v, 'Cantidad Radios:')
                 h += 4*cm
-                razon_social = str(i.razon_social)
-                pdf.drawString(h, v, razon_social)
+                radios_cantidad = str(i.cantidad_radios)
+                pdf.drawString(h, v, radios_cantidad)
+                h += 5*cm
+                pdf.drawString(h, v, 'Monto Total Abonado:')
+                h +=5*cm
+                pdf.drawString(h,v, 'S/' + ' ' + str(total_abono_value))
                 h = 2*cm
                 v -= 0.5*cm
-                pdf.drawString(h, v, 'RUC:')
-                h += 4*cm
-                ruc_razon_social = str(i.ruc_razon_social)
-                pdf.drawString(h, v, ruc_razon_social)
+                if i.razon_social is not None:
+                    pdf.drawString(h, v, 'Razon Social:')
+                    h += 4*cm
+                    razon_social = str(i.razon_social)
+                    pdf.drawString(h, v, razon_social)
+                    h = 2*cm
+                    v -= 0.5*cm
+                    pdf.drawString(h, v, 'RUC:')
+                    h += 4*cm
+                    ruc_razon_social = str(i.ruc_razon_social)
+                    pdf.drawString(h, v, ruc_razon_social)
 
-            v -= 1*cm
+                v -= 1*cm
 
-            #colocar Razon social 
-        
-        v -=2*cm
-        h = 2*cm
-        pdf.setFillColorRGB(1, 0, 0)
-        font_size = 14
-        pdf.setFont("Helvetica-Bold", font_size)
-        pdf.drawString(h, v, 'Total por Cobrar:')
-        h = 6.5*cm
-        pdf.drawString(h, v, 'S/' + ' ' + str(total_saldo_value_detalle))
-        pdf.setFillColorRGB(0, 0, 0)
-        
-        pdf.showPage()
-        pdf.save()
+                #colocar Razon social 
+            
+            v -=2*cm
+            h = 2*cm
+            pdf.setFillColorRGB(1, 0, 0)
+            font_size = 14
+            pdf.setFont("Helvetica-Bold", font_size)
+            pdf.drawString(h, v, 'Total por Cobrar:')
+            h = 6.5*cm
+            pdf.drawString(h, v, 'S/' + ' ' + str(total_saldo_value_detalle))
+            pdf.setFillColorRGB(0, 0, 0)
+            
+            pdf.showPage()
+            pdf.save()
 
-        buffer.seek(0)
-        nombre_archivo = str(cliente)+'.pdf'
-        response = HttpResponse(buffer, content_type='application/pdf')
-        response['Content-Disposition'] = f'attachment; filename= {nombre_archivo}'
+            buffer.seek(0)
+            nombre_archivo = str(cliente)+'.pdf'
+            response = HttpResponse(buffer, content_type='application/pdf')
+            response['Content-Disposition'] = f'attachment; filename= {nombre_archivo}'
 
-        return response
-    
+            return response
+    except Exception as e:
+                error_message = f"Error al guardar los datos: {e}"
+                return HttpResponse(error_message) 
+
     else:
         return HttpResponse(f"""
                 <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
