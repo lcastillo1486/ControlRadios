@@ -1428,7 +1428,7 @@ def listadocxc(request):
 
     form = FacturaPDFForm()
     nombre_cliente = cliente.objects.all().order_by('nombre')
-    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
 @login_required
 def listadocxcfacturado(request):
@@ -1437,7 +1437,7 @@ def listadocxcfacturado(request):
     nombre_cliente = cliente.objects.all().order_by('nombre')
     devueltas = vista_ordenes_cxc.objects.filter(facturado=1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
     saldo=F('monto_total')  # saldo igual a monto_total
-).order_by('id_orden')
+).order_by('fecha_entrega')
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
 @login_required
 def listadocxcfacturadoAbono(request):
@@ -1446,7 +1446,7 @@ def listadocxcfacturadoAbono(request):
     nombre_cliente = cliente.objects.all().order_by('nombre')
     devueltas = vista_ordenes_cxc.objects.filter(facturado=1, pagado = 0).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
     saldo__lt=F('monto_total')
-).order_by('id_orden')
+).order_by('fecha_entrega')
     return render(request, 'listadocxcfacturadoabono.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
 @login_required
 def detalleabonado(request, id):
