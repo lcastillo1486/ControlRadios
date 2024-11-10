@@ -203,7 +203,7 @@
                                 <tr>
                                     <td>{{c.id_salida}}</td>
                                     <td>{{c.cliente}}</td>
-                                    <td>{{c.ruc}}</td>
+                                    <td>{{ c.ruc|default:"" }}</td>
                                     <td style="font-weight: bold;">S/ {{c.monto_total}}</td>
                                     <td style="font-weight: bold;">S/ {{c.saldo}}</td>
                                     <td>{{c.fecha_pago|date}}</td>

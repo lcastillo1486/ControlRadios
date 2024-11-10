@@ -200,7 +200,7 @@
                                     <td>{{c.id_orden}}</td>
                                     <td>{{c.id_salida}}</td>
                                     <td>{{c.cliente}}</td>
-                                    <td>{{c.ruc}}</td>
+                                    <td>{{ c.ruc|default:"" }}</td>
                                     <td>{{c.fecha_entrega|date}}</td>
                                     <td> <input type="checkbox" id="check_{{c.id_orden}}" name="opcion1" value="opcion1" onclick="mostrarboton('{{c.id_orden}}')" checked> </td>
                                     <td>

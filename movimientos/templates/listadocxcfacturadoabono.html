@@ -203,7 +203,7 @@
                                     <td>{{c.id_orden}}</td>
                                     <td>{{c.id_salida}}</td>
                                     <td>{{c.cliente}}</td>
-                                    <td>{{c.ruc}}</td>
+                                    <td>{{ c.ruc|default:"" }}</td>
                                     <td>{{c.fecha_evento_desde|date}}</td>
                                     <td><input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled>
                                         {% if not c.facturado %}
