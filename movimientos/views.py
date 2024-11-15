@@ -507,8 +507,9 @@ def cambiaEstadoEntregado(request, id):
 
 
 
-    ordenes = ordenRegistro.objects.filter(estado_id = 3)
-    return render(request, 'ordenesCerradas.html', {"listaOrdenes": ordenes})
+    # ordenes = ordenRegistro.objects.filter(estado_id = 3)
+    ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
+    return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
 @login_required
 def generarPDFPreparados(request, id):
 
