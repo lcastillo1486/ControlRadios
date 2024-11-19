@@ -302,6 +302,7 @@ class vista_ordenes_cxc(models.Model):
         auto_created = True
     
 class controlrxevent(models.Model):
+    id = models.AutoField(primary_key=True)
     id_salida = models.PositiveIntegerField(null=True, blank=True)
     serial = models.CharField(max_length=50, null=True, blank=True)
     responsable = models.CharField(max_length=200, null=True, blank=True)
