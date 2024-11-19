@@ -152,3 +152,12 @@ class comprobanteabonoForm(forms.ModelForm):
         super(comprobanteabonoForm, self).__init__(*args, **kwargs)
         self.fields['comprobante_pago'].required = False              
         
+class rxcontroleventoform(forms.Form):
+    serial = forms.CharField(max_length=100, label="Serial")
+
+class ResponsableForm(forms.Form):
+    responsable = forms.CharField(max_length=100, label="Responsable")
+    telefono = forms.CharField(max_length=20, label='Teléfono', required=False)
+
+class rxcontroleventoformRecojo(forms.Form):
+    serial_recojo = forms.CharField(max_length=100, label="Serial")

@@ -301,6 +301,17 @@ class vista_ordenes_cxc(models.Model):
         db_table = 'vista_ordenes_cxc'
         auto_created = True
     
+class controlrxevent(models.Model):
+    id_salida = models.PositiveIntegerField(null=True, blank=True)
+    serial = models.CharField(max_length=50, null=True, blank=True)
+    responsable = models.CharField(max_length=200, null=True, blank=True)
+    estadorx = models.CharField(max_length=5, null=True, blank=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+    hora = models.TimeField(null=True, blank=True)
 
+    class Meta:
+        managed = False
+        db_table = 'controlrxevent'
+        auto_created = True
 
 
