@@ -2379,21 +2379,26 @@ def controlrxevento(request, id):
 
 def cargarxordenevento(request, id):
 
-    rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
-    registros = [
-        controlrxevent(
-            id_salida = i.id_salida,
-            serial = i.serial,
-            responsable = "",
-            estadorx = 'S'
-        )
+    try:
+        rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
+        registros = [
+            controlrxevent(
+                id_salida = i.id_salida,
+                serial = i.serial,
+                responsable = "",
+                estadorx = 'S'
+            )
 
-        for i in rx_orden
-    ]
+            for i in rx_orden
+        ]
 
-    if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
-        controlrxevent.objects.bulk_create(registros)
-
+        if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
+            controlrxevent.objects.bulk_create(registros)
+    
+    except Exception as e:
+                error_message = f"Error al guardar los datos: {e}"
+                return HttpResponse(error_message) 
+    
     return redirect('controlrxevento', id=id)
 
 
