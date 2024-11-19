@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackTrack</title>
+</head>
+<style>
+
+    body{
+        font-weight: bold;
+        text-align: center;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Agregar una sombra a la tabla */
+
+    }
+
+    tr {
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+    }
+
+    .centrar {
+        text-align: center;
+    }
+
+    th {
+        color: #0047ab;
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+        background-color: white;
+    }
+
+    h1 {
+        color: #0047ab;
+        font-size: 36px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    h3 {
+        color: #0047ab;
+        font-size: 18px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    h5 {
+        font-size: 12px;
+    }
+
+    .container {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        height: auto;
+        border-radius: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        background: white;
+    }
+
+    /* Pantallas medianas (tablets, pantallas de 1200px o menos) */
+    @media (max-width: 1200px) {
+        .container {
+            max-width: 1000px;
+            /* Ancho más adecuado para pantallas medianas */
+            padding: 15px;
+            /* Ajuste de padding */
+        }
+    }
+
+    /* Pantallas pequeñas (tablets verticales, smartphones grandes) */
+    @media (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            /* Ancho completo para pantallas pequeñas */
+            padding: 10px;
+            /* Relleno más pequeño */
+        }
+    }
+
+    /* Pantallas muy pequeñas (smartphones pequeños) */
+    @media (max-width: 480px) {
+        .container {
+            padding: 5px;
+            /* Relleno aún menor */
+            border-radius: 10px;
+            /* Bordes menos redondeados para espacio adicional */
+        }
+    }
+</style>
+
+<body>
+
+    <div class="container mt-4">
+
+            <img src="{% static 'logo.png' %}" width="50" height="50" style="margin-bottom: 10px;">
+            <p><strong>Responsable:</strong> {{ request.session.responsable_print }}</p>
+            <p><strong>Teléfono:</strong> {{ request.session.telefono_print }}</p>
+    
+            <h4>Lista de Seriales</h4>
+            <div class="serial-list">
+                {% for serial in request.session.seriales_print %}
+                    <div class="serial-item">{{ serial.serial }}</div>
+                {% endfor %}
+            </div>
+
+                <h5>{{fecha_hora}}</h5>
+           
+                <h5>https://www.backtrackelite.com/</h5>
+    
+            <script>
+                window.onload = function() {
+                    window.print();
+                    
+                    // Redirige a 'controlrxevento' después de un tiempo de espera de 3 segundos
+                    setTimeout(function() {
+                        window.location.href = "{% url 'controlrxevento' id=id %}";
+                    }, 3000);  // 3000 ms = 3 segundos
+                }
+            </script>
+    </div>        
+            
+            
+
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+</body>
+
+
+</html>
