@@ -59,6 +59,11 @@ urlpatterns = [
     path('detalleabonos/<int:id>',views.detalleabonado),
     path('descargarcomprobanteabono/<int:id>',views.ver_comprobante_pago_abono),
     path('borrarabono/<int:id>',views.revertir_abono),
+    path('controlrxevento/<int:id>',views.controlrxevento, name='controlrxevento'),
+    path('cargarrxevento/<int:id>',views.cargarxordenevento, name='cargarx'),
+    path('controlrxeventorecojo/<int:id>',views.controlrxeventorecojo, name='controlrxeventorecojo'),
+    path('imprimir/<int:id>', views.print_view, name='print_template'),
+    path('eliminarserial/<int:id>', views.eliminar_serial, name='eliminar_serial'),
 
 
 
