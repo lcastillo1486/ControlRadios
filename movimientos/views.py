@@ -2133,7 +2133,10 @@ def pdfporcobrar_detalle(request, cliente):
             pdf.setFillColorRGB(0, 0, 0)
             pdf.setFont("Helvetica-Bold", font_size)
             pdf.drawString(2*cm, 21*cm, "CLIENTE: "+ cliente)
-            if ruc_valor is not None:
+            if ruc_valor is None:
+                ruc_valor = ""
+                pdf.drawString(2*cm, 20.5*cm, "RUC: "+ ruc_valor)
+            else:
                 pdf.drawString(2*cm, 20.5*cm, "RUC: "+ ruc_valor)
             pdf.setFillColorRGB(0, 0, 0)
             pdf.setFont("Helvetica", font_size)
