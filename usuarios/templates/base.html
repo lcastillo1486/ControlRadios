@@ -29,6 +29,7 @@
         <a class="nav-item nav-link" href='/informe/'>Informes</a>
         <a class="nav-item nav-link" href='/auditoria/'>Auditoría</a>
 
+        {% if user.username in  'lmeneses, maria2018, lcastillo' %}
         <div class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="facturasBancoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             Facturación
@@ -41,7 +42,7 @@
           <li><a class="dropdown-item" href="/reportescxc/">Reportes</a></li>
         </ul>
         </div>
-        
+        {% endif %}
         <a class="nav-item nav-link" href='/registro/'>Nuevo Usuario</a>
         <a class="nav-item nav-link" href='/logout/'>Cerrar Sesion</a>
         {% else %}
