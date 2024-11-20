@@ -2416,7 +2416,7 @@ def controlrxeventorecojo(request, id):
             # calcular hora suma 3 de diferencia con Oregon
 
             hora_actual = d.now()
-            hora_actual = hora_actual + timedelta(hours=3)
+            # hora_actual = hora_actual + timedelta(hours=3)
             hora_actual = hora_actual.strftime("%H:%M")
             
 
@@ -2454,7 +2454,7 @@ def controlrxeventorecojo(request, id):
 def print_view(request, id):
 
     fecha_hora = d.now()
-    fecha_hora = fecha_hora + timedelta(hours=3)
+    # fecha_hora = fecha_hora + timedelta(hours=3)
 
     return render(request, 'print_seriales.html', {'id':id, 'fecha_hora':fecha_hora})
 
