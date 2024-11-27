@@ -183,7 +183,10 @@
                                         Cliente
                                     </th>
                                     <th>
-                                        RUC
+                                        Razón Social
+                                    </th>
+                                    <th>
+                                        RUC R.S.
                                     </th>
                                     <th>
                                         Fecha del Evento:
@@ -203,7 +206,8 @@
                                     <td>{{c.id_orden}}</td>
                                     <td>{{c.id_salida}}</td>
                                     <td>{{c.cliente}}</td>
-                                    <td>{{ c.ruc|default:"" }}</td>
+                                    <td>{{c.razon_social|default:""}}</td>
+                                    <td>{{c.ruc_razon_social|default:""}}</td>
                                     <td>{{c.fecha_evento_desde|date}}</td>
                                     <td><input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled>
                                         {% if not c.facturado %}
