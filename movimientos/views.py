@@ -1657,7 +1657,7 @@ def revertir_abono(request, id):
     #buscar el saldo en contable y actualizar 
     return redirect('/listadocxcfacturadoabono/')
 @login_required
-def form_registrar_pago(request, id, cliente, ruc, id_salida):
+def form_registrar_pago(request, id, cliente, ruc, id_salida, razon_social):
 
     form_datos_pago = formRegistroMontopago()
     form_comprobante_pago = comprobantePagoForm()
@@ -1679,7 +1679,8 @@ def form_registrar_pago(request, id, cliente, ruc, id_salida):
     return render(request, 'formregistrapago.html',{'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,
                                                     'form_datos_pago':form_datos_pago, 'saldo':saldo, 'form_comprobante_pago':form_comprobante_pago,
                                                     'monto_base':monto_base, 'igv':igv, 'monto_total':monto_total, 
-                                                    'total_abonos_facturas':total_abonos_facturas, 'monto_detraccion':monto_detraccion})
+                                                    'total_abonos_facturas':total_abonos_facturas, 'monto_detraccion':monto_detraccion,
+                                                    'razon_social':razon_social})
 @login_required
 def registrar_pago(request, id, id_salida):
 

@@ -37,7 +37,7 @@ urlpatterns = [
     path('formregistrafactura/<int:id>/<str:cliente>/<str:ruc>/<str:id_salida>/<str:razon_social>',views.form_registra_fact),
     path('formregistrafacturanosunat/<int:id>/<str:cliente>/<str:ruc>/<str:id_salida>/<str:razon_social>',views.form_registra_fact_no_sunat),
     path('revertirfactura/<int:id>',views.revertir_factura),
-    path('formregistrarpago/<int:id>/<str:cliente>/<str:ruc>/<str:id_salida>',views.form_registrar_pago),
+    path('formregistrarpago/<int:id>/<str:cliente>/<str:ruc>/<str:id_salida>/<str:razon_social>',views.form_registrar_pago),
     path('registrarpago/<int:id>/<int:id_salida>',views.registrar_pago),
     path('listadopagado/',views.listadocxcpagado),
     path('descargarcomprobante/<int:id>',views.ver_comprobante_pago),
