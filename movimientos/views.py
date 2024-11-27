@@ -1610,7 +1610,7 @@ def form_registra_fact(request, id, cliente, ruc, id_salida):
                 <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
                 <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
                 <h2 style="color: red;">DEBE INGRESAR UNA RAZÓN SOCIAL PARA PODER AGREGAR UNA FACTURA</h2>
-                <h2 style="color: red;">POR FAVOR VUELVA ATRÁS Y CORRIJA.</H2>
+                <h2 style="color: red;">POR FAVOR VUELVA ATRÁS.</H2>
                 <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
                 Volver atrás
                 </button>
