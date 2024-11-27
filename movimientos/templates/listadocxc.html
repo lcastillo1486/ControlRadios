@@ -180,7 +180,10 @@
                                         Cliente
                                     </th>
                                     <th>
-                                        RUC
+                                        Razón Social
+                                    </th>
+                                    <th>
+                                        RUC R.S.
                                     </th>
                                     <th>
                                         Fecha de entrega:
@@ -200,10 +203,14 @@
                                     <td>{{c.id_orden}}</td>
                                     <td>{{c.id_salida}}</td>
                                     <td>{{c.cliente}}</td>
-                                    <td>{{ c.ruc|default:"" }}</td>
+                                    <td>{{c.razon_social|default:""}}</td>
+                                    <td>{{c.ruc_razon_social|default:""}}</td>
                                     <td>{{c.fecha_entrega|date}}</td>
                                     <td> <input type="checkbox" id="check_{{c.id_orden}}" name="opcion1" value="opcion1" onclick="mostrarboton('{{c.id_orden}}')" checked> </td>
                                     <td>
+                                        <a href='/editarOrdenfactura/{{c.id_orden}}' class="btn btn-success"
+                                            style="background: url(/static/editar_rs.png); background-size: cover; width: 30px; height: 30px;"
+                                            title="Editar Razón Social"></a>
                                         <!-- <input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled> -->
                                         {% if not c.facturado %}
                                         <a id="sunat_{{c.id_orden}}" href='/formregistrafactura/{{c.id_orden}}/{{c.cliente}}/{{c.ruc}}/{{c.id_salida}}'

@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 from .models import ordenRegistro
-from cliente.models import cliente
+from cliente.models import cliente, razonSocial
 from django.forms import widgets
 
 class formOrden(ModelForm):
@@ -60,4 +60,22 @@ class formEdit(ModelForm):
         super().__init__(*args, **kwargs)
         # Ordenar alfabéticamente el campo cliente
         self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
+
+class formEditFactura(ModelForm):
+
+    class Meta:
+        model = ordenRegistro
+        fields = ['cliente', 'razon_Social']
+        
+        labels = {
+            'cliente':'Cliente:',
+            'razon_Social':'Razon Social:',
+                  
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Ordenar alfabéticamente el campo cliente
+        self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
+        self.fields['razon_Social'].queryset = razonSocial.objects.all().order_by('denominacion')
         

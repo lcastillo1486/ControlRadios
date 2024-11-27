@@ -1286,7 +1286,6 @@ def generaInformes(request):
             return response
     else:
         return render(request, 'informes.html', {'form':form})
-
 @login_required
 def generarPDFtotales(request):
 
@@ -1419,13 +1418,10 @@ def generarPDFtotales(request):
             
     else:
 
-        return render(request, 'informes.html', {'form':form})
-    
+        return render(request, 'informes.html', {'form':form})    
 @login_required
 def auditoria(request):
     return render(request, 'auditoria.html')
-
-
 @login_required    
 def listadocxc(request):
 
@@ -1901,7 +1897,7 @@ def buscarlistadocxcruc(request):
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(ruc_razon_social = ruc, facturado = 0).order_by('id_orden')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
