@@ -1604,10 +1604,13 @@ def ver_comprobante_pago_abono(request, id):
 @login_required    
 def form_registra_fact(request, id, cliente, ruc, id_salida):
 
-    form = FacturaPDFForm()
-    form_datos_fact = formRegistroMontoFact()
-    
-    return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact})
+    if ruc == 'None':
+        print(ruc)
+        return HttpResponse("Agregue un ruc")
+    else:
+        form = FacturaPDFForm()
+        form_datos_fact = formRegistroMontoFact()
+        return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact})
 @login_required
 def form_registra_fact_no_sunat(request, id, cliente, ruc, id_salida):
 
