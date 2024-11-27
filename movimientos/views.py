@@ -1602,7 +1602,7 @@ def ver_comprobante_pago_abono(request, id):
         # Manejo si no hay PDF disponible
         return HttpResponse("No hay archivo disponible para descargar.")
 @login_required    
-def form_registra_fact(request, id, cliente, ruc, id_salida):
+def form_registra_fact(request, id, cliente, ruc, id_salida, razon_social):
 
     if ruc == 'None':
         print(ruc)
@@ -1619,13 +1619,15 @@ def form_registra_fact(request, id, cliente, ruc, id_salida):
     else:
         form = FacturaPDFForm()
         form_datos_fact = formRegistroMontoFact()
-        return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact})
+        return render(request, 'formsubirfact.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'form':form, 'formDatosFact':form_datos_fact,
+                                                      'razon_social':razon_social})
 @login_required
-def form_registra_fact_no_sunat(request, id, cliente, ruc, id_salida):
+def form_registra_fact_no_sunat(request, id, cliente, ruc, id_salida, razon_social):
 
     form_datos_fact = formRegistroMontoFactNoSunat()
     
-    return render(request, 'formsubirfactNosunat.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'formDatosFact':form_datos_fact})
+    return render(request, 'formsubirfactNosunat.html', {'id':id, 'cliente':cliente,'ruc':ruc,'id_salida':id_salida,'formDatosFact':form_datos_fact,
+                                                         'razon_social':razon_social})
 @login_required
 def revertir_factura(request, id):
     
