@@ -1887,11 +1887,11 @@ def buscarlistadocxccliente(request):
 
         if nombre == " ":
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -1905,11 +1905,11 @@ def buscarlistadocxcruc(request):
 
         if not ruc:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(ruc_razon_social = ruc, facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(ruc_razon_social = ruc, facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -1923,11 +1923,11 @@ def buscarlistadocxcidsalida(request):
 
         if not id_salida:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -1941,11 +1941,11 @@ def buscarlistadocxcidorden(request):
 
         if not id_orden:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(id_orden = id_orden, facturado = 0).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(id_orden = id_orden, facturado = 0).order_by('fecha_entrega')
             return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -1960,12 +1960,12 @@ def buscarlistadofacturadocliente(request):
         if nombre == " ":
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, facturado = 1).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -1980,12 +1980,12 @@ def buscarlistadofacturadoruc(request):
         if not ruc:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(ruc_razon_social = ruc, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2000,12 +2000,12 @@ def buscarlistadofacturadoidsalida(request):
         if not id_salida:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2020,12 +2020,12 @@ def buscarlistadofacturadoidorden(request):
         if not id_orden:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
             devueltas = vista_ordenes_cxc.objects.filter(id_orden = id_orden, facturado = 1).filter(Q(referencia__isnull=True) | Q(referencia='')).filter(
-    saldo=F('monto_total')).order_by('id_orden')
+    saldo=F('monto_total')).order_by('fecha_entrega')
             return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcfacturado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2039,11 +2039,11 @@ def buscarlistadocobradocliente(request):
 
         if nombre == " ":
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, pagado =1).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(cliente = nombre, pagado =1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2057,11 +2057,11 @@ def buscarlistadocobradoruc(request):
 
         if not ruc:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(ruc = ruc, pagado = 1).order_by('id_orden').order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(ruc_razon_social = ruc, pagado = 1).order_by('id_orden').order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2075,11 +2075,11 @@ def buscarlistadocobradoidsalida(request):
 
         if not id_salida:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, pagado = 1).order_by('id_orden').order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(id_salida = id_salida, pagado = 1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
@@ -2093,11 +2093,11 @@ def buscarlistadocobradoreferencia(request):
 
         if not referencia:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(pagado = 1).order_by('id_orden').order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         else:
             nombre_cliente = cliente.objects.all().order_by('nombre')
-            devueltas = vista_ordenes_cxc.objects.filter(referencia = referencia, pagado = 1).order_by('id_orden').order_by('id_orden')
+            devueltas = vista_ordenes_cxc.objects.filter(referencia = referencia, pagado = 1).order_by('fecha_entrega')
             return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
         
     return render(request, 'listadocxcpagado.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
