@@ -1493,8 +1493,8 @@ def subir_factura_pdf(request, id, id_salida):
                 return HttpResponse(f"""
                 <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
                 <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
-                <h2 style="color: red;">EL ARCHIVO SELECCIONADO NO ES UN PDF VALIDO</h2>
-                <h2 style="color: red;">POR FAVOR VUELVA ATRÁS.</H2>
+                <h2 style="color: red;">EL ARCHIVO SELECCIONADO NO TIENE UN FORMATO PDF.</h2>
+                <h2 style="color: red;">POR FAVOR, VUELVA ATRÁS.</H2>
                 <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
                 Volver atrás
                 </button>
