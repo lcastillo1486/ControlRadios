@@ -34,6 +34,7 @@ class formOrden(ModelForm):
         super().__init__(*args, **kwargs)
         # Ordenar alfabéticamente el campo cliente
         self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
+        self.fields['razon_Social'].queryset = razonSocial.objects.all().order_by('denominacion')
 
 class formEdit(ModelForm):
 
@@ -60,6 +61,7 @@ class formEdit(ModelForm):
         super().__init__(*args, **kwargs)
         # Ordenar alfabéticamente el campo cliente
         self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
+        self.fields['razon_Social'].queryset = razonSocial.objects.all().order_by('denominacion')
 
 class formEditFactura(ModelForm):
 
