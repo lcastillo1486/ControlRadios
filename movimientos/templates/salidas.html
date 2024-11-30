@@ -145,7 +145,7 @@
                             {% endif %}
                             <td>{{c.id}}</td>
                             <td>{{c.cliente}}</td>
-                            <td>{{c.fecha_creacion}}</td>
+                            <td>{{c.fecha_creacion|date}}</td>
                             <td>{{c.fecha_entrega}}</td>
                             <td>{{c.fecha_evento_desde}}</td>
                             <td>{{c.fecha_evento_hasta|default:""}}</td>
