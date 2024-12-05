@@ -2584,37 +2584,40 @@ def mikrotik(request, ip):
 def cargadash(request):
     user = 'admin'
     passw = 'B@cktr@ck2OI9'
+    try:
     # leer la tabla, buscar ip y hacer ping.
-    listado_cajas = CajasMikrot.objects.filter(activo = True).order_by('-id')
+        listado_cajas = CajasMikrot.objects.filter(activo = True).order_by('-id')
 
-    result = []
+        result = []
 
-    for i in listado_cajas:
-        ip_dir = i.ip
-        accesible = False
-        respuesta = ping(ip_dir, count=1, timeout=1)
-        if respuesta.success():
-            accesible = True
-            response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
-            nombre_router = response_nombre.json()
-            result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
-            #### actualizar el nombre en la tabla 
-            actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
-            actualiza_nombre.nombre = nombre_router['name']
-            actualiza_nombre.save()
-        else:
+        for i in listado_cajas:
+            ip_dir = i.ip
             accesible = False
-            nombre_router = "DESCONECTADO"
-            result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+            respuesta = ping(ip_dir, count=1, timeout=1)
+            if respuesta.success():
+                accesible = True
+                response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
+                nombre_router = response_nombre.json()
+                result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+                #### actualizar el nombre en la tabla 
+                actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
+                actualiza_nombre.nombre = nombre_router['name']
+                actualiza_nombre.save()
+            else:
+                accesible = False
+                nombre_router = "DESCONECTADO"
+                result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
 
-        
-        # buscar el nombre en el json
-        
+            
+            # buscar el nombre en el json
+            
 
-        # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
-    
-    return render(request, 'dash_inicial.html',{'resultado':result})
-    
+            # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+        
+        return render(request, 'dash_inicial.html',{'resultado':result})
+    except Exception as e:
+                error_message = f"Error al guardar los datos: {e}"
+                return HttpResponse(error_message) 
 
     
 
