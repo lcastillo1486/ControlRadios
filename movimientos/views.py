@@ -2593,7 +2593,7 @@ def cargadash(request):
         for i in listado_cajas:
             ip_dir = i.ip
             accesible = False
-            respuesta = ping(ip_dir, count=1, timeout=1)
+            # respuesta = ping(ip_dir, count=1, timeout=1)
             # if respuesta.success():
             #     accesible = True
             #     response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
