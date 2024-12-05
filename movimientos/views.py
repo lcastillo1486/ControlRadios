@@ -2600,9 +2600,9 @@ def cargadash(request):
                 nombre_router = response_nombre.json()
                 result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
                 #### actualizar el nombre en la tabla 
-                actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
-                actualiza_nombre.nombre = nombre_router['name']
-                actualiza_nombre.save()
+                # actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
+                # actualiza_nombre.nombre = nombre_router['name']
+                # actualiza_nombre.save()
             else:
                 accesible = False
                 nombre_router = "DESCONECTADO"
