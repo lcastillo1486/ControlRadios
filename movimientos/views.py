@@ -2594,19 +2594,19 @@ def cargadash(request):
             ip_dir = i.ip
             accesible = False
             respuesta = ping(ip_dir, count=1, timeout=1)
-            if respuesta.success():
-                accesible = True
-                response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
-                nombre_router = response_nombre.json()
-                result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
-                #### actualizar el nombre en la tabla 
-                # actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
-                # actualiza_nombre.nombre = nombre_router['name']
-                # actualiza_nombre.save()
-            else:
-                accesible = False
-                nombre_router = "DESCONECTADO"
-                result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+            # if respuesta.success():
+            #     accesible = True
+            #     response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
+            #     nombre_router = response_nombre.json()
+            #     result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+            #     #### actualizar el nombre en la tabla 
+            #     # actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
+            #     # actualiza_nombre.nombre = nombre_router['name']
+            #     # actualiza_nombre.save()
+            # else:
+            #     accesible = False
+            #     nombre_router = "DESCONECTADO"
+            #     result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
 
             
             # buscar el nombre en el json
