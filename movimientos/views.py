@@ -2593,8 +2593,8 @@ def cargadash(request):
         for i in listado_cajas:
             ip_dir = i.ip
             accesible = False
-            # respuesta = ping(ip_dir, count=1, timeout=1)
-            # if respuesta.success():
+            respuesta = requests.get(ip_dir, timeout=3)
+            if respuesta.status_code == 200:
             #     accesible = True
             #     response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
             #     nombre_router = response_nombre.json()
@@ -2614,7 +2614,7 @@ def cargadash(request):
 
             # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
         
-        return render(request, 'dash_inicial.html',{'resultado':result})
+                return render(request, 'dash_inicial.html')
     except Exception as e:
                 error_message = f"Error al guardar los datos: {e}"
                 return HttpResponse(error_message) 
