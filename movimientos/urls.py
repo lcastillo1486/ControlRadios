@@ -64,6 +64,8 @@ urlpatterns = [
     path('controlrxeventorecojo/<int:id>',views.controlrxeventorecojo, name='controlrxeventorecojo'),
     path('imprimir/<int:id>', views.print_view, name='print_template'),
     path('eliminarserial/<int:id>', views.eliminar_serial, name='eliminar_serial'),
+    path('mikrotik/<str:ip>', views.mikrotik),
+    path('dash/', views.cargadash, name='dash'),
 
 
 

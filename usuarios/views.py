@@ -34,6 +34,8 @@ def logear(request):
                 login(request, usuario)
                 if nombre_usuario == 'monitor':
                     return redirect('monitor/')
+                if nombre_usuario == 'monitoreo':
+                    return redirect('dash/')
                 return redirect('salidas/')
             else:
                 for msg in form.error_messages:

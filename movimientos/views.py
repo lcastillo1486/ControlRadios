@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -36,6 +36,9 @@ import base64
 from django.db.models import Q
 from datetime import datetime as d
 import re
+import requests
+from requests.auth import HTTPBasicAuth
+from pythonping import ping
 
 
 # Create your views here. 
@@ -2260,7 +2263,7 @@ def pdfporcobrar_detalle(request, cliente):
                 </div>
                 """)
 
-
+@login_required
 def controlrxevento(request, id):
 
     form_serial_recojo = rxcontroleventoformRecojo()
@@ -2407,7 +2410,7 @@ def controlrxevento(request, id):
         
     })
 
-
+@login_required
 def cargarxordenevento(request, id):
 
     try:
@@ -2432,7 +2435,7 @@ def cargarxordenevento(request, id):
     
     return redirect('controlrxevento', id=id)
 
-
+@login_required
 def controlrxeventorecojo(request, id):
 
     
@@ -2481,14 +2484,14 @@ def controlrxeventorecojo(request, id):
                     """)
     else:
         return redirect('controlrxevento', id=id) 
-   
+@login_required   
 def print_view(request, id):
 
     fecha_hora = d.now()
     # fecha_hora = fecha_hora + timedelta(hours=3)
 
     return render(request, 'print_seriales.html', {'id':id, 'fecha_hora':fecha_hora})
-
+@login_required
 def eliminar_serial(request, id):
 
     if request.method == 'POST':
@@ -2503,8 +2506,114 @@ def eliminar_serial(request, id):
         return redirect('controlrxevento', id=id)
 
 
+@login_required
+def mikrotik(request, ip):
 
+    user = 'admin'
+    passw = 'B@cktr@ck2OI9'
+    listado_wan = []
+    listado_ip = []
+    listado_interfaz = []
+    listado_vlan = []
 
+    try:
+        #### BUSCA INFO DHCP - CLIENTES CONECTADOS
+        response = requests.get(f'http://{ip}/rest/ip/dhcp-server/lease', auth=HTTPBasicAuth(user,passw),verify=False)
+        datos = response.json()
+
+        ##### CUENTA LOS CLIENTES
+        count_clientes = 0
+        for i in datos:
+            count_clientes +=1
+        
+        listado_ip = [
+            {"nombre":item.get("host-name", ""),"address": item["address"]} for item in datos 
+            ]
+        
+        ##### BUSCA INFO DE LAS INTERFACES WAN #################
+        response_wan = requests.get(f'http://{ip}/rest/interface', auth=HTTPBasicAuth(user,passw),verify=False)
+        datos_wan = response_wan.json()
+
+        #### BUSCAR LA IP DE LA INTERFAZ #####
+
+        for i in datos_wan:
+             if i["name"] in ("Wan","Wan1","Wan2","Local","Local 01"):
+                response_ip_wan = requests.get(f'http://{ip}/rest/ip/address', auth=HTTPBasicAuth(user,passw),verify=False)
+                ip_wan = response_ip_wan.json()
+                for j in ip_wan:
+                    if i["name"] == j["interface"]:
+                        ip_interfaz = j["address"]
+                        listado_wan.append({'ip_interfaz':ip_interfaz,'interface':i["name"], 'estado':i["running"]})
+        
+        ##### OTRAS INTERFACES #################
+        response_interfaz = requests.get(f'http://{ip}/rest/interface/bridge/port', auth=HTTPBasicAuth(user,passw),verify=False)
+        datos_interfaz = response_interfaz.json()
+        listado_interfaz.append({'ip_interfaz_ether':datos_interfaz})
+
+        ############ VLANS ##############
+
+        response_vlan = requests.get(f'http://{ip}/rest/interface/vlan', auth=HTTPBasicAuth(user,passw),verify=False)
+        datos_vlan = response_vlan.json()
+
+        for s in datos_vlan:
+            vlan_id = s["vlan-id"]
+            response_ip_vlan = requests.get(f'http://{ip}/rest/ip/address', auth=HTTPBasicAuth(user,passw),verify=False)
+            datos_ip_vlan = response_ip_vlan.json()
+            for v in datos_ip_vlan:
+                 if s["name"] == v["interface"]:
+                    ip_vlan = v["address"]
+                    listado_vlan.append({'id_vlan':vlan_id, 'name':s["name"],'interface':s["interface"], 'ip_vlan':ip_vlan, 'activa':s["running"]})
+                  
+
+        
+
+        # for k in datos_vlan:
+        #           response_ip_vlan = requests.get(f'http://{ip}/ip/address', auth=HTTPBasicAuth(user,passw),verify=False)
+        #           datos_ip_vlan = response_ip_vlan.json()
+        #           for l in datos_ip_vlan:
+        #             if k["name"] == datos_ip_vlan["interface"]:
+        #                 listado_vlan.append({'name':k["name"],'interface':k["interface"]})
+             
+
+        return render(request, 'mikrotik.html', {'response':listado_ip, 'clientes':count_clientes, 'response_wan':listado_wan, 'ip':ip, 'listado_interfaz_ether':datos_interfaz,
+                                                 'listado_vlan':listado_vlan})
+    except Exception as e:
+                error_message = f"Error al leer los datos: {e}"
+                return HttpResponse(error_message)  
+@login_required
+def cargadash(request):
+    user = 'admin'
+    passw = 'B@cktr@ck2OI9'
+    # leer la tabla, buscar ip y hacer ping.
+    listado_cajas = CajasMikrot.objects.filter(activo = True).order_by('-id')
+
+    result = []
+
+    for i in listado_cajas:
+        ip_dir = i.ip
+        accesible = False
+        respuesta = ping(ip_dir, count=1, timeout=1)
+        if respuesta.success():
+            accesible = True
+            response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
+            nombre_router = response_nombre.json()
+            result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+            #### actualizar el nombre en la tabla 
+            actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
+            actualiza_nombre.nombre = nombre_router['name']
+            actualiza_nombre.save()
+        else:
+            accesible = False
+            nombre_router = "DESCONECTADO"
+            result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+
+        
+        # buscar el nombre en el json
+        
+
+        # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+    
+    return render(request, 'dash_inicial.html',{'resultado':result})
     
 
     
