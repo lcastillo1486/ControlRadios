@@ -121,7 +121,6 @@
 </style>
 
 <body>
-
     <div class="centrar">
         <img src="{% static 'logo_22.png' %}" width="400" height="120" style="margin-top: 15px;">
         <img src="{% static 'mikrotik_logo.png' %}" width="150" height="60" style="margin-left: 30px;">
@@ -132,34 +131,90 @@
             <a href='/dash/' class="btn btn-dark"><strong>ACTUALIZAR</strong></a>
         </div>
 
-        <div class="row">
-            {% for c in resultado %}
-            <div class="form-group col-md-3 col-lg-3 col-xl-3">
-                {% if c.resultado_ping %}
-                <div class="card" 
-                    style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: black; box-shadow: 10px 10px 10px rgba(0, 255, 0, 0.5);"
-                    onclick="window.location.href='/mikrotik/{{ c.direccion_ip }}';">
-                    <img src="{% static 'router.png' %}" alt="Descripción de la imagen"
-                        style="width: 100px; height: 100px;">
-                    <p> {{c.nombre}} </p>
-                    <p class="highlight"> {{c.direccion_ip}}</p>
-                    <p class="highlight"> {{c.ubicacion}}</p>
-                </div>
-                {% else %}
-                <div class="card"
-                    style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: black; box-shadow: 10px 10px 10px rgba(255, 0, 0, 0.5);">
-                    <img src="{% static 'router.png' %}" alt="Descripción de la imagen"
-                        style="width: 100px; height: 100px;">
-                    <p> {{c.nombre}} </p>
-                    <p class="highlight"> {{c.direccion_ip}}</p>
-                    <p class="highlight"> {{c.ubicacion}}</p>
-                </div>
-                {% endif  %}
-            </div>
-            {% endfor %}
-        </div>
-        
+        <div class="row" id="cajas-listado"></div>
     </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const user = 'admin';
+        const passw = 'B@cktr@ck2OI9';
+
+        // Función para realizar ping
+        async function ping(ip) {
+            try {
+                const response = await fetch(`http://${ip}/rest/system/identity`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Basic ' + btoa(`${user}:${passw}`)
+                    }
+                });
+                if (response.ok) {
+                    const data = await response.json();
+                    return { reachable: true, name: data.name };
+                }
+                return { reachable: false, name: "DESCONECTADO" };
+            } catch (error) {
+                return { reachable: false, name: "DESCONECTADO" };
+            }
+        }
+
+        // Función para actualizar el nombre del router en el servidor
+        async function updateRouterName(ip, name) {
+            try {
+                await fetch('/api/update_router/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ ip, nombre: name })
+                });
+            } catch (error) {
+                console.error(`Error actualizando el nombre para ${ip}:`, error);
+            }
+        }
+
+        // Obtener la lista de cajas y procesarlas
+        async function fetchCajas() {
+            const response = await fetch('/api/cajas/');
+            const data = await response.json();
+
+            const listado = $('#cajas-listado');
+            listado.empty();
+
+            for (const caja of data.cajas) {
+                const { ip, ubicacion } = caja;
+
+                // Crear tarjeta de forma inicial
+                const card = $(`
+                    <div class="form-group col-md-3 col-lg-3 col-xl-3">
+                        <div class="card" style="cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; color: black; box-shadow: 10px 10px 10px rgba(255, 255, 255, 0.5);">
+                            <img src="{% static 'router.png' %}" alt="Descripción de la imagen" style="width: 100px; height: 100px;">
+                            <p> Cargando... </p>
+                            <p class="highlight"> ${ip} </p>
+                            <p class="highlight"> ${ubicacion} </p>
+                        </div>
+                    </div>
+                `);
+                listado.append(card);
+
+                // Realizar ping y actualizar tarjeta
+                const result = await ping(ip);
+                if (result.reachable) {
+                    card.find('p:first').text(result.name);
+                    card.find('.card').css('box-shadow', '10px 10px 10px rgba(0, 255, 0, 0.5)');
+                    await updateRouterName(ip, result.name); // Actualizar en el servidor
+                } else {
+                    card.find('p:first').text('DESCONECTADO');
+                    card.find('.card').css('box-shadow', '10px 10px 10px rgba(255, 0, 0, 0.5)');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        $(document).ready(() => {
+            fetchCajas();
+        });
+    </script>
 </body>
 {% endblock %}
 </html>

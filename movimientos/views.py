@@ -39,6 +39,8 @@ import re
 import requests
 from requests.auth import HTTPBasicAuth
 from pythonping import ping
+from django.http import JsonResponse
+import json
 
 
 # Create your views here. 
@@ -2595,31 +2597,47 @@ def cargadash(request):
             accesible = False
             respuesta = requests.get(ip_dir, timeout=3)
             if respuesta.status_code == 200:
-            #     accesible = True
-            #     response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
-            #     nombre_router = response_nombre.json()
-            #     result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
-            #     #### actualizar el nombre en la tabla 
-            #     # actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
-            #     # actualiza_nombre.nombre = nombre_router['name']
-            #     # actualiza_nombre.save()
-            # else:
-            #     accesible = False
-            #     nombre_router = "DESCONECTADO"
-            #     result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+                accesible = True
+                response_nombre = requests.get(f'http://{ip_dir}/rest/system/identity', auth=HTTPBasicAuth(user,passw),verify=False)
+                nombre_router = response_nombre.json()
+                result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+                #### actualizar el nombre en la tabla 
+                # actualiza_nombre = get_object_or_404(CajasMikrot, ip=ip_dir)
+                # actualiza_nombre.nombre = nombre_router['name']
+                # actualiza_nombre.save()
+            else:
+                accesible = False
+                nombre_router = "DESCONECTADO"
+                result.append({'nombre': nombre_router, 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
 
             
-            # buscar el nombre en el json
+                # buscar el nombre en el json
             
 
-            # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
+                # result.append({'nombre': nombre_router['name'], 'resultado_ping':accesible, 'direccion_ip': ip_dir, 'ubicacion':i.ubicacion})
         
-                return render(request, 'dash_inicial.html')
+        return render(request, 'dash_inicial.html',{'resultado':result})
     except Exception as e:
                 error_message = f"Error al guardar los datos: {e}"
                 return HttpResponse(error_message) 
 
-    
+def get_cajas(request):
+    listado_cajas = CajasMikrot.objects.filter(activo=True).order_by('-id')
+    result = [{'id': caja.id, 'ip': caja.ip, 'ubicacion': caja.ubicacion} for caja in listado_cajas]
+    return JsonResponse({'cajas': result})
+
+def update_router_name(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        ip = data.get('ip')
+        nombre = data.get('nombre')
+
+        if ip and nombre:
+            caja = get_object_or_404(CajasMikrot, ip=ip)
+            caja.nombre = nombre
+            caja.save()
+            return JsonResponse({'success': True})
+        return JsonResponse({'success': False, 'error': 'Datos incompletos'}, status=400)    
 
 
 

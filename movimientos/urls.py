@@ -66,8 +66,8 @@ urlpatterns = [
     path('eliminarserial/<int:id>', views.eliminar_serial, name='eliminar_serial'),
     path('mikrotik/<str:ip>', views.mikrotik),
     path('dash/', views.cargadash, name='dash'),
-
-
+    path('api/cajas/', views.get_cajas, name='get_cajas'),
+    path('api/update_router/', views.update_router_name, name='update_router_name'),
 
 
 
