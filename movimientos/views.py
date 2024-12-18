@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -41,7 +41,8 @@ from requests.auth import HTTPBasicAuth
 from pythonping import ping
 from django.http import JsonResponse
 import json
-
+import openpyxl
+from openpyxl.styles import PatternFill, alignment, Alignment
 
 # Create your views here. 
 @login_required
@@ -2641,12 +2642,281 @@ def update_router_name(request):
 
 
 
+def inventario(request):
 
+    if controlinventario.objects.filter(activo = True).exists():
+        fecha_inv_activo = controlinventario.objects.latest('id').fecha_inicio
+        id_inv_activo = controlinventario.objects.latest('id').id
+        activo = True
+        return render(request, 'inventariorx.html', {'activo':activo, 'fecha_inventario':fecha_inv_activo, 'id_inv_activo':id_inv_activo})
+    else:
+        return render(request, 'inventariorx.html')
 
+def iniciar_inventario(request):
+
+###### APERTURA DEL INVENTARIO ##########
+    fecha_inicio = datetime.date.today()
+    activo = True
+
+    ## validar si hay otro inventario sin cerrar ###
+
+    if controlinventario.objects.filter(activo = True).exists():
+        return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <h2 style="color: red;">YA EXISTE UN PROCESO DE INVENTARIO ACTIVO.</h2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
+    else:
+        inicia_inventario = controlinventario(fecha_inicio = fecha_inicio, activo = activo)
+        inicia_inventario.save()
+    ### BUSCAR ESE ULTIMO ID Y CREAR LA TABLA ESPEJO ########
+        id_ult_inventario = controlinventario.objects.latest('id').id
+    ##### PREPARAR LA COPIA #####
+        datos_inicial = invSeriales.objects.all()
+        datos_espejo = []
+        for i in datos_inicial:
+            dato_espejo = espejo_inventario_ant(id_inventario = id_ult_inventario,
+                                                codigo = i.codigo,
+                                                estado = i.estado, 
+                                                tipo = i.tipo)
+            datos_espejo.append(dato_espejo)
+        espejo_inventario_ant.objects.bulk_create(datos_espejo)
+
+        ##### renderizar el template con datos #####
+        return redirect('inventario')
 
         
-      
+def updaterx_inventario(request, id):
+
+    if request.method == 'POST':
+        rx_serial = request.POST.get('serial_rx')
+
+        ### buscarlo en el inv actual #####
+        try:
+            serial_actual = invSeriales.objects.get(codigo = rx_serial)
+            if serial_actual.estado_id != 4:
+                ################################################ QUE PASA CUANDO NO ES 2 - PROGRAMAR LOS BOTONES ###########################
+                dif_estado = True
+                activo = True
+                fecha_inv_activo = controlinventario.objects.latest('id').fecha_inicio
+                id_inv_activo = controlinventario.objects.latest('id').id
+                return render(request, 'inventariorx.html', {'activo':activo, 'fecha_inventario':fecha_inv_activo,
+                                                              'id_inv_activo':id_inv_activo, 'dif_estado':dif_estado,
+                                                              'rx_serial':rx_serial})
+            else:    
+                serial_actual.estado_id = 4
+                serial_actual.save()
+        ### buscarlo en el espejo antes ###
+                serial_espejo = espejo_inventario_ant.objects.get(codigo = rx_serial, id_inventario = id)
+                serial_espejo.escaneado = True
+                serial_espejo.save()
+                return redirect('inventario')
+        except invSeriales.DoesNotExist:
+            return HttpResponse(f"""
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                            <h2 style="color: red;">ESTE SERIAL NO PERTENECE AL INVENTARIO</h2>
+                            <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                                Volver atrás
+                            </button>
+                        </div>
+    
+                    """)
+             
+def cambia_estado_dif_inventario(request,estado, serial, id):
+    
+    serial_actual = invSeriales.objects.get(codigo = serial)
+
+    if estado == 'disponible':
+        serial_actual.estado_id = 4
+        serial_actual.save()
+        ### buscarlo en el espejo antes ###
+        serial_espejo = espejo_inventario_ant.objects.get(codigo = serial, id_inventario = id)
+        serial_espejo.escaneado = True
+        serial_espejo.save()
+        return redirect('inventario')
+    
+    if estado == 'malogrado':
+        serial_actual.estado_id = 6
+        serial_actual.save()
+        ### buscarlo en el espejo antes ###
+        serial_espejo = espejo_inventario_ant.objects.get(codigo = serial, id_inventario = id)
+        serial_espejo.escaneado = True
+        serial_espejo.save()
+        return redirect('inventario')
+
+
+def finaliza_inventario(request, id):
+
+    fecha_cierre = datetime.date.today()
         
+    id_ult_inventario = id
+    ##### PREPARAR LA COPIA #####
+    datos_final = invSeriales.objects.all()
+    datos_espejo = []
+    for i in datos_final:
+        dato_espejo = espejo_inventario_desp(id_inventario = id_ult_inventario,
+                                                codigo = i.codigo,
+                                                estado = i.estado, 
+                                                tipo = i.tipo)
+        datos_espejo.append(dato_espejo)
+    espejo_inventario_desp.objects.bulk_create(datos_espejo)
+
+    cierra_inventario = controlinventario.objects.get(id = id)
+    cierra_inventario.activo = 0
+    cierra_inventario.fecha_cierre = fecha_cierre
+    cierra_inventario.save() 
+
+    ###### ARMAR EL EXCEL FINAL ###########
+
+    workbook = openpyxl.Workbook()
+    sheet = workbook.active
+
+    for col in sheet.columns:
+        col.width = 15.6
+
+    #### GRUPO 1 ########
+    gris = PatternFill(start_color='CDCDCD', end_color='CDCDCD', fill_type='solid')
+    datos_final = invSeriales.objects.all().order_by('tipo_id', 'codigo')
+    
+    total_verde_1 = 0
+    total_verde_2 = 0
+    total_verde_3 = 0
+
+    total_rojo_1 = 0
+    total_rojo_2 = 0
+    total_rojo_3 = 0
+
+    total_amarillo_1 = 0
+    total_amarillo_2 = 0
+    total_amarillo_3 = 0
+
+    total_azul_1 = 0
+    total_azul_2 = 0
+    total_azul_3 = 0
+
+    column = 1
+    row = 5
+    previo_id = 1
+
+    sheet.merge_cells(start_row=1, start_column=1, end_row=1, end_column=4)
+    sheet.cell(1, 1,f"INVENTARIO: {fecha_cierre}").fill = gris
+    sheet.merge_cells(start_row=4, start_column=1, end_row=4, end_column=4)
+    # sheet.cell(4, 1,f"EP 450 (Amarillas)").fill = gris
+    cell = sheet.cell(4, 1,f"EP 450 (Amarillas)").fill = gris
+    cell.alignment = Alignment(horizontal='center', vertical='center')
+    
+    for j in datos_final:
+        if previo_id != j.tipo_id:
+            row += 2
+            if j.tipo_id == 2:
+                sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=4)
+                # sheet.cell(row, 1,f"DEP 450 (Moradas)").fill = gris
+                cell = sheet.cell(row, 1,f"DEP 450 (Moradas)").fill = gris
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+            if  j.tipo_id == 3:
+                sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=4)
+                cell = sheet.cell(row, 1,f"DEP 450 (Plomo)").fill = gris
+                cell.alignment = Alignment(horizontal='center', vertical='center')
+            row += 1
+            column = 1
+        if column  == 11:
+            sheet.append([])
+            row += 1
+            column = 1
+        verde = PatternFill(start_color='00ff00', end_color='00ff00', fill_type='solid')
+        rojo = PatternFill(start_color='ff0000', end_color='ff0000', fill_type='solid')
+        amarillo = PatternFill(start_color='ffff00', end_color='ffff00', fill_type='solid')
+        azul = PatternFill(start_color='ADD8E6', end_color='ADD8E6', fill_type='solid')
+        
+
+        if j.estado_id == 4:
+            sheet.cell(row, column,j.codigo).fill = verde
+            if j.tipo_id == 1:
+                total_verde_1 += 1
+            if j.tipo_id == 2:
+                total_verde_2 += 1
+            if j.tipo_id == 3:
+                total_verde_3 += 1
+        if j.estado_id == 5:
+            sheet.cell(row, column,j.codigo).fill = amarillo
+            if j.tipo_id == 1:
+                total_amarillo_1 += 1
+            if j.tipo_id == 2:
+                total_amarillo_2 += 1
+            if j.tipo_id == 3:
+                total_amarillo_3 += 1
+        if j.estado_id == 6:
+            sheet.cell(row, column,j.codigo).fill = rojo
+            if j.tipo_id == 1:
+                total_rojo_1 += 1
+            if j.tipo_id == 2:
+                total_rojo_2 += 1
+            if j.tipo_id == 3:
+                total_rojo_3 += 1
+        if j.estado_id == 7:
+            sheet.cell(row, column,j.codigo).fill = azul
+            if j.tipo_id == 1:
+                total_azul_1 += 1
+            if j.tipo_id == 2:
+                total_azul_2 += 1
+            if j.tipo_id == 3:
+                total_azul_3 += 1
+
+        column += 1
+        previo_id = j.tipo_id
+
+    row += 5
+    sheet.cell(row, 1,f"Total Disponibles EP 450 (Amarillas): {total_verde_1}")
+    row +=1
+    sheet.cell(row, 1,f"Total Disponibles DEP 450 (Moradas): {total_verde_2}")
+    row +=1
+    sheet.cell(row, 1,f"Total Disponibles DEP 450 (Plomo): {total_verde_3}")
+    row +=2
+    sheet.cell(row, 1,f"Total Malogradas EP 450 (Amarillas): {total_rojo_1}")
+    row +=1
+    sheet.cell(row, 1,f"Total Malogradas DEP 450 (Moradas): {total_rojo_2}")
+    row +=1
+    sheet.cell(row, 1,f"Total Malogradas DEP 450 (Plomo): {total_rojo_3}")
+    row +=2
+    sheet.cell(row, 1,f"Total No Disponibles EP 450 (Amarillas): {total_amarillo_1}")
+    row +=1
+    sheet.cell(row, 1,f"Total No Disponibles DEP 450 (Moradas): {total_amarillo_2}")
+    row +=1
+    sheet.cell(row, 1,f"Total No Disponible DEP 450 (Plomo): {total_amarillo_3}")
+    row +=2
+    sheet.cell(row, 1,f"Total Extraviadas EP 450 (Amarillas): {total_azul_1}")
+    row +=1
+    sheet.cell(row, 1,f"Total Extraviadas DEP 450 (Moradas): {total_azul_2}")
+    row +=1
+    sheet.cell(row, 1,f"Total Extraviadas DEP 450 (Plomo): {total_azul_3}")
+    
+    ##### LEYENDA #####
+    row +=3
+    sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=2)
+    sheet.cell(row, 1,f"Disponibles")
+    sheet.cell(row, 3,f" ").fill = verde
+    row += 1
+    sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=2)
+    sheet.cell(row, 1,f"No Disponibles")
+    sheet.cell(row, 3,f" ").fill = amarillo
+    row += 1
+    sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=2)
+    sheet.cell(row, 1,f"Malogradas")
+    sheet.cell(row, 3,f" ").fill = rojo
+    row += 1
+    sheet.merge_cells(start_row=row, start_column=1, end_row=row, end_column=2)
+    sheet.cell(row, 1,f"Extraviadas")
+    sheet.cell(row, 3,f" ").fill = azul
+
+
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content-Disposition'] = f'attachment; filename="Inventario_{fecha_cierre}.xlsx"'
+
+    workbook.save(response)
+    return response
 
     
 

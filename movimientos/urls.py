@@ -68,6 +68,12 @@ urlpatterns = [
     path('dash/', views.cargadash, name='dash'),
     path('api/cajas/', views.get_cajas, name='get_cajas'),
     path('api/update_router/', views.update_router_name, name='update_router_name'),
+    path('inventario/', views.inventario, name='inventario'),
+    path('iniciarinventario/', views.iniciar_inventario),
+    path('updaterxinventario/<int:id>', views.updaterx_inventario),
+    path('updaterxinventariodif/<str:estado>/<str:serial>/<int:id>', views.cambia_estado_dif_inventario),
+    path('finalizarinventario/<int:id>', views.finaliza_inventario),
+
 
 
 

@@ -330,3 +330,39 @@ class CajasMikrot(models.Model):
 
     def __str__(self):
         return self.nombre
+
+class controlinventario(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_inicio = models.DateField(blank=True, null=True)
+    fecha_cierre = models.DateField(blank=True, null=True)
+    activo = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'controlinventario'
+        auto_created = True
+
+class espejo_inventario_ant(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_inventario = models.IntegerField(blank=True, null=True)
+    codigo = models.CharField(max_length=50, blank=True, null=True)
+    estado = models.CharField(max_length=50,blank=True, null=True)
+    tipo = models.CharField(max_length=50,blank=True, null=True)
+    escaneado = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'espejo_inventario_ant'
+        auto_created = True 
+
+class espejo_inventario_desp(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_inventario = models.IntegerField(blank=True, null=True)
+    codigo = models.CharField(max_length=50, blank=True, null=True)
+    estado = models.CharField(max_length=50,blank=True, null=True)
+    tipo = models.CharField(max_length=50,blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'espejo_inventario_desp'
+        auto_created = True
