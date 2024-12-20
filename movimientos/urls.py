@@ -7,7 +7,7 @@ urlpatterns = [
     path('detalleOrden/<int:id>',views.ordenDetalle),
     path('generarsalida/<int:id>',views.generarSalida),
     path('detalleradios/<int:id>/<int:id_orden>',views.guardarDetalleRadio),
-    path('inventario/',views.inventario),
+    path('consultainventario/',views.consultainventario),
     path('ubicarRadios/',views.movimientosRadios),
     path('ordenesProcesadas/',views.ordenesProcesadas, name="ordenesProcesadas"),
     path('ordenesCerradas/',views.ordenesCerradas),

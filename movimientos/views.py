@@ -402,7 +402,7 @@ def guardarDetalleRadio(request, id, id_orden):
         # form = radiotipos(initial={'serial': ''})
         return render(request, 'salidaGenerada.html', {"salidaGenerada": msalida, "datosOrden": detalle_salida, "formRadios": form, "cantidad_radios":cuenta_radios,"serial_radios":serial_radios})
 @login_required           
-def inventario(request):
+def consultainventario(request):
 
     inv_disp = invSeriales.objects.filter(estado_id =4)
     cuenta_disponibles = invSeriales.objects.filter(estado_id =4).count()
