@@ -1433,7 +1433,7 @@ def listadocxc(request):
 
     form = FacturaPDFForm()
     nombre_cliente = cliente.objects.all().order_by('nombre')
-    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('fecha_entrega')
+    devueltas = vista_ordenes_cxc.objects.filter(facturado = 0).order_by('-fecha_entrega')
     return render(request, 'listadocxc.html', {"listaOrdenescerradas": devueltas, "lista_cliente":nombre_cliente, 'form': form})
 @login_required
 def listadocxcfacturado(request):
