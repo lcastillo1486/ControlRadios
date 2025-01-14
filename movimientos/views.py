@@ -2925,7 +2925,7 @@ def inventario_acce(request):
         fecha_inv_activo = controlinventarioacce.objects.latest('id').fecha_inicio
         id_inv_activo = controlinventarioacce.objects.latest('id').id
         activo = True
-        item = inv_accesorios_temp.objects.all()
+        item = inv_accesorios_temp.objects.all().order_by('id_item')
         return render(request, 'inventarioacce.html', {'activo':activo, 'fecha_inventario':fecha_inv_activo, 'id_inv_activo':id_inv_activo, 'item':item})
     else:
         return render(request, 'inventarioacce.html')
@@ -2950,7 +2950,7 @@ def iniciainventarioacce(request):
 
         id_ult_inventario = controlinventarioacce.objects.latest('id').id
 
-        datos_inicial = inv_accesorios.objects.all()
+        datos_inicial = inv_accesorios.objects.all().order_by('id')
         datos_espejo = []
         datos_temp = []
         for i in datos_inicial:
@@ -2982,7 +2982,7 @@ def finaliza_inventarioacce(request, id):
         
     id_ult_inventario = id
     ##### PREPARAR LA COPIA #####
-    datos_final = inv_accesorios_temp.objects.all()
+    datos_final = inv_accesorios_temp.objects.all().order_by('id')
     datos_espejo = []
     for i in datos_final:
         dato_espejo = espejo_inventarioacce_desp(id_inventario = id_ult_inventario,
@@ -3022,7 +3022,7 @@ def finaliza_inventarioacce(request, id):
 
 def cargar_entrada_accesorios(request):
 
-    item = inv_accesorios.objects.all()
+    item = inv_accesorios.objects.all().order_by('id')
 
     return render(request, 'entrada_accesorios.html',{'item':item})
 
@@ -3062,7 +3062,7 @@ def actualiza_entrada_acce(request):
 
 def consulta_inventario_acce(request):
 
-    item = inv_accesorios.objects.all()
+    item = inv_accesorios.objects.all().order_by('id')
 
     return render(request, 'consulta_inv_accesorios.html', {'item':item})    
 
