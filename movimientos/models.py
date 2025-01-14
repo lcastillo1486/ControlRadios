@@ -366,3 +366,86 @@ class espejo_inventario_desp(models.Model):
         managed = False
         db_table = 'espejo_inventario_desp'
         auto_created = True
+
+
+class inv_accesorios(models.Model):
+    id = models.AutoField(primary_key=True)
+    descripcion = models.CharField(max_length=50, blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'inv_accesorios'
+        auto_created = True
+
+    def __str__(self):
+        return self.descripcion
+
+
+class entrada_salida_acce(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_item = models.CharField(max_length=2, blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+    tipo_mov = models.CharField(max_length=2, blank=True, null=True)
+    fecha_mov = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'entrada_salida_acce'
+        auto_created = True
+
+class controlinventarioacce(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_inicio = models.DateField(blank=True, null=True)
+    fecha_cierre = models.DateField(blank=True, null=True)
+    activo = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'controlinventarioacce'
+        auto_created = True
+   
+class espejo_inventarioacce_ant(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_inventario = models.IntegerField(blank=True, null=True)
+    id_item = models.CharField(max_length=50,blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'espejo_inventarioacce_ant'
+        auto_created = True
+      
+class espejo_inventarioacce_desp(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_inventario = models.IntegerField(blank=True, null=True)
+    id_item = models.CharField(max_length=50,blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'espejo_inventarioacce_desp'
+        auto_created = True
+         
+
+class entrada_accesorios(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_item = models.CharField(max_length=50,blank=True, null=True) 
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+    fecha_entrada = models.DateField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'entrada_accesorios'
+        auto_created = True
+
+class inv_accesorios_temp(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_item = models.CharField(max_length=50,blank=True, null=True)
+    descripcion = models.CharField(max_length=50, blank=True, null=True)
+    cantidad = models.IntegerField(blank=True, null=True, default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'inv_accesorios_temp'
+        auto_created = True

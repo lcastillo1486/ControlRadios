@@ -2919,16 +2919,152 @@ def finaliza_inventario(request, id):
     return response
 
     
+def inventario_acce(request):
 
+    if controlinventarioacce.objects.filter(activo = True).exists():
+        fecha_inv_activo = controlinventarioacce.objects.latest('id').fecha_inicio
+        id_inv_activo = controlinventarioacce.objects.latest('id').id
+        activo = True
+        item = inv_accesorios_temp.objects.all()
+        return render(request, 'inventarioacce.html', {'activo':activo, 'fecha_inventario':fecha_inv_activo, 'id_inv_activo':id_inv_activo, 'item':item})
+    else:
+        return render(request, 'inventarioacce.html')
+    # return render(request, 'inventarioacce.html')
  
+def iniciainventarioacce(request):
+    fecha_inicio = datetime.date.today()
+    activo = True
+
+    if controlinventarioacce.objects.filter(activo = True).exists():
+        return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <h2 style="color: red;">YA EXISTE UN PROCESO DE INVENTARIO ACTIVO.</h2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
+    else:
+        iniciainventarioacce = controlinventarioacce(fecha_inicio = fecha_inicio, activo = activo)
+        iniciainventarioacce.save()
+
+        id_ult_inventario = controlinventarioacce.objects.latest('id').id
+
+        datos_inicial = inv_accesorios.objects.all()
+        datos_espejo = []
+        datos_temp = []
+        for i in datos_inicial:
+            dato_espejo = espejo_inventarioacce_ant(id_inventario = id_ult_inventario,
+                                                id_item = i.id,
+                                                cantidad = i.cantidad)
+            dato_temp = inv_accesorios_temp(id_item = i.id, descripcion = i.descripcion, cantidad = 0)
+            datos_temp.append(dato_temp)
+            datos_espejo.append(dato_espejo)
+        
+        espejo_inventarioacce_ant.objects.bulk_create(datos_espejo)
+        inv_accesorios_temp.objects.bulk_create(datos_temp)
+
+        return redirect('inventario_acce')
+
+def updateinventarioacce(request, id):
     
+    if request.method == 'POST':
+        cantidad = request.POST.get('cantid')
+        nueva_cantidad = inv_accesorios_temp.objects.get(id_item = id)
+        nueva_cantidad.cantidad = nueva_cantidad.cantidad + int(cantidad)
+        nueva_cantidad.save()
+
+        return redirect('inventario_acce')    
+
+def finaliza_inventarioacce(request, id):
+
+    fecha_cierre = datetime.date.today()
+        
+    id_ult_inventario = id
+    ##### PREPARAR LA COPIA #####
+    datos_final = inv_accesorios_temp.objects.all()
+    datos_espejo = []
+    for i in datos_final:
+        dato_espejo = espejo_inventarioacce_desp(id_inventario = id_ult_inventario,
+                                                id_item = i.id_item,
+                                                cantidad = i.cantidad)
+        datos_espejo.append(dato_espejo)
+
+        actu_final = inv_accesorios.objects.get(id = i.id_item)
+        actu_final.cantidad = i.cantidad
+        actu_final.save()
+        
 
 
+    espejo_inventarioacce_desp.objects.bulk_create(datos_espejo)
+
+    ### CERRAR EL INVENTARIO #####
+
+    cierra_inventario = controlinventarioacce.objects.get(id = id)
+    cierra_inventario.activo = 0
+    cierra_inventario.fecha_cierre = fecha_cierre
+    cierra_inventario.save()
 
 
+    ##### BORRAR TEMPORAL AL CERRAR #####
+
+    inv_accesorios_temp.objects.all().delete()
+
+    ### PARA EL REPORTE FINAL ####
+
+    # con el id_ultmo - 1 buscar la fecha de cierre anterior 
+
+    # id_inv_anterior = id_ult_inventario -1
+    # fecha_anterior = controlinventarioacce.objects.get(id = id_inv_anterior)
+    # fecha_cierre_antes = fecha_anterior.fecha_cierre
     
+    return redirect('inventario_acce') 
 
-    
+def cargar_entrada_accesorios(request):
+
+    item = inv_accesorios.objects.all()
+
+    return render(request, 'entrada_accesorios.html',{'item':item})
+
+def actualiza_entrada_acce(request):
+
+    fecha_entrada = datetime.date.today()
+
+    if request.method == 'POST':
+        
+        if controlinventarioacce.objects.filter(activo = True).exists():
+            return HttpResponse(f"""
+                    <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                    <h2 style="color: red;">EXISTE UN PROCESO DE INVENTARIO ACTIVO.</h2>
+                    <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                    Volver atrás
+                    </button>
+                    </div>
+                    """)
+        else:
+            id = request.POST.get('itemaccesorio')
+            cantidad = int(request.POST.get('cantid'))
+
+            # CREAR EL REGISTRO DE ENTRADA #
+
+            crea_registro = entrada_accesorios(id_item = id, cantidad = cantidad, fecha_entrada = fecha_entrada)
+            crea_registro.save()
+
+            # ACTUALIZA EL INVENTARIO #
+
+            item_actualizar = inv_accesorios.objects.get(id = id)
+            item_actualizar.cantidad = item_actualizar.cantidad + cantidad
+            item_actualizar.save()
+
+            messages.success(request, '¡EL INVENTARIO HA SIDO ACTUALIZADO!')
+
+            return redirect('cargar_entrada_accesorios')    
+
+def consulta_inventario_acce(request):
+
+    item = inv_accesorios.objects.all()
+
+    return render(request, 'consulta_inv_accesorios.html', {'item':item})    
 
 
 
