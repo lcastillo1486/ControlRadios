@@ -73,6 +73,13 @@ urlpatterns = [
     path('updaterxinventario/<int:id>', views.updaterx_inventario),
     path('updaterxinventariodif/<str:estado>/<str:serial>/<int:id>', views.cambia_estado_dif_inventario),
     path('finalizarinventario/<int:id>', views.finaliza_inventario),
+    path('inventarioacce/', views.inventario_acce, name= 'inventario_acce'),
+    path('iniciarinventarioacce/', views.iniciainventarioacce),
+    path('updateinventarioacce/<int:id>', views.updateinventarioacce),
+    path('finalizarinventarioacce/<int:id>', views.finaliza_inventarioacce),
+    path('entradaaccesorios/', views.cargar_entrada_accesorios, name='cargar_entrada_accesorios'),
+    path('actualiza_entrada_acce/', views.actualiza_entrada_acce),
+    path('consultaaccesorios/', views.consulta_inventario_acce),
 
 
 
