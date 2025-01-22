@@ -80,7 +80,7 @@ urlpatterns = [
     path('entradaaccesorios/', views.cargar_entrada_accesorios, name='cargar_entrada_accesorios'),
     path('actualiza_entrada_acce/', views.actualiza_entrada_acce),
     path('consultaaccesorios/', views.consulta_inventario_acce),
-    path('kardex/', views.consulta_inventario_acce),
+    path('kardex/', views.kardex),
 
 
 
