@@ -3288,7 +3288,9 @@ def consulta_inventario_acce(request):
 
 
 
-
+def kardex(request):
+    
+    return render(request, 'kardex.html')
         
       
         

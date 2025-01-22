@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html lang="en">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BackTrack</title>
+</head>
+<style>
+    body {
+        font-weight: bold;
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        /* Agregar una sombra a la tabla */
+
+    }
+
+    tr {
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+    }
+
+    .centrar {
+        text-align: center;
+    }
+
+    th {
+        color: #0047ab;
+        padding: 8px;
+        text-align: center;
+        border: 3px solid #7ed957;
+        /* Agregar bordes a las celdas */
+        background-color: white;
+    }
+
+    h1 {
+        color: #0047ab;
+        font-size: 36px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    h3 {
+        color: #0047ab;
+        font-size: 20px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    h5 {
+        color: #0047ab;
+        font-size: 15px;
+        /* Tamaño de fuente */
+        text-align: center;
+        /* Alineación del texto */
+        text-transform: uppercase;
+        /* Transformación a mayúsculas */
+        letter-spacing: 2px;
+        /* Espaciado entre letras */
+        font-weight: bold;
+        /* Negrita */
+        text-shadow: 4px 4px 8px rgba(0, 0, 0, 0.4);
+        /* Sombra de texto */
+    }
+
+    p {
+        color: #0047ab;
+    }
+
+    .container {
+        position: relative;
+        width: 100%;
+        max-width: 700px;
+        height: auto;
+        border-radius: 20px;
+        padding: 20px;
+        box-sizing: border-box;
+        background: white;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #7ed957;
+        /* Color de fondo del tab activo */
+        color: #0056b3;
+        /* Color de texto del tab activo */
+    }
+
+    .nav-tabs .nav-link:hover {
+        background-color: #e9ecef;
+        /* Color de fondo al pasar el cursor */
+        color: #0056b3;
+        /* Color de texto al pasar el cursor */
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 250px;
+        text-align: center;
+        height: 230px;
+    }
+
+    .card h3 {
+        color: #333;
+        font-size: 24px;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        color: green;
+        font-size: 18px;
+        margin: 5px 0;
+    }
+
+    .card .highlight {
+        font-weight: bold;
+        color: #007bff;
+        font-size: 22px;
+    }
+
+    .card:hover {
+        transform: translateY(-20px);
+        box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .label {
+        color: #0047ab;
+    }
+
+    /* Pantallas medianas (tablets, pantallas de 1200px o menos) */
+    @media (max-width: 1200px) {
+        .container {
+            max-width: 1000px;
+            /* Ancho más adecuado para pantallas medianas */
+            padding: 15px;
+            /* Ajuste de padding */
+        }
+    }
+
+    /* Pantallas pequeñas (tablets verticales, smartphones grandes) */
+    @media (max-width: 768px) {
+        .container {
+            max-width: 100%;
+            /* Ancho completo para pantallas pequeñas */
+            padding: 10px;
+            /* Relleno más pequeño */
+        }
+    }
+
+    /* Pantallas muy pequeñas (smartphones pequeños) */
+    @media (max-width: 480px) {
+        .container {
+            padding: 5px;
+            /* Relleno aún menor */
+            border-radius: 10px;
+            /* Bordes menos redondeados para espacio adicional */
+        }
+    }
+</style>
+
+<body>
+
+    <div class="container mb-4 mt-4">
+        <div class="centrar mb-4">
+            <img src="{% static 'logo.png' %}" width="50" height="50">
+            <h1> KARDEX </h1>
+        </div>
+        <!-- Nav Tabs -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="tab1-tab" data-bs-toggle="tab" data-bs-target="#tab1" type="button"
+                    role="tab" aria-controls="tab1" aria-selected="true">ACCESORIOS</button>
+            </li>
+
+        </ul>
+
+        <!-- Tab Content -->
+        <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="tab1" role="tabpanel" aria-labelledby="tab1-tab">
+                <h3>KARDEX</h3>               
+                <div
+                    style="border: 2px solid #7ed957; padding: 15px; border-radius: 8px; max-width: 100%; margin: 0 auto; background-color: #c7e0bb; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                    <div class="table-responsive py-2">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        ID
+                                    </th>
+                                    <th>
+                                        Descripción
+                                    </th>
+                                    <th>
+                                        Ult. Inventario
+                                    </th>
+                                    <th>
+                                        Salidas
+                                    </th>
+                                    <th>
+                                        Entradas
+                                    </th>
+                                    <th>
+                                        Existencia actual
+                                    </th>
+                                    <th>
+                                        Dif.
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+        <script>
+            // Espera a que el documento se cargue completamente
+            document.addEventListener("DOMContentLoaded", function () {
+                // Enfoca el primer campo de entrada en el formulario de serial
+                const serialInput = document.querySelector("input[name='serial_rx']");
+                if (serialInput) {
+                    serialInput.focus();
+                }
+            });
+        </script>
+        <script>
+            // Espera a que el documento se cargue completamente
+            document.addEventListener("DOMContentLoaded", function () {
+                // Enfoca el primer campo de entrada en el formulario de serial
+                const responsableInput = document.querySelector("input[name='responsable']");
+                if (responsableInput) {
+                    responsableInput.focus();
+                }
+            });
+        </script>
+
+        <script>
+            // Función para mover el enfoque al campo en la pestaña 2 (RECOJO)
+            document.querySelector('#tab2-tab').addEventListener('click', function () {
+                const campoTab2 = document.getElementById('id_serial_recojo');
+                campoTab2.focus(); // Mueve el enfoque al campo de la pestaña 2
+            });
+        </script>
+
+        <script>
+            // Función para mover el enfoque al campo en la pestaña 1 (ENTREGA)
+            document.querySelector('#tab1-tab').addEventListener('click', function () {
+                const campoTab1 = document.getElementById('id_responsable');
+                campoTab1.focus(); // Mueve el enfoque al campo de la pestaña 1
+            });
+        </script>
+
+
+
+        <script>
+            let enterCount = 0;
+            let timer;
+
+            // Escucha para detectar la tecla Enter
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    enterCount++;
+
+                    // Si es la primera pulsación, iniciamos el temporizador
+                    if (enterCount === 1) {
+                        timer = setTimeout(() => enterCount = 0, 500); // Reinicia después de 500 ms
+                    }
+
+                    // Si se presiona dos veces antes de que termine el tiempo, activamos el botón
+                    if (enterCount === 2) {
+                        document.getElementById('g_seriales').click();
+                        clearTimeout(timer);  // Limpiamos el temporizador
+                        enterCount = 0;  // Reiniciamos el contador
+                    }
+                }
+            });
+        </script>
+
+        <script>
+            // Función para filtrar la tabla por responsable
+            document.getElementById('buscarResponsable').addEventListener('keyup', function () {
+                var input = document.getElementById('buscarResponsable');
+                var filter = input.value.toLowerCase();
+                var rows = document.querySelectorAll('#tablaResumen tr');
+
+                rows.forEach(function (row) {
+                    var responsable = row.cells[1].textContent.toLowerCase(); // Columna "RESPONSABLE" (índice 1)
+                    if (responsable.indexOf(filter) > -1) {
+                        row.style.display = "";  // Mostrar fila
+                    } else {
+                        row.style.display = "none";  // Ocultar fila
+                    }
+                });
+            });
+        </script>
+
+        <!-- Bootstrap JS and Popper.js -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Custom JavaScript -->
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const tab1Button = document.getElementById('tab1-tab');
+                const tab2Button = document.getElementById('tab2-tab');
+                const deleteSerialButton = document.getElementById('recojo_sn');
+
+                // Verificar en localStorage si hay un tab guardado
+                const savedTab = localStorage.getItem('activeTab');
+                if (savedTab === 'tab2') {
+                    tab2Button.click(); // Activar el tab2 si estaba guardado
+                } else {
+                    tab1Button.click(); // Activar tab1 como predeterminado
+                }
+
+                // Guardar el tab activo en localStorage cuando cambie
+                tab1Button.addEventListener('shown.bs.tab', function () {
+                    localStorage.setItem('activeTab', 'tab1');
+                });
+                tab2Button.addEventListener('shown.bs.tab', function () {
+                    localStorage.setItem('activeTab', 'tab2');
+                });
+
+                // Acción de eliminación que fuerza a guardar el tab2 como activo
+                deleteSerialButton.addEventListener('click', function () {
+                    localStorage.setItem('activeTab', 'tab2'); // Asegurarse de guardar tab2 como activo
+                    location.reload(); // Recargar la página
+                });
+            });
+        </script>
+        <script>
+            document.getElementById('cerrar').addEventListener('click', function () {
+                // Redirigir después de 2 segundos para dar tiempo a la descarga
+                setTimeout(function () {
+                    window.location.href = '/inventario/';  // URL a donde quieres redirigir
+                }, 2000);  // Ajusta el tiempo si es necesario
+            });
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+            crossorigin="anonymous"></script>
+
+
+</body>
+{% endblock %}
+
+</html>
