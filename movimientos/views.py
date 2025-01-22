@@ -3290,6 +3290,33 @@ def consulta_inventario_acce(request):
 
 def kardex(request):
     
+    ####buscar la fecha del ultimo inventario y el id de ese inventario
+    ult_inv = controlinventarioacce.objects.filter(activo=False).latest('fecha_cierre')
+    fecha_ult_inv = ult_inv.fecha_cierre
+    id_inventario = ult_inv.id_inventario
+
+    ####buscar cuanto se actualizo
+    ult_actualizacion = espejo_inventarioacce_desp.objects.filter(id_inventario = id_inventario)
+    ult_actualizacion_cant = ult_actualizacion.values('id_item').annotate(total_cantidad=Sum('cantidad'))
+    
+    ####buscar entradas de mercancia
+    entradas_merc = entrada_accesorios.objects.filter(fecha_entrada__gte=fecha_ult_inv)
+    entradas_merc_cant = entradas_merc.values('id_item').annotate(total_cantidad=Sum('cantidad'))
+
+    ####buscar salidas
+    salidas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov = 'S')
+    salidas_agrupadas = salidas_acce.values('id_item').annotate(total_cantidad=Sum('cantidad'))
+
+    ####busca entradas 
+    entradas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov = 'E')
+    entradas_agrupadas = entradas_acce.values('id_item').annotate(total_cantidad=Sum('cantidad'))
+    
+    ####busca existencia actual 
+    existencia_act = inv_accesorios.objects.all()
+    existencia_act_cant = existencia_act.cantidad
+    id = existencia_act.id
+    descripcion = existencia_act.descripcion
+
     return render(request, 'kardex.html')
         
       
