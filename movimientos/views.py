@@ -907,8 +907,8 @@ def generarEntrada(request, id, orden_id):
                 # BATERIAS
 
                 t_suma_bat = inv_accesorios.objects.get(id = 5)
-                t_mas_baterias = mas_baterias + cuentaRxOrden
-                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias
+                t_mas_baterias = mas_baterias + cuentaRxOrden - bat_faltante_rx
+                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias - bat_faltante_rx
                 t_suma_bat.save()
 
                 f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
