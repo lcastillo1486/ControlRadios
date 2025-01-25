@@ -3289,7 +3289,7 @@ def kardex(request):
     ####buscar la fecha del ultimo inventario y el id de ese inventario
     ult_inv = controlinventarioacce.objects.filter(activo=False).latest('fecha_cierre')
     fecha_ult_inv = ult_inv.fecha_cierre
-    id_inventario = ult_inv.id_inventario
+    id_inventario = ult_inv.id
 
     ####busca existencia actual 
     existencia_act = inv_accesorios.objects.all()
