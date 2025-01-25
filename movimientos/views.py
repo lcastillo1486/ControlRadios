@@ -831,11 +831,13 @@ def generarEntrada(request, id, orden_id):
 
             for i in rxOrden:
                 serfaltante = i.serial
+                bat_faltante_rx = 0
 
                 if not movimientoRadios.objects.filter(serial = serfaltante, id_salida = id, estado = "D").exists():
                     guardafaltanterx = radiosFantantes()
                     guardafaltanterx.id_salida = id
                     guardafaltanterx.fserial = serfaltante
+                    bat_faltante_rx += 1
                     guardafaltanterx.save()
 
             numorden = salidasDetalle.objects.get(id_orden=orden_id)
