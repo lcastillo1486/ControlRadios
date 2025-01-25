@@ -3286,6 +3286,7 @@ def consulta_inventario_acce(request):
 
 def kardex(request):
 
+    rpt_kardex.objects.all().delete()
 
     try:
         ult_inv = controlinventarioacce.objects.filter(activo=False).latest('fecha_cierre')
@@ -3336,8 +3337,8 @@ def kardex(request):
                                      existencia_actual = cant_existencia, dif = diferencia)
         guardar_kardex.save()
 
-
-    return render(request, 'kardex.html')
+    datos = rpt_kardex.objects.all()    
+    return render(request, 'kardex.html', {'datos':datos})
         
       
         
