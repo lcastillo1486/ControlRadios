@@ -449,3 +449,19 @@ class inv_accesorios_temp(models.Model):
         managed = False
         db_table = 'inv_accesorios_temp'
         auto_created = True
+
+class rpt_kardex(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_item = models.CharField(max_length=50,blank=True, null=True)
+    descripcion = models.CharField(max_length=250, blank=True, null=True)
+    ult_actualizacion = models.IntegerField(blank=True, null=True, default=0)
+    entrada_merc = models.IntegerField(blank=True, null=True, default=0)
+    salidas = models.IntegerField(blank=True, null=True, default=0)
+    entradas = models.IntegerField(blank=True, null=True, default=0)
+    existencia_actual = models.IntegerField(blank=True, null=True, default=0)
+    dif = models.IntegerField(blank=True, null=True, default=0)
+
+    class Meta:
+        managed = False
+        db_table = 'rpt_kardex'
+        auto_created = True

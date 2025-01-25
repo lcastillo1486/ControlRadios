@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -3284,10 +3284,6 @@ def consulta_inventario_acce(request):
 
     return render(request, 'consulta_inv_accesorios.html', {'item':item})    
 
-
-
-
-
 def kardex(request):
     
     ####buscar la fecha del ultimo inventario y el id de ese inventario
@@ -3295,27 +3291,38 @@ def kardex(request):
     fecha_ult_inv = ult_inv.fecha_cierre
     id_inventario = ult_inv.id_inventario
 
-    ####buscar cuanto se actualizo
-    ult_actualizacion = espejo_inventarioacce_desp.objects.filter(id_inventario = id_inventario)
-    ult_actualizacion_cant = ult_actualizacion.values('id_item').annotate(total_cantidad=Sum('cantidad'))
-    
-    ####buscar entradas de mercancia
-    entradas_merc = entrada_accesorios.objects.filter(fecha_entrada__gte=fecha_ult_inv)
-    entradas_merc_cant = entradas_merc.values('id_item').annotate(total_cantidad=Sum('cantidad'))
-
-    ####buscar salidas
-    salidas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov = 'S')
-    salidas_agrupadas = salidas_acce.values('id_item').annotate(total_cantidad=Sum('cantidad'))
-
-    ####busca entradas 
-    entradas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov = 'E')
-    entradas_agrupadas = entradas_acce.values('id_item').annotate(total_cantidad=Sum('cantidad'))
-    
     ####busca existencia actual 
     existencia_act = inv_accesorios.objects.all()
-    existencia_act_cant = existencia_act.cantidad
-    id = existencia_act.id
-    descripcion = existencia_act.descripcion
+
+    for i in existencia_act:
+        id_item = i.id
+        descripcion_item = i.descripcion
+        cant_existencia = i.cantidad or 0
+
+        ####buscar cuanto se actualizo
+        ult_actualizacion = espejo_inventarioacce_desp.objects.filter(id_inventario = id_inventario, id_item = id_item)
+        ult_actualizacion_cant = ult_actualizacion.cantidad or 0
+    
+        ####buscar entradas de mercancia
+        total_entradas = entrada_accesorios.objects.filter(fecha_entrada__gte=fecha_ult_inv, id_item=id_item).aggregate(total=Sum('cantidad'))['total']
+
+        entradas_merc_cant = total_entradas or 0
+
+        ####buscar salidas
+        total_salidas = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov='S', id_item=id_item).aggregate(total=Sum('cantidad'))['total']
+
+        salidas_agrupadas = total_salidas or 0
+
+        ####busca entradas 
+        total_entradas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov='E', id_item=id_item).aggregate(total=Sum('cantidad'))['total']
+        entradas_agrupadas = total_entradas_acce or 0
+    
+        ###Calcular diferencia
+
+        suma_alge =  ult_actualizacion_cant + entradas_merc_cant + entradas_agrupadas - salidas_agrupadas
+        diferencia = suma_alge - cant_existencia  
+
+
 
     return render(request, 'kardex.html')
         
