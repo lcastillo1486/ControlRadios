@@ -3330,7 +3330,7 @@ def kardex(request):
         suma_alge = (
             ult_actualizacion_cant + total_entradas + total_entradas_acce - total_salidas
         )
-        diferencia = suma_alge - cant_existencia
+        diferencia = cant_existencia - suma_alge
     
         guardar_kardex = rpt_kardex(id_item = id_item, descripcion = descripcion_item, ult_actualizacion = ult_actualizacion_cant,
                                      entrada_merc =  total_entradas, salidas = total_salidas, entradas = total_entradas_acce,
