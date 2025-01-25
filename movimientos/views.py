@@ -3331,42 +3331,10 @@ def kardex(request):
         )
         diferencia = suma_alge - cant_existencia
     
-    ####buscar la fecha del ultimo inventario y el id de ese inventario
-    # ult_inv = controlinventarioacce.objects.filter(activo=False).latest('fecha_cierre')
-    # fecha_ult_inv = ult_inv.fecha_cierre
-    # id_inventario = ult_inv.id
-
-    ####busca existencia actual 
-    # existencia_act = inv_accesorios.objects.all()
-
-    # for i in existencia_act:
-    #     id_item = i.id
-    #     descripcion_item = i.descripcion
-    #     cant_existencia = i.cantidad or 0
-
-        ####buscar cuanto se actualizo
-        # ult_actualizacion = espejo_inventarioacce_desp.objects.filter(id_inventario = id_inventario, id_item = id_item)
-        # ult_actualizacion_cant = ult_actualizacion.cantidad or 0
-    
-        ####buscar entradas de mercancia
-        # total_entradas = entrada_accesorios.objects.filter(fecha_entrada__gte=fecha_ult_inv, id_item=id_item).aggregate(total=Sum('cantidad'))['total']
-
-        # entradas_merc_cant = total_entradas or 0
-
-        ####buscar salidas
-        # total_salidas = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov='S', id_item=id_item).aggregate(total=Sum('cantidad'))['total']
-
-        # salidas_agrupadas = total_salidas or 0
-
-        ####busca entradas 
-        # total_entradas_acce = entrada_salida_acce.objects.filter(fecha_mov__gte=fecha_ult_inv, tipo_mov='E', id_item=id_item).aggregate(total=Sum('cantidad'))['total']
-        # entradas_agrupadas = total_entradas_acce or 0
-    
-        ###Calcular diferencia
-
-        # suma_alge =  ult_actualizacion_cant + entradas_merc_cant + entradas_agrupadas - salidas_agrupadas
-        # diferencia = suma_alge - cant_existencia  
-
+        guardar_kardex = rpt_kardex(id_item = id_item, descripcion = descripcion_item, ult_actualizacion = ult_actualizacion_cant,
+                                     entrada_merc =  total_entradas, salidas = total_salidas, entradas = total_entradas_acce,
+                                     existencia_actual = cant_existencia, dif = diferencia)
+        guardar_kardex.save()
 
 
     return render(request, 'kardex.html')
