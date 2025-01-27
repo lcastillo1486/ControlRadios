@@ -106,16 +106,16 @@ def entradaRadios(request, id, orden_id):
 
                 # BATERIAS
 
-                t_suma_bat = inv_accesorios.objects.get(id = 5)
-                t_mas_baterias = 1
-                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias
-                t_suma_bat.save()
+                # t_suma_bat = inv_accesorios.objects.get(id = 5)
+                # t_mas_baterias = 1
+                # t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias
+                # t_suma_bat.save()
 
-                fecha_mov = datetime.date.today()
+                # fecha_mov = datetime.date.today()
 
-                f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
-                                                                  tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_bat.save()
+                # f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
+                #                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
+                # f_suma_bat.save()
 
                 
 
