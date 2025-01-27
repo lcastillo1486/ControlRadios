@@ -870,76 +870,76 @@ def generarEntrada(request, id, orden_id):
             
                 guardaEntrada.save()
 
-                ### ENTRADA ACCESORIOS ###
+            ### ENTRADA ACCESORIOS ###
 
-                mas_cobras = cobras
-                mas_handsfree = handsfree
-                mas_escolta = estaciones
-                mas_cascos = cascos
-                mas_baterias = baterias
-                mas_cargadores = cargadores
+            mas_cobras = cobras
+            mas_handsfree = handsfree
+            mas_escolta = estaciones
+            mas_cascos = cascos
+            mas_baterias = baterias
+            mas_cargadores = cargadores
 
-                fecha_mov = datetime.date.today()
+            fecha_mov = datetime.date.today()
 
-                # COBRAS 
-                t_suma_cobras = inv_accesorios.objects.get(id = 1)
-                t_suma_cobras.cantidad = t_suma_cobras.cantidad + mas_cobras
-                t_suma_cobras.save()
+            # COBRAS 
+            t_suma_cobras = inv_accesorios.objects.get(id = 1)
+            t_suma_cobras.cantidad = t_suma_cobras.cantidad + mas_cobras
+            t_suma_cobras.save()
 
-                f_suma_cobras = entrada_salida_acce(id_item = 1, cantidad = mas_cobras,
+            f_suma_cobras = entrada_salida_acce(id_item = 1, cantidad = mas_cobras,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_cobras.save()
+            f_suma_cobras.save()
 
-                # HANDSFREE 
+            # HANDSFREE 
 
-                t_suma_hands = inv_accesorios.objects.get (id = 2)
-                t_suma_hands.cantidad = t_suma_hands.cantidad + mas_handsfree
-                t_suma_hands.save()
+            t_suma_hands = inv_accesorios.objects.get (id = 2)
+            t_suma_hands.cantidad = t_suma_hands.cantidad + mas_handsfree
+            t_suma_hands.save()
 
-                f_suma_hands = entrada_salida_acce(id_item = 2, cantidad = mas_handsfree,
+            f_suma_hands = entrada_salida_acce(id_item = 2, cantidad = mas_handsfree,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_hands.save()
+            f_suma_hands.save()
 
-                # ESCOLTA 
+            # ESCOLTA 
 
-                t_suma_escolta = inv_accesorios.objects.get(id = 3)
-                t_suma_escolta.cantidad = t_suma_escolta.cantidad + mas_escolta
-                t_suma_escolta.save()
+            t_suma_escolta = inv_accesorios.objects.get(id = 3)
+            t_suma_escolta.cantidad = t_suma_escolta.cantidad + mas_escolta
+            t_suma_escolta.save()
 
-                f_suma_escolta = entrada_salida_acce(id_item = 3, cantidad = mas_escolta,
+            f_suma_escolta = entrada_salida_acce(id_item = 3, cantidad = mas_escolta,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_escolta.save() 
+            f_suma_escolta.save() 
 
-                # CASCOS
+            # CASCOS
 
-                t_suma_cascos = inv_accesorios.objects.get(id = 4)
-                t_suma_cascos.cantidad = t_suma_cascos.cantidad + mas_cascos
-                t_suma_cascos.save()
+            t_suma_cascos = inv_accesorios.objects.get(id = 4)
+            t_suma_cascos.cantidad = t_suma_cascos.cantidad + mas_cascos
+            t_suma_cascos.save()
 
-                f_suma_cascos = entrada_salida_acce(id_item = 4, cantidad = mas_cascos,
+            f_suma_cascos = entrada_salida_acce(id_item = 4, cantidad = mas_cascos,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_cascos.save()
+            f_suma_cascos.save()
 
-                # BATERIAS
+            # BATERIAS
 
-                t_suma_bat = inv_accesorios.objects.get(id = 5)
-                t_mas_baterias = mas_baterias + cuentaRxOrden - bat_faltante_rx
-                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias - bat_faltante_rx
-                t_suma_bat.save()
+            t_suma_bat = inv_accesorios.objects.get(id = 5)
+            t_mas_baterias = mas_baterias + cuentaRxOrden - bat_faltante_rx
+            t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias - bat_faltante_rx
+            t_suma_bat.save()
 
-                f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
+            f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_bat.save()
+            f_suma_bat.save()
 
-                # CARGADORES 
+            # CARGADORES 
 
-                t_suma_carg = inv_accesorios.objects.get(id = 6)
-                t_suma_carg.cantidad = t_suma_carg.cantidad + mas_cargadores
-                t_suma_carg.save()
+            t_suma_carg = inv_accesorios.objects.get(id = 6)
+            t_suma_carg.cantidad = t_suma_carg.cantidad + mas_cargadores
+            t_suma_carg.save()
 
-                f_suma_carg = entrada_salida_acce(id_item = 6, cantidad = mas_cargadores,
+            f_suma_carg = entrada_salida_acce(id_item = 6, cantidad = mas_cargadores,
                                                                   tipo_mov = 'E', fecha_mov = fecha_mov)
-                f_suma_carg.save()
+            f_suma_carg.save()
 
 
                 #####AUDITORIA############
