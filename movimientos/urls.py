@@ -81,6 +81,7 @@ urlpatterns = [
     path('actualiza_entrada_acce/', views.actualiza_entrada_acce),
     path('consultaaccesorios/', views.consulta_inventario_acce),
     path('kardex/', views.kardex),
+    path('exportarrx/', views.exportar_radios_excel),
 
 
 

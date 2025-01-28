@@ -3582,7 +3582,79 @@ def kardex(request):
       
         
 
+def exportar_radios_excel(request):
+
+
+    inv_disp = invSeriales.objects.filter(estado_id =4)
+    cuenta_disponibles = invSeriales.objects.filter(estado_id =4).count()
+    inv_nodisp = invSeriales.objects.filter(estado_id =5)
+    cuenta_nodisponibles = invSeriales.objects.filter(estado_id =5).count()
+    inv_malogrado = invSeriales.objects.filter(estado_id =6)
+    cuenta_malogrado = invSeriales.objects.filter(estado_id =6).count()
+    amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
+    moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
+    plomo_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 3).count()
+    amarillas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 1).count()
+    moradas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 2).count()
+    plomo_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 3).count()
+    extraviadas = invSeriales.objects.filter(estado_id =7).count()
+    total_radios = invSeriales.objects.filter().count()
+
     
+    
+    #crea nuevo libro
+    wb = openpyxl.Workbook()
+
+    hoja = wb.active
+
+    hoja.merge_cells(start_row=1, start_column=1, end_row=1, end_column=4)
+    fill = PatternFill(start_color="FFFF00", end_color="FFFF00", fill_type="solid")
+    hoja['A1'].alignment = Alignment(horizontal="center", vertical="center")
+   
+    hoja['A1'] = 'RELACIÓN DE RADIOS'
+    hoja['A1'].fill = fill
+
+    hoja['A3'] = 'DISPONIBLES'
+    hoja['A4'] = 'AMARILLAS'
+    hoja['B4'] = amarillas_disp
+    hoja['A5'] = 'MORADAS'
+    hoja['B5'] = moradas_disp
+    hoja['A6'] = 'PLOMO'
+    hoja['B6'] = plomo_disp
+    hoja['A7'] = 'TOTAL'
+    hoja['B7'] = cuenta_disponibles
+
+    hoja['A9'] = 'NO DISPONIBLES'
+    hoja['A10'] = 'AMARILLAS'
+    hoja['B10'] = amarillas_nodisp
+    hoja['A11'] = 'MORADAS'
+    hoja['B11'] = moradas_nodisp
+    hoja['A12'] = 'PLOMO'
+    hoja['B12'] = plomo_nodisp
+    hoja['A13'] = 'TOTAL'
+    hoja['B13'] = cuenta_nodisponibles
+
+    hoja['A15'] = 'MALOGRADAS'
+    hoja['B15'] = cuenta_malogrado
+
+    hoja['A17'] = 'EXTRAVIADAS'
+    hoja['B17'] = extraviadas
+
+    hoja['A19'] = 'TOTAL RADIOS EN INVENTARIO'
+    hoja['B19'] = total_radios
+
+    hoja.column_dimensions['A'].width = 30
+    hoja.column_dimensions['B'].width = 15
+
+
+
+ 
+    response = HttpResponse(content_type = 'application/vnd.ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="relacion_radios.xlsx"'
+
+    wb.save(response)
+
+    return response
 
  
     
