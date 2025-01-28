@@ -1327,7 +1327,7 @@ def generarPDFGuia(request, id):
     nombre_archivo = str(id)+'_'+str(fecha_entrega)+'.pdf'
    
     response = HttpResponse(buffer, content_type='application/pdf')
-    response['Content-Disposition'] = f'inline; filename= {nombre_archivo}'
+    response['Content-Disposition'] = f'attachment; filename= {nombre_archivo}'
 
 
     return response
