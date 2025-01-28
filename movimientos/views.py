@@ -648,6 +648,7 @@ def consultainventario(request):
     amarillas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 1).count()
     moradas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 2).count()
     plomo_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 3).count()
+    extraviadas = invSeriales.objects.filter(estado_id =7).count()
 
 
 
@@ -671,12 +672,13 @@ def consultainventario(request):
                 return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
                 "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
                 "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
-                "plomonoDisponibles":plomo_nodisp})         
+                "plomonoDisponibles":plomo_nodisp, 'extraviadas':extraviadas})         
 
     return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
     "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
     "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
-                "plomonoDisponibles":plomo_nodisp})
+                "plomonoDisponibles":plomo_nodisp, 'extraviadas':extraviadas})
+
 @login_required
 def movimientosRadios(request):
 
@@ -690,6 +692,10 @@ def movimientosRadios(request):
     amarillas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 1).count()
     moradas_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 2).count()
     plomo_disp = invSeriales.objects.filter(estado_id =4, tipo_id = 3).count()
+    amarillas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 1).count()
+    moradas_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 2).count()
+    plomo_nodisp = invSeriales.objects.filter(estado_id =5, tipo_id = 3).count()
+    extraviadas = invSeriales.objects.filter(estado_id =7).count()
 
     form = agregarInven()
     context = {'form':form}
@@ -701,9 +707,10 @@ def movimientosRadios(request):
         serial = request.POST['serial']
         valida_serial = invSeriales.objects.filter(codigo = serial).count()
         if valida_serial == 0:
-            return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"amarillasDisponibles":amarillas_disp, 
-                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "buscaradios":formBuscaRadio, 'error01':'el serial no existe'})
+            return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
+                "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
+                "plomonoDisponibles":plomo_nodisp, 'extraviadas':extraviadas})         
         else:
             estadorx = invSeriales.objects.get(codigo = serial)
             ultima_salida = movimientoRadios.objects.filter(serial = serial)
@@ -725,8 +732,10 @@ def movimientosRadios(request):
                 formatedDate = 'aun no tiene salidas'
                 nombre_cliente = 'aun no tiene salidas'
 
-        return render(request, 'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
-                "cantidadnoDispo":cuenta_nodisponibles,"cantidadMalogrado":cuenta_malogrado,"amarillasDisponibles":amarillas_disp, "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "estado":estadorx.estado,"buscaradios":formBuscaRadio, "ultima_salida":formatedDate, "cliente":nombre_cliente})
+        return render(request,'inventario.html', {"form": form,"listaDisponibles":inv_disp, "listaNoDisponible":inv_nodisp, "listaMalogrado":inv_malogrado, "cantidadDisponible":cuenta_disponibles,
+                "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
+                "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
+                "plomonoDisponibles":plomo_nodisp, 'extraviadas':extraviadas, "estado":estadorx.estado,"ultima_salida":formatedDate, "cliente":nombre_cliente})         
 @login_required
 def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
