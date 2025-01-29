@@ -1043,8 +1043,8 @@ def generarEntrada(request, id, orden_id):
                 # BATERIAS
 
                 t_suma_bat = inv_accesorios.objects.get(id = 5)
-                t_mas_baterias = mas_baterias + cuentaRxOrden - bat_faltante_rx
-                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias - bat_faltante_rx
+                t_mas_baterias = mas_baterias 
+                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias 
                 t_suma_bat.save()
 
                 f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
@@ -3657,9 +3657,113 @@ def exportar_radios_excel(request):
     return response
 
  
+def entradasfalt(request, id):
+
+    form = guardaEntradaRx()
+    formEntrada = formEntradaDetalle()
+    context = {'form':form}
+
     
+    msalida = salidasDetalle.objects.get(id=id)
+    orden_id = msalida.id_orden
+    ordenes = ordenRegistro.objects.get(id = orden_id)
+
+#buscar las radios cargadas
+
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+    return render(request, 'entradarxfaltante.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
+                                             "formEntrada":formEntrada})   
 
 
+def entradasfaltanterx(request, id, orden_id):
 
+    form = guardaEntradaRx()
+    formEntrada = formEntradaDetalle()
+    #verificar aqui el id
+    radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+
+    u = orden_id
+
+    msalida = salidasDetalle.objects.get(id=id)
+    orden_id = msalida.id_orden
+    ordenes = ordenRegistro.objects.get(id = orden_id)
+
+
+    if request.method == 'POST':
+
+        form = guardaEntradaRx(request.POST)
+        
+        if form.is_valid():
+            a = form.cleaned_data['serial']
+            ##comprobar que existe una salida con ese serial y ese numero de salida
+            if not movimientoRadios.objects.filter(serial = a, id_salida = id, estado = "F").exists():
+                initial_data = {
+                    'serial': '',
+                    }
+                form = guardaEntradaRx(initial=initial_data)
+                return render(request, 'entradarxfaltante.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
+                                                        "error": "El serial ingresado no corresponde a la salida", "formEntrada":formEntrada})
+            ##valida si ya fue agregado
+            if movimientoRadios.objects.filter(serial = a, id_salida = id, estado = "D").exists():
+                initial_data = {
+                    'serial': '',
+                    }
+                form = guardaEntradaRx(initial=initial_data)
+                return render(request, 'entradarxfaltante.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
+                                                        "error": "El serial ingresado ya fue agregado", "formEntrada":formEntrada})
+            
+            else:
+                valExisteRxSalida = movimientoRadios.objects.get(serial = a, id_salida = id, estado = "F")
+                a = form.save(commit=False)
+                a.id_salida = id
+                a.estado = 'D'
+                a.id_tipo = valExisteRxSalida.id_tipo
+                a.save()
+
+                d = a.serial
+
+                #borrar si existe en faltantes
+
+                if radiosFantantes.objects.filter(fserial = d, id_salida = id).exists():
+                    borrarrx = radiosFantantes.objects.filter(fserial = d, id_salida = id)
+                    borrarrx.delete()
+
+
+                #cambiar el estatus del radio en el inventario
+
+                cambiaestado =  invSeriales.objects.get(codigo = d)
+                cambiaestado.estado_id = 4
+                cambiaestado.save()
+
+                ## afectar inventario accesorios
+
+                # BATERIAS
+
+                t_suma_bat = inv_accesorios.objects.get(id = 5)
+                t_mas_baterias = 1
+                t_suma_bat.cantidad = t_suma_bat.cantidad + t_mas_baterias
+                t_suma_bat.save()
+
+                fecha_mov = datetime.date.today()
+
+                f_suma_bat = entrada_salida_acce(id_item = 5, cantidad = t_mas_baterias,
+                                                                  tipo_mov = 'E', fecha_mov = fecha_mov)
+                f_suma_bat.save()
+
+                
+
+
+            ordenes = ordenRegistro.objects.get(id = orden_id)
+            msalida = salidasDetalle.objects.get(id_orden=orden_id)
+
+            initial_data = {
+                    'serial': '',
+                    }
+            form = guardaEntradaRx(initial=initial_data)
+
+            radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+            return redirect('/verFaltante/') 
+
+    return render(request,'entradarxfaltante.html', {"form":form})
 
     
