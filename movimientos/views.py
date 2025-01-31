@@ -146,8 +146,9 @@ def entradas(request, id):
 #buscar las radios cargadas
 
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+    cuenta_radios_cargadas  = movimientoRadios.objects.filter(id_salida = id, estado = "D").count()
     return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
-                                             "formEntrada":formEntrada})
+                                             "formEntrada":formEntrada, 'cantidad_rx':cuenta_radios_cargadas})
 @login_required
 def entradatotal(request, id, id_orden):
 
