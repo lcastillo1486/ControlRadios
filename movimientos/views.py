@@ -3657,13 +3657,13 @@ def exportar_radios_excel(request):
     return response
 
  
-def entradasfalt(request, id):
+def entradasfalt(request, id,serial_rx):
 
     form = guardaEntradaRx()
     formEntrada = formEntradaDetalle()
     context = {'form':form}
 
-    
+    serial = serial_rx
     msalida = salidasDetalle.objects.get(id=id)
     orden_id = msalida.id_orden
     ordenes = ordenRegistro.objects.get(id = orden_id)
@@ -3672,10 +3672,10 @@ def entradasfalt(request, id):
 
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
     return render(request, 'entradarxfaltante.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
-                                             "formEntrada":formEntrada})   
+                                             "formEntrada":formEntrada, 'serial':serial})   
 
 
-def entradasfaltanterx(request, id, orden_id):
+def entradasfaltanterx(request, id, orden_id, serial_rx):
 
     form = guardaEntradaRx()
     formEntrada = formEntradaDetalle()
@@ -3695,6 +3695,17 @@ def entradasfaltanterx(request, id, orden_id):
         
         if form.is_valid():
             a = form.cleaned_data['serial']
+
+            if a != serial_rx:
+                return HttpResponse(f"""
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                <img src="/static/error.png" alt="Error" style="max-width: 200px; margin-bottom: 20px;">
+                <h2 style="color: red;">EL SERIAL INTRODUCIDO NO CORRESPONDE</h2>
+                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                Volver atrás
+                </button>
+                </div>
+                """)
             ##comprobar que existe una salida con ese serial y ese numero de salida
             if not movimientoRadios.objects.filter(serial = a, id_salida = id, estado = "F").exists():
                 initial_data = {

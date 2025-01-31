@@ -202,6 +202,7 @@
 
                 <h2> Salida N° {{listado_entrada.id}} </h2>
                 <h2> Cliente: {{listado_orden.cliente}}</h2>
+                <h2> Serial: {{serial}}</h2>
 
             </div>
 
@@ -220,7 +221,7 @@
             <div class="text-center">
             
                 <h5><b>Registrar Radios</h5></b>
-                <form action='/entradasrxfalt/{{listado_entrada.id}}/{{listado_orden.id}}' method="POST">
+                <form action='/entradasrxfalt/{{listado_entrada.id}}/{{listado_orden.id}}/{{serial}}' method="POST">
                     {% csrf_token %}
                     <h3>
                         <font color="red">{{error}}

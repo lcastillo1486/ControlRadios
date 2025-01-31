@@ -82,8 +82,8 @@ urlpatterns = [
     path('consultaaccesorios/', views.consulta_inventario_acce),
     path('kardex/', views.kardex),
     path('exportarrx/', views.exportar_radios_excel),
-    path('entradasrxfaltante/<int:id>',views.entradasfalt),
-    path('entradasrxfalt/<int:id>/<int:orden_id>',views.entradasfaltanterx),
+    path('entradasrxfaltante/<int:id>/<str:serial_rx>',views.entradasfalt),
+    path('entradasrxfalt/<int:id>/<int:orden_id>/<str:serial_rx>',views.entradasfaltanterx),
 
 
 
