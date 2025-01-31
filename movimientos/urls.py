@@ -84,6 +84,8 @@ urlpatterns = [
     path('exportarrx/', views.exportar_radios_excel),
     path('entradasrxfaltante/<int:id>/<str:serial_rx>',views.entradasfalt),
     path('entradasrxfalt/<int:id>/<int:orden_id>/<str:serial_rx>',views.entradasfaltanterx),
+    path('entradasaccefaltante/<int:id>',views.entradaaccefaltante),
+
 
 
 
