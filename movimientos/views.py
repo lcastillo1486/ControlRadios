@@ -129,8 +129,9 @@ def entradaRadios(request, id, orden_id):
             form = guardaEntradaRx(initial=initial_data)
 
             radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
+            cuenta_radios_cargadas  = movimientoRadios.objects.filter(id_salida = id, estado = "D").count()
             return render(request, 'entradas.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
-                                                    "formEntrada":formEntrada}) 
+                                                    "formEntrada":formEntrada, 'cantidad_rx':cuenta_radios_cargadas}) 
 @login_required
 def entradas(request, id):
 
