@@ -2852,7 +2852,7 @@ def controlrxevento(request, id):
     total_entregado = controlrxevent.objects.filter(id_salida = id, estadorx = 'E').count()
     total_disponible = radios_en_orden - total_entregado
     total_recogido = controlrxevent.objects.filter(id_salida = id, estadorx = 'R').count()
-    tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('responsable', 'estadorx')
+    tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('responsable', 'hora')
 
     # Obtenemos los seriales agregados temporalmente
     seriales_temporales = request.session.get('seriales', [])
