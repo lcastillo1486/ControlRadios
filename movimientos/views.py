@@ -3864,3 +3864,8 @@ Atte.
 
             return redirect('gracias')
     return render(request, 'formulario_pedido.html',{'form':form})
+
+
+def gracias(request):
+
+    return render(request, 'gracias.html')
