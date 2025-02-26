@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<style>
+    .label {
+        color: #0047ab;
+    }
+</style>
+
+<body class="bg-slate-200 flex items-center justify-center min-h-screen p-4">
+
+    <div class="max-w-4xl w-full bg-white p-8 shadow-lg rounded-lg">
+        <div class="flex justify-center">
+            <img src="{% static 'logo_nuevo.png' %}" width="400" height="300" class="block">
+        </div>
+        <h2 class="text-2xl font-bold text-gray-700 text-center mb-6 drop-shadow-lg">FORMULARIO DE PEDIDO</h2>
+
+        <form method="POST" class="flex flex-col gap-6">
+            {% csrf_token %}
+
+            <!-- Nombre -->
+            <h2 class="text-l font-bold text-gray-700 text-left -mb-3 drop-shadow-lg">Datos Personales:</h2>
+
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Nombres y Apellidos:</label>
+                <input type="text" name="Nombre" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+            </div>
+
+            <!-- Teléfono -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Teléfono:</label>
+                <input type="text" name="telefono" maxlength="9" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg"
+                    pattern="\d{9}" title="Debe contener 9 dígitos">
+            </div>
+
+            <!-- Fecha de Entrega -->
+            <h2 class="text-l font-bold text-gray-700 text-left -mb-3 drop-shadow-lg">Datos del Evento:</h2>
+
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Fecha de Entrega:</label>
+                <input type="date" name="fecha_entrega" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+            </div>
+
+            <!-- Fecha del Evento -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Fecha del Evento:</label>
+                <input type="date" name="fecha_evento" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+            </div>
+
+            <!-- Cantidad de Radios -->
+            <h2 class="text-l font-bold text-gray-700 text-left -mb-3 drop-shadow-lg">Detalles del Pedido:</h2>
+
+            <div class="flex flex-col relative">
+                <label class="font-semibold text-blue-700 mb-1">Cantidad de Radios:</label>
+                <input type="number" id="cantidad_radios" name="cantidad_radios" value="0" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+
+                <!-- Imagen ampliada oculta -->
+                <div id="imagen_radios"
+                    class="absolute top-14 left-1/2 transform -translate-x-1/2 hidden transition-opacity duration-500">
+                    <img src="{% static 'logo.png' %}" class="w-64 h-64  rounded-lg opacity-0">
+                </div>
+            </div>
+
+            <!-- Cantidad de Cobras -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Cantidad de Cobras:</label>
+                <input type="number" id="cantidad_cobras" name="cantidad_cobras" value="0"
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+                <!-- Imagen ampliada oculta -->
+                <div id="imagen_cobra"
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 hidden transition-opacity duration-500">
+                    <img src="{% static 'cobra.png' %}" class="w-64 h-64  rounded-lg opacity-0">
+                </div>
+            </div>
+
+            <!-- Cantidad de Manos Libres -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Cantidad de Manos Libres:</label>
+                <input type="number" id="cantidad_manos_libres" name="cantidad_manos_libres" value="0"
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+                <div id="imagen_manos_libres"
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 hidden transition-opacity duration-500">
+                    <img src="{% static 'manos_libres.png' %}" class="w-96 h-96 rounded-lg opacity-0">
+                </div>
+            </div>
+
+            <!-- Cantidad Tipo Escolta -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Cantidad de HandsFree Tipo Escolta:</label>
+                <input type="number" id="cantidad_tipo_escolta" name="cantidad_tipo_escolta" value="0"
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg">
+                <div id="imagen_tipo_escolta"
+                    class="absolute top-1/2 left-1/2 transform -translate-x-1/2 hidden transition-opacity duration-500">
+                    <img src="{% static 'tipo_escolta.png' %}" class="w-64 h-64 rounded-lg opacity-0">
+                </div>
+            </div>
+
+            <!-- Dirección de Entrega -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Dirección de Entrega:</label>
+                <textarea name="direccion_entrega" required
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg"></textarea>
+            </div>
+
+            <!-- Comentarios (Mismo Alto que Cantidad Tipo Escolta) -->
+            <div class="flex flex-col">
+                <label class="font-semibold text-blue-700 mb-1">Comentarios:</label>
+                <textarea name="comentarios"
+                    class="w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg h-28"></textarea>
+            </div>
+
+            <!-- Botón Enviar -->
+            <button type="submit" 
+                class="w-full bg-blue-600 text-white font-bold py-3 rounded-lg hover:bg-blue-700 transition">
+                Enviar
+            </button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const imagenes = {
+                cantidad_cobras: document.getElementById("imagen_cobra"),
+                cantidad_manos_libres: document.getElementById("imagen_manos_libres"),
+                cantidad_tipo_escolta: document.getElementById("imagen_tipo_escolta"),
+            };
+
+            // Ocultar todas las imágenes al inicio
+            Object.values(imagenes).forEach(img => {
+                if (img) img.classList.add("hidden");
+            });
+
+            function mostrarImagen(inputId) {
+                // Ocultar cualquier imagen visible antes de mostrar la nueva
+                Object.keys(imagenes).forEach(id => {
+                    if (imagenes[id]) {
+                        imagenes[id].classList.add("hidden");
+                        imagenes[id].querySelector("img").classList.remove("opacity-100");
+                    }
+                });
+
+                // Mostrar la imagen correspondiente al input
+                const imagen = imagenes[inputId];
+                if (imagen) {
+                    imagen.classList.remove("hidden");
+                    setTimeout(() => imagen.querySelector("img").classList.add("opacity-100"), 50);
+
+                    // Ocultar después de 4 segundos
+                    setTimeout(() => {
+                        imagen.querySelector("img").classList.remove("opacity-100");
+                        setTimeout(() => imagen.classList.add("hidden"), 500);
+                    }, 4000);
+                }
+            }
+
+            // Agregar eventos a los campos
+            Object.keys(imagenes).forEach(inputId => {
+                const input = document.getElementById(inputId);
+                if (input) {
+                    input.addEventListener("focus", () => mostrarImagen(inputId));
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

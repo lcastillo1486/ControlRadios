@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
-from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo
+from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -43,6 +43,7 @@ from django.http import JsonResponse
 import json
 import openpyxl
 from openpyxl.styles import PatternFill, alignment, Alignment
+from django.core.validators import RegexValidator
 
 # Create your views here. 
 @login_required
@@ -3796,3 +3797,70 @@ def entradaaccefaltante(request, id):
     radiosCargadas = movimientoRadios.objects.filter(id_salida = id, estado = "D")
     return render(request, 'entradaaccefaltante.html',{"listado_entrada": msalida, "listado_orden":ordenes, "listadoRadiosCargadas":radiosCargadas, "form":form, 
                                              "formEntrada":formEntrada})
+
+
+def carga_formulario_pedido(request):
+
+    form = FormPedidoCliente()
+
+    if request.method == 'POST':
+        form = FormPedidoCliente(request.POST)
+        if form.is_valid():
+            nombre = form.cleaned_data['Nombre']
+            telefono = form.cleaned_data['telefono']
+            f_entrega = form.cleaned_data['fecha_entrega']
+            f_evento = form.cleaned_data['fecha_evento']
+            cantidad_rx = form.cleaned_data['cantidad_radios']
+            cantidad_cobras = form.cleaned_data['cantidad_cobras']
+            cantidad_manos_l = form.cleaned_data['cantidad_manos_libres']
+            cantidad_t_escolta = form.cleaned_data['cantidad_tipo_escolta']
+            direccion = form.cleaned_data['direccion_entrega']
+            comentarios = form.cleaned_data['comentarios']
+
+            form.save()
+
+            ############ ENVIARLO POR WHATSAPP ############
+
+            # telwhat = +51946364693
+            telwhat = ["+51914142952", "+51974616099"] 
+            mensaje = f"""Hola. Tienes un nuevo pedido.
+Cliente: {nombre}
+Teléfono: {telefono}
+Dirección Entrega: {direccion}
+Comentarios del Cliente: {comentarios}\n
+*DATOS DEL PEDIDO:*
+Fecha de Entrega: {f_entrega}
+Fecha del Evento: {f_evento}
+Radios: {cantidad_rx}
+Cobras: {cantidad_cobras}
+Manos Libres: {cantidad_manos_l}
+Tipo Escolta: {cantidad_t_escolta}
+"""
+            for tel in telwhat:
+                url = "https://api.ultramsg.com/instance108195/messages/chat"
+                payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
+                payload = payload.encode('utf8').decode('iso-8859-1')
+                headers = {'content-type': 'application/x-www-form-urlencoded'}
+                response = requests.request("POST", url, data=payload, headers=headers)
+
+            mensaje_cliente = f"""Estimado/a {nombre},
+
+Hemos recibido su pedido y nos encontramos procesándolo. 
+En breve, un miembro de nuestro equipo se pondrá en contacto con usted para brindarle más detalles y coordinar cualquier información adicional.
+Si tiene alguna consulta, no dude en escribirnos. Estamos aquí para ayudarle.\n
+¡Gracias por confiar en nosotros!\n
+Atte.
+*BACKTRAK SOLUTION NETWORK*
+"""
+            if not telefono is None:
+                telefono = re.sub(r'[^\d]+', '', telefono)
+                telefono = "51" + telefono if not telefono.startswith("51") else telefono
+
+            url = "https://api.ultramsg.com/instance108195/messages/chat"
+            payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cliente}"
+            payload = payload.encode('utf8').decode('iso-8859-1')
+            headers = {'content-type': 'application/x-www-form-urlencoded'}
+            response = requests.request("POST", url, data=payload, headers=headers)
+
+            return redirect('gracias')
+    return render(request, 'formulario_pedido.html',{'form':form})

@@ -85,6 +85,8 @@ urlpatterns = [
     path('entradasrxfaltante/<int:id>/<str:serial_rx>',views.entradasfalt),
     path('entradasrxfalt/<int:id>/<int:orden_id>/<str:serial_rx>',views.entradasfaltanterx),
     path('entradasaccefaltante/<int:id>',views.entradaaccefaltante),
+    path('formulario/',views.carga_formulario_pedido),
+    path('gracias/',views.gracias, name='gracias'),
 
 
 

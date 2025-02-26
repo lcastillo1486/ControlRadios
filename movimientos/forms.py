@@ -1,10 +1,10 @@
 from django.forms import ModelForm
-from .models import movimientoRadios, invSeriales, entradaDetalle, buscaentregados, contable, abono_factura
+from .models import movimientoRadios, invSeriales, entradaDetalle, buscaentregados, contable, abono_factura, formulario_pedido
 from django.forms import widgets
 from django import forms
 from cliente.models import cliente, razonSocial
 from ordenes.models import ordenRegistro
-
+from django.core.validators import RegexValidator
 
 class radiotipos(ModelForm):
 
@@ -161,3 +161,52 @@ class ResponsableForm(forms.Form):
 
 class rxcontroleventoformRecojo(forms.Form):
     serial_recojo = forms.CharField(max_length=100, label="Serial")
+
+
+class FormPedidoCliente(forms.ModelForm):
+    telefono = forms.CharField(
+        max_length=9,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{9}$',
+                message="El número de teléfono debe tener exactamente 9 dígitos.",
+                code='invalid_phone_number'
+            )
+        ],
+        widget=forms.TextInput(attrs={
+            'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg',
+            'placeholder': 'Ingrese su teléfono',
+        })
+    )
+
+    fecha_entrega = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg',
+        })
+    )
+
+    fecha_evento = forms.DateField(
+        widget=forms.DateInput(attrs={
+            'type': 'date',
+            'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg',
+        })
+    )
+
+    
+
+    class Meta:
+        model = formulario_pedido
+        fields = '__all__'
+        labels = {
+            'Nombre':'Nombre y Apellidos:'
+        }
+        widgets = {
+            'Nombre': forms.TextInput(attrs={'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'cantidad_radios': forms.NumberInput(attrs={'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'cantidad_cobras': forms.NumberInput(attrs={'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'cantidad_manos_libres': forms.NumberInput(attrs={'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'cantidad_tipo_escolta': forms.NumberInput(attrs={'class': 'w-full h-12 px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'direccion_entrega': forms.TextInput(attrs={'class': 'w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+            'comentarios': forms.TextInput(attrs={'class': 'w-full px-4 py-3 border border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-lg'}),
+        }

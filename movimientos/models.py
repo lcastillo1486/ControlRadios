@@ -2,6 +2,7 @@ from django.db import models
 from ordenes.models import ordenRegistro, cliente
 from django.utils import timezone
 import pytz
+from django.core.validators import RegexValidator
 
 def obtener_fecha_hora_peru():
     peru_timezone = pytz.timezone('America/Lima')
@@ -464,4 +465,35 @@ class rpt_kardex(models.Model):
     class Meta:
         managed = False
         db_table = 'rpt_kardex'
+        auto_created = True
+
+
+class formulario_pedido(models.Model):
+    id = models.AutoField(primary_key=True)
+    fecha_creacion = models.DateField(auto_now_add=True)
+    Nombre = models.CharField(max_length=200, blank=False, null=False)
+    telefono = models.CharField(
+        max_length=9,
+        validators=[
+            RegexValidator(
+                regex=r'^\d{9}$',
+                message="El número de teléfono debe tener exactamente 9 dígitos.",
+                code='invalid_phone_number'
+            )
+        ],
+        null=False,
+        blank=False
+    )
+    fecha_entrega = models.DateField()
+    fecha_evento = models.DateField()
+    cantidad_radios = models.PositiveIntegerField(null = False, default=0 )
+    cantidad_cobras = models.PositiveIntegerField(null = False, default=0)
+    cantidad_manos_libres = models.PositiveIntegerField(null = False, default=0)
+    cantidad_tipo_escolta = models.PositiveIntegerField(null = False, default=0)
+    comentarios = models.TextField (blank = True, null=True)
+    direccion_entrega = models.TextField(blank = False, null=False)
+
+    class Meta:
+        managed = False
+        db_table = 'formulario_pedido'
         auto_created = True
