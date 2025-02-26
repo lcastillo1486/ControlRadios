@@ -44,6 +44,7 @@ import json
 import openpyxl
 from openpyxl.styles import PatternFill, alignment, Alignment
 from django.core.validators import RegexValidator
+import urllib.parse
 
 # Create your views here. 
 @login_required
@@ -3827,7 +3828,7 @@ def carga_formulario_pedido(request):
 
                 # telwhat = +51946364693
                 telwhat = ["+51914142952", "+51974616099"] 
-                mensaje = f"""Nuevo pedido.
+                mensaje = f'''Nuevo pedido.
 Cliente: {nombre}
 Teléfono: {telefono}
 Dirección Entrega: {direccion}
@@ -3838,28 +3839,31 @@ Fecha del Evento: {f_evento}
 Radios: {cantidad_rx}
 Cobras: {cantidad_cobras}
 Manos Libres: {cantidad_manos_l}
-Tipo Escolta: {cantidad_t_escolta}"""
+Tipo Escolta: {cantidad_t_escolta}'''
+                mensaje_codificado = urllib.parse.quote(mensaje)
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
-                    payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
-                    payload = payload.encode('utf8').decode('utf8')
+                    payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                    # payload = payload.encode('utf8').decode('iso-8859-1')
                     headers = {'content-type': 'application/x-www-form-urlencoded'}
                     response = requests.request("POST", url, data=payload, headers=headers)
 
-                mensaje_cliente = f"""Estimado/a {nombre},
+                mensaje_cliente = f'''Estimado/a {nombre},
 Hemos recibido su pedido. 
 En breve, un miembro de nuestro equipo se pondrá en contacto con usted para brindarle más detalles y coordinar cualquier información adicional.
 Si tiene alguna consulta, no dude en escribirnos. Estamos aquí para ayudarle.\n
 ¡Gracias por confiar en nosotros!\n
 Atte.
-*BACKTRAK SOLUTION NETWORK*"""
+*BACKTRAK SOLUTION NETWORK*'''
                 if not telefono is None:
                     telefono = re.sub(r'[^\d]+', '', telefono)
                     telefono = "51" + telefono if not telefono.startswith("51") else telefono
 
+                mensaje_cod = urllib.parse.quote(mensaje_cliente)
+
                 url = "https://api.ultramsg.com/instance108195/messages/chat"
-                payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cliente}"
-                payload = payload.encode('utf8').decode('utf8')
+                payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cod}"
+                # payload = payload.encode('utf8').decode('iso-8859-1')
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
