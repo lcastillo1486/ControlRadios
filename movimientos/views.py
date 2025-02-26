@@ -3895,14 +3895,18 @@ def envio_whatsapp_entrega(request):
     por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy, estado_id = 5)
     
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51974616099"] 
+        telwhats = ["+51933805151", "+51914142952"] 
         mensaje = "*PEDIDOS POR ENTREGAR HOY:*\n"
 
         if por_entregar.exists():
             for orden in por_entregar:
+                if not orden.direccion_entrega:
+                    direccion = 'Por confirmar'
+                else: 
+                    direccion = orden.direccion_entrega
                 mensaje += f'''
 *Cliente:* {orden.cliente}
-*Dirección:* {orden.direccion_entrega}\n'''
+*Dirección:* {direccion}\n'''
                 
             mensaje_codificado = urllib.parse.quote(mensaje)
 
@@ -3921,14 +3925,18 @@ def envio_whatsapp_recojo(request):
     por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy, estado_id = 3)
 
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51974616099"] 
+        telwhats = ["+51933805151", "+51914142952"] 
         mensaje = "*PEDIDOS POR RECOGER HOY:*\n"
 
         if por_recoger.exists():
             for orden in por_recoger:
+                if not orden.direccion_entrega:
+                    direccion = 'Por confirmar'
+                else: 
+                    direccion = orden.direccion_entrega
                 mensaje += f'''
 *Cliente:* {orden.cliente}
-*Dirección:* {orden.direccion_entrega}\n'''
+*Dirección:* {direccion}\n'''
             
             mensaje_codificado = urllib.parse.quote(mensaje)
             url = "https://api.ultramsg.com/instance108195/messages/chat"
