@@ -3808,6 +3808,7 @@ def carga_formulario_pedido(request):
         if request.method == 'POST':
             form = FormPedidoCliente(request.POST)
             if form.is_valid():
+                f_creacion = datetime.date.today()
                 nombre = form.cleaned_data['Nombre']
                 telefono = form.cleaned_data['telefono']
                 f_entrega = form.cleaned_data['fecha_entrega']
@@ -3819,7 +3820,9 @@ def carga_formulario_pedido(request):
                 direccion = form.cleaned_data['direccion_entrega']
                 comentarios = form.cleaned_data['comentarios']
 
-                form.save()
+                guardar_form = form.save(commit=False)
+                guardar_form.fecha_creacion = f_creacion
+                guardar_form.save()
 
                 ############ ENVIARLO POR WHATSAPP ############
 
