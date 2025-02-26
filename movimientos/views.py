@@ -3837,8 +3837,8 @@ Fecha de Entrega: {f_entrega}
 Fecha del Evento: {f_evento}
 Radios: {cantidad_rx}
 Cobras: {cantidad_cobras}
-Manos Libres: {cantidad_manos_l}
-Tipo Escolta: {cantidad_t_escolta}"""
+Manos Libres: {cantidad_manos_l}"""
+# Tipo Escolta: {cantidad_t_escolta}
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
                     payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
