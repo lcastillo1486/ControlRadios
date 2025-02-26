@@ -87,6 +87,9 @@ urlpatterns = [
     path('entradasaccefaltante/<int:id>',views.entradaaccefaltante),
     path('formulario/',views.carga_formulario_pedido),
     path('gracias/',views.gracias, name='gracias'),
+    path('recordatorio/',views.enviar_recordatorios, name='recordatorio'),
+    path('enviarmensajeentrega/',views.envio_whatsapp_entrega),
+    path('enviarmensajerecojo/',views.envio_whatsapp_recojo),
 
 
 

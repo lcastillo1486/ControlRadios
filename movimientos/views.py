@@ -3828,10 +3828,10 @@ def carga_formulario_pedido(request):
 
                 # telwhat = +51946364693
                 telwhat = ["+51914142952", "+51974616099"] 
-                mensaje = f'''Nuevo pedido.
+                mensaje = f'''Hola. Tienes un nuevo pedido.
 Cliente: {nombre}
 Teléfono: {telefono}
-Dirección Entrega: {direccion}
+Dirección de Entrega: {direccion}
 Comentarios del Cliente: {comentarios}\n
 *DATOS DEL PEDIDO:*
 Fecha de Entrega: {f_entrega}
@@ -3840,6 +3840,7 @@ Radios: {cantidad_rx}
 Cobras: {cantidad_cobras}
 Manos Libres: {cantidad_manos_l}
 Tipo Escolta: {cantidad_t_escolta}'''
+                
                 mensaje_codificado = urllib.parse.quote(mensaje)
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
@@ -3877,3 +3878,65 @@ Atte.
 def gracias(request):
 
     return render(request, 'gracias.html')
+
+def enviar_recordatorios(request):
+
+    fecha_hoy = datetime.date.today()
+
+    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy)
+    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy)
+
+    return render(request, 'enviar_recordatorio.html',{'por_entregar':por_entregar, 'por_recoger':por_recoger})
+
+def envio_whatsapp_entrega(request):
+
+    fecha_hoy = datetime.date.today()
+
+    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy)
+    
+    if request.method == "POST":
+        telwhats = ["+51933805151", "+51974616099"] 
+        mensaje = "*PEDIDOS POR ENTREGAR HOY:*\n"
+
+        if por_entregar.exists():
+            for orden in por_entregar:
+                mensaje += f'''
+*Cliente:* {orden.cliente}
+*Dirección:* {orden.direccion_entrega}\n'''
+                
+            mensaje_codificado = urllib.parse.quote(mensaje)
+
+            for tel in telwhats:
+                url = "https://api.ultramsg.com/instance108195/messages/chat"
+                payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                headers = {'content-type': 'application/x-www-form-urlencoded'}
+                response = requests.request("POST", url, data=payload, headers=headers)
+
+        return redirect('recordatorio')
+    return redirect('recordatorio')
+
+def envio_whatsapp_recojo(request):
+
+    fecha_hoy = datetime.date.today()
+    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy)
+
+    if request.method == "POST":
+        telwhats = ["+51933805151", "+51974616099"] 
+        mensaje = "*PEDIDOS POR RECOGER HOY:*\n"
+
+        if por_recoger.exists():
+            for orden in por_recoger:
+                mensaje += f'''
+*Cliente:* {orden.cliente}
+*Dirección:* {orden.direccion_entrega}\n'''
+            
+            mensaje_codificado = urllib.parse.quote(mensaje)
+            url = "https://api.ultramsg.com/instance108195/messages/chat"
+            for tel in telwhats:
+                url = "https://api.ultramsg.com/instance108195/messages/chat"
+                payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                headers = {'content-type': 'application/x-www-form-urlencoded'}
+                response = requests.request("POST", url, data=payload, headers=headers)
+
+        return redirect('recordatorio')
+    return redirect('recordatorio')
