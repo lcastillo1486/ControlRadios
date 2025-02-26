@@ -3842,7 +3842,7 @@ Tipo Escolta: {cantidad_t_escolta}"""
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
                     payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
-                    payload = payload.encode('utf-8').decode('utf-8')
+                    payload = payload.encode('utf8').decode('utf8')
                     headers = {'content-type': 'application/x-www-form-urlencoded'}
                     response = requests.request("POST", url, data=payload, headers=headers)
 
@@ -3859,7 +3859,7 @@ Atte.
 
                 url = "https://api.ultramsg.com/instance108195/messages/chat"
                 payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cliente}"
-                payload = payload.encode('utf-8').decode('utf-8')
+                payload = payload.encode('utf8').decode('utf8')
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
