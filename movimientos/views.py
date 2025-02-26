@@ -3827,7 +3827,7 @@ def carga_formulario_pedido(request):
 
                 # telwhat = +51946364693
                 telwhat = ["+51914142952", "+51974616099"] 
-                mensaje = f"""Hola. Tienes un nuevo pedido.
+                mensaje = f"""Nuevo pedido.
 Cliente: {nombre}
 Teléfono: {telefono}
 Dirección Entrega: {direccion}
@@ -3842,12 +3842,12 @@ Tipo Escolta: {cantidad_t_escolta}"""
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
                     payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
-                    # payload = payload.encode('utf8').decode('utf8')
+                    payload = payload.encode('utf8').decode('utf8')
                     headers = {'content-type': 'application/x-www-form-urlencoded'}
                     response = requests.request("POST", url, data=payload, headers=headers)
 
                 mensaje_cliente = f"""Estimado/a {nombre},
-Hemos recibido su pedido y nos encontramos procesándolo. 
+Hemos recibido su pedido. 
 En breve, un miembro de nuestro equipo se pondrá en contacto con usted para brindarle más detalles y coordinar cualquier información adicional.
 Si tiene alguna consulta, no dude en escribirnos. Estamos aquí para ayudarle.\n
 ¡Gracias por confiar en nosotros!\n
@@ -3859,7 +3859,7 @@ Atte.
 
                 url = "https://api.ultramsg.com/instance108195/messages/chat"
                 payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cliente}"
-                # payload = payload.encode('utf8').decode('utf8')
+                payload = payload.encode('utf8').decode('utf8')
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
