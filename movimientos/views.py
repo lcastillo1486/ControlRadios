@@ -3883,8 +3883,8 @@ def enviar_recordatorios(request):
 
     fecha_hoy = datetime.date.today()
 
-    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy)
-    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy)
+    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy, estado_id = 5)
+    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy, estado_id = 3)
 
     return render(request, 'enviar_recordatorio.html',{'por_entregar':por_entregar, 'por_recoger':por_recoger})
 
@@ -3892,7 +3892,7 @@ def envio_whatsapp_entrega(request):
 
     fecha_hoy = datetime.date.today()
 
-    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy)
+    por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy, estado_id = 5)
     
     if request.method == "POST":
         telwhats = ["+51933805151", "+51974616099"] 
@@ -3918,7 +3918,7 @@ def envio_whatsapp_entrega(request):
 def envio_whatsapp_recojo(request):
 
     fecha_hoy = datetime.date.today()
-    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy)
+    por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy, estado_id = 3)
 
     if request.method == "POST":
         telwhats = ["+51933805151", "+51974616099"] 
