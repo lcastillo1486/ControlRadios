@@ -3838,8 +3838,7 @@ Fecha del Evento: {f_evento}
 Radios: {cantidad_rx}
 Cobras: {cantidad_cobras}
 Manos Libres: {cantidad_manos_l}
-Tipo Escolta: {cantidad_t_escolta}
-"""
+Tipo Escolta: {cantidad_t_escolta}"""
                 for tel in telwhat:
                     url = "https://api.ultramsg.com/instance108195/messages/chat"
                     payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje}"
@@ -3853,8 +3852,7 @@ En breve, un miembro de nuestro equipo se pondrá en contacto con usted para bri
 Si tiene alguna consulta, no dude en escribirnos. Estamos aquí para ayudarle.\n
 ¡Gracias por confiar en nosotros!\n
 Atte.
-*BACKTRAK SOLUTION NETWORK*
-"""
+*BACKTRAK SOLUTION NETWORK*"""
                 if not telefono is None:
                     telefono = re.sub(r'[^\d]+', '', telefono)
                     telefono = "51" + telefono if not telefono.startswith("51") else telefono
