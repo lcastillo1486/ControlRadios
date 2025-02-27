@@ -3952,6 +3952,11 @@ def envio_whatsapp_recojo(request):
 def consultar_estado_pedido(request):
     numero_pedido = request.GET.get("numero_pedido")  # Obtener el número del pedido desde la URL
 
+    try:
+        numero_pedido = int(numero_pedido)  # Convertir a número
+    except ValueError:
+        return JsonResponse({"error": "Número de pedido inválido"}, status=400)
+
     if not numero_pedido:
         return JsonResponse({"error": "Número de pedido requerido"}, status=400)
 
