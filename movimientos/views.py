@@ -3948,3 +3948,16 @@ def envio_whatsapp_recojo(request):
 
         return redirect('recordatorio')
     return redirect('recordatorio')
+
+def consultar_estado_pedido(request):
+    numero_pedido = request.GET.get("numero_pedido")  # Obtener el número del pedido desde la URL
+
+    if not numero_pedido:
+        return JsonResponse({"error": "Número de pedido requerido"}, status=400)
+
+    pedido = ordenRegistro.objects.filter(id=numero_pedido).first()
+
+    if pedido:
+        return JsonResponse({"estado": pedido.estado_id}, status=200)
+    else:
+        return JsonResponse({"error": "Pedido no encontrado"}, status=404) 

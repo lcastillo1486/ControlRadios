@@ -90,6 +90,7 @@ urlpatterns = [
     path('recordatorio/',views.enviar_recordatorios, name='recordatorio'),
     path('enviarmensajeentrega/',views.envio_whatsapp_entrega),
     path('enviarmensajerecojo/',views.envio_whatsapp_recojo),
+    path('api/estado_pedido/', views.consultar_estado_pedido, name='consultar_estado_pedido'),
 
 
 
