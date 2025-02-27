@@ -3960,7 +3960,7 @@ def consultar_estado_pedido(request):
     if not numero_pedido:
         return JsonResponse({"error": "Número de pedido requerido"}, status=400)
 
-    pedido = ordenRegistro.objects.filter(id=numero_pedido).first()
+    pedido = ordenRegistro.objects.get(id=numero_pedido)
 
     if pedido:
         response_data = {
@@ -3968,7 +3968,7 @@ def consultar_estado_pedido(request):
             "type": "estado_pedido",
             "contacts": [
                 {
-                    "estado": str(pedido.estado_id)  # Convertir a string para el mapeo
+                    "lastName": str(pedido.estado_id)  # Convertir a string para el mapeo
                 }
             ]
         }
