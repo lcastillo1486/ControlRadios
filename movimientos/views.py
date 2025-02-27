@@ -3962,8 +3962,20 @@ def consultar_estado_pedido(request):
 
     pedido = ordenRegistro.objects.get(id=numero_pedido)
 
-    
-    response_data = { "data": { "type": pedido.estado_id, "contacts" : [ { "firstName":"Steve", "lastName":"De", "email": "steve@example.com" }, { "firstName":"Jane", "lastName":"Doe", "email": "Jane@example.com" } ] } }
+    if pedido.estado_id == 1:
+        estado_texto = "Anulado"
+    elif pedido.estado_id == 2:
+        estado_texto = "Pedido"
+    elif pedido.estado_id == 3:
+        estado_texto = "Entregado"
+    elif pedido.estado_id == 4:
+        estado_texto = "Devuelto"
+    elif pedido.estado_id == 5:
+        estado_texto = "Devuelto"
+    else:
+        estado_texto = "Desconocido"
+
+    response_data = { "data": { "type": estado_texto, "contacts" : [ { "firstName":"Steve", "lastName":"De", "email": "steve@example.com" }, { "firstName":"Jane", "lastName":"Doe", "email": "Jane@example.com" } ] } }
     return JsonResponse(response_data)
         
     
