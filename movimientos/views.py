@@ -3963,6 +3963,17 @@ def consultar_estado_pedido(request):
     pedido = ordenRegistro.objects.filter(id=numero_pedido).first()
 
     if pedido:
-        return JsonResponse({"estado": pedido.estado_id}, status=200)
+        response_data = {
+        "data": {
+            "type": "estado_pedido",
+            "contacts": [
+                {
+                    "estado": str(pedido.estado_id)  # Convertir a string para el mapeo
+                }
+            ]
+        }
+    }
+        return JsonResponse(response_data, status=200)
+        
     else:
         return JsonResponse({"error": "Pedido no encontrado"}, status=404) 
