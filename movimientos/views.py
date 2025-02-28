@@ -3895,7 +3895,7 @@ def envio_whatsapp_entrega(request):
     por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy, estado_id = 5)
     
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51914142952"] 
+        telwhats = ["+51933805151", "+51918961967"] 
         mensaje = "*PEDIDOS POR ENTREGAR HOY:*\n"
 
         if por_entregar.exists():
@@ -3925,7 +3925,7 @@ def envio_whatsapp_recojo(request):
     por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy, estado_id = 3)
 
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51914142952"] 
+        telwhats = ["+51933805151", "+51918961967"] 
         mensaje = "*PEDIDOS POR RECOGER HOY:*\n"
 
         if por_recoger.exists():
