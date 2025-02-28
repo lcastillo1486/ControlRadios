@@ -3911,8 +3911,8 @@ def envio_whatsapp_entrega(request):
             mensaje_codificado = urllib.parse.quote(mensaje)
 
             for tel in telwhats:
-                url = "https://api.ultramsg.com/instance108195/messages/chat"
-                payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                url = "https://api.ultramsg.com/instance108729/messages/chat"
+                payload = f"token=mq810u759a8gk6e6&to=%2B{tel}&body={mensaje_codificado}"
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
@@ -3939,10 +3939,10 @@ def envio_whatsapp_recojo(request):
 *Dirección:* {direccion}\n'''
             
             mensaje_codificado = urllib.parse.quote(mensaje)
-            url = "https://api.ultramsg.com/instance108195/messages/chat"
+            url = "https://api.ultramsg.com/instance108729/messages/chat"
             for tel in telwhats:
                 url = "https://api.ultramsg.com/instance108195/messages/chat"
-                payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                payload = f"token=mq810u759a8gk6e6&to=%2B{tel}&body={mensaje_codificado}"
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
@@ -3975,7 +3975,9 @@ def consultar_estado_pedido(request):
     else:
         estado_texto = "Desconocido"
 
-    response_data = { "data": { "type": estado_texto, "contacts" : [ { "firstName":"Steve", "lastName":"De", "email": "steve@example.com" }, { "firstName":"Jane", "lastName":"Doe", "email": "Jane@example.com" } ] } }
+    response_data = { "data": { "type": estado_texto, "contacts" : 
+                               [ { "firstName":"Steve", "lastName":"De", "email": "steve@example.com" }, 
+                                { "firstName":"Jane", "lastName":"Doe", "email": "Jane@example.com" } ] } }
     return JsonResponse(response_data)
         
     
