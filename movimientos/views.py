@@ -3939,9 +3939,9 @@ def envio_whatsapp_recojo(request):
 *Dirección:* {direccion}\n'''
             
             mensaje_codificado = urllib.parse.quote(mensaje)
-            url = "https://api.ultramsg.com/instance108729/messages/chat"
+            # url = "https://api.ultramsg.com/instance108729/messages/chat"
             for tel in telwhats:
-                url = "https://api.ultramsg.com/instance108195/messages/chat"
+                url = "https://api.ultramsg.com/instance108729/messages/chat"
                 payload = f"token=mq810u759a8gk6e6&to=%2B{tel}&body={mensaje_codificado}"
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
