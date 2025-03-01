@@ -405,7 +405,7 @@ def ordenesCerradas(request):
 @login_required
 def ordenesDevueltas(request):
 
-    nombre_cliente = cliente.objects.all()
+    nombre_cliente = cliente.objects.all().order_by('nombre')
     
     devueltas = vista_entrada_detalle.objects.all().order_by('-fecha_evento')
     return render(request, 'ordenesDevueltas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
