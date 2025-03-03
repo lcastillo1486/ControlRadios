@@ -2890,26 +2890,31 @@ def controlrxevento(request, id):
 @login_required
 def cargarxordenevento(request, id):
 
-    rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
-    registros = [
-        controlrxevent(
-            id_salida = i.id_salida,
-            serial = i.serial,
-            responsable = "",
-            estadorx = 'S'
-        )
+    try:
 
-        for i in rx_orden
-    ]
+        rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
+        registros = [
+            controlrxevent(
+                id_salida = i.id_salida,
+                serial = i.serial,
+                responsable = "",
+                estadorx = 'S'
+            )
 
-    if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
-        controlrxevent.objects.bulk_create(registros)
-        #### ESCRIBE EN LA TABLA DE CONTROL DE DIA ####
-        if not controlrx_event_dia.objects.filter(id_salida = id).exists():
-            guardar_control_evento = controlrx_event_dia(id_salida = id, dia = 1, activo = True)
-            guardar_control_evento.save()
-        
-    return redirect('controlrxevento', id=id)
+            for i in rx_orden
+        ]
+
+        if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
+            controlrxevent.objects.bulk_create(registros)
+            #### ESCRIBE EN LA TABLA DE CONTROL DE DIA ####
+            if not controlrx_event_dia.objects.filter(id_salida = id).exists():
+                guardar_control_evento = controlrx_event_dia(id_salida = id, dia = 1, activo = True)
+                guardar_control_evento.save()
+            
+        return redirect('controlrxevento', id=id)
+    except Exception as e:
+                error_message = f"Error al leer los datos: {e}"
+                return HttpResponse(error_message)  
 
 @login_required
 def controlrxeventorecojo(request, id):
