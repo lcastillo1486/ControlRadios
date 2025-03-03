@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -2731,6 +2731,9 @@ def pdfporcobrar_detalle(request, cliente):
 def controlrxevento(request, id):
 
     form_serial_recojo = rxcontroleventoformRecojo()
+    if controlrx_event_dia.objects.filter(id_salida = id, activo = True).exists():
+        busca_dia = controlrx_event_dia.objects.get(id_salida = id, activo = True)
+        dia_entrega = busca_dia.dia
 
     # contar radios disponibles en la orden
     
@@ -2822,6 +2825,11 @@ def controlrxevento(request, id):
 
     # Guardamos todos los seriales al hacer clic en "Guardar Todos los Seriales"
     if request.GET.get('guardar', False):
+        
+        hora_actual = d.now()
+        hora_actual = hora_actual.strftime("%H:%M")
+        usuario_bk = request.user.username
+        
         for item in request.session['seriales']:
             # Guardamos cada serial en la base de datos
             controlrxevent.objects.create(
@@ -2829,7 +2837,11 @@ def controlrxevento(request, id):
                 serial=item['serial'],
                 responsable=item['responsable'],
                 telefono = item['telefono'],
-                estadorx='E'  # 'E' indica que el serial ha sido entregado
+                estadorx='E',
+                hora_entrega = hora_actual,
+                dia = dia_entrega,
+                responsable_bk = usuario_bk
+                ####### METER EL DIA AQUI ###########    
             )
         # Pasamos los datos de los seriales y responsable a la sesión para impresión
         responsable = request.session.get('responsable', '')
@@ -2854,7 +2866,7 @@ def controlrxevento(request, id):
     total_entregado = controlrxevent.objects.filter(id_salida = id, estadorx = 'E').count()
     total_disponible = radios_en_orden - total_entregado
     total_recogido = controlrxevent.objects.filter(id_salida = id, estadorx = 'R').count()
-    tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('responsable', 'hora')
+    tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('-dia','responsable', 'hora')
 
     # Obtenemos los seriales agregados temporalmente
     seriales_temporales = request.session.get('seriales', [])
@@ -2870,33 +2882,33 @@ def controlrxevento(request, id):
         'total_entregado':total_entregado,
         'total_disponibles': total_disponible,
         'total_recogido': total_recogido,
-        'tabla_resumen':tabla_resumen
-        
+        'tabla_resumen':tabla_resumen,
+        'dia':dia_entrega
     })
+
 
 @login_required
 def cargarxordenevento(request, id):
 
-    try:
-        rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
-        registros = [
-            controlrxevent(
-                id_salida = i.id_salida,
-                serial = i.serial,
-                responsable = "",
-                estadorx = 'S'
-            )
+    rx_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F')
+    registros = [
+        controlrxevent(
+            id_salida = i.id_salida,
+            serial = i.serial,
+            responsable = "",
+            estadorx = 'S'
+        )
 
-            for i in rx_orden
-        ]
+        for i in rx_orden
+    ]
 
-        if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
-            controlrxevent.objects.bulk_create(registros)
-    
-    except Exception as e:
-                error_message = f"Error al guardar los datos: {e}"
-                return HttpResponse(error_message) 
-    
+    if not controlrxevent.objects.filter(id_salida = id, estadorx = 'S').exists():
+        controlrxevent.objects.bulk_create(registros)
+        #### ESCRIBE EN LA TABLA DE CONTROL DE DIA ####
+        if not controlrx_event_dia.objects.filter(id_salida = id).exists():
+            guardar_control_evento = controlrx_event_dia(id_salida = id, dia = 1, activo = True)
+            guardar_control_evento.save()
+        
     return redirect('controlrxevento', id=id)
 
 @login_required
@@ -2913,6 +2925,10 @@ def controlrxeventorecojo(request, id):
             hora_actual = d.now()
             # hora_actual = hora_actual + timedelta(hours=3)
             hora_actual = hora_actual.strftime("%H:%M")
+            busca_dia = controlrx_event_dia.objects.get(id_salida = id, activo = True)
+            dia_recojo = busca_dia.dia
+            usuario_bk = request.user.username
+
             
 
             # if controlrxevent.objects.filter(serial = serial, id_salida = id, estadorx = 'R', hora__isnull = False).exists():
@@ -2930,13 +2946,15 @@ def controlrxeventorecojo(request, id):
                 radio_recogida = controlrxevent.objects.get(serial = serial, id_salida = id, estadorx = 'E')
                 radio_recogida.estadorx = 'R'
                 radio_recogida.hora = hora_actual
+                radio_recogida.dia = dia_recojo
+                radio_recogida.responsable_bk = usuario_bk
                 radio_recogida.save()
                 
                 return redirect('controlrxevento', id=id)
             except controlrxevent.DoesNotExist:
                 return HttpResponse(f"""
                         <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
-                            <h2 style="color: red;">ESTE SERIAL NO HA SIDO ENCUENTRA ENTREGADO</h2>
+                            <h2 style="color: red;">ESTE SERIAL NO HA SIDO ENTREGADO</h2>
                             <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
                                 Volver atrás
                             </button>
@@ -2944,7 +2962,95 @@ def controlrxeventorecojo(request, id):
     
                     """)
     else:
-        return redirect('controlrxevento', id=id) 
+        return redirect('controlrxevento', id=id)
+def cerrar_dia_rx_evento(request, id):
+
+    if controlrx_event_dia.objects.filter(id_salida = id).exists():
+        dia_anterior = controlrx_event_dia.objects.get(id_salida = id, activo = True)
+        dia_anterior.activo = False
+        dia_anterior.save()
+
+        
+        dia_nuevo = dia_anterior.dia + 1
+
+        nuevo_dia = controlrx_event_dia(id_salida = id, dia = dia_nuevo, activo = True)
+        nuevo_dia.save()
+
+        ############### CREAR UN ESPEJO ###############
+
+        dia_respaldo = dia_anterior.dia
+
+        datos_inicial = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo)
+        total_rx_usados = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo).count()
+        total_rx_por_recojo = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo, estadorx = 'E')
+        datos_espejo = []
+        
+        for i in datos_inicial:
+            dato_espejo = espejo_dia_control_rx(id_salida = id,
+                                                serial = i.serial,
+                                                responsable = i.responsable, 
+                                                estadorx = i.estadorx,
+                                                telefono = i.telefono,
+                                                hora = i.hora,
+                                                hora_entrega = i.hora_entrega,
+                                                dia = i.dia)
+            datos_espejo.append(dato_espejo)
+        espejo_dia_control_rx.objects.bulk_create(datos_espejo)
+
+        ############# GENERAR UN EXCEL #################
+
+        rpt_dia = espejo_dia_control_rx.objects.filter(id_salida = id, dia = dia_respaldo)
+        wb = openpyxl.Workbook()
+        hoja = wb.active
+
+        hoja['A1'] = 'ID SALIDA'
+        hoja['B1'] = 'RESPONSABLE'
+        hoja['C1'] = 'TELÉFONO'
+        hoja['D1'] = 'SERIAL'
+        hoja['E1'] = 'TIPO MOVIMIENTO'
+        hoja['F1'] = 'HORA ENTREGA'
+        hoja['G1'] = 'HORA RECOJO'
+        hoja['H1'] = 'DÍA'
+
+        row = 2
+
+        for i in rpt_dia:
+            hoja.cell(row, 1, i.id_salida)
+            hoja.cell(row, 2, i.responsable)
+            hoja.cell(row, 3, i.telefono)
+            hoja.cell(row, 4, i.serial)
+            hoja.cell(row, 5, i.estadorx)
+            hoja.cell(row, 6, i.hora_entrega)
+            hoja.cell(row, 7, i.hora)
+            hoja.cell(row, 8, i.dia)
+            row += 1
+
+        row += 3
+        hoja.cell(row, 1, f'TOTAL RADIOS USADAS DEL DÍA: {total_rx_usados}')
+        
+        row += 2
+        hoja.cell(row, 1, f'RADIOS PENDIENTE POR RECOGER DÍA {dia_respaldo}')
+        row += 1
+
+        hoja.cell(row, 1, 'RESPONSABLE')
+        hoja.cell(row, 2, 'SERIAL')
+        hoja.cell(row, 3, 'HORA DE ENTREGA')
+
+        row += 1
+
+        for j in total_rx_por_recojo:
+            hoja.cell(row,1, j.responsable)
+            hoja.cell(row,2, j.serial)
+            hoja.cell(row,3, j.hora_entrega)
+            row +=1
+
+        response = HttpResponse(content_type='application/vnd.ms-excel')
+        response['Content-Disposition'] = f'attachment; filename="rpt_movimiento_radios_dia_{dia_respaldo}.xlsx"'
+
+        wb.save(response)
+        return response
+
+        # return redirect('controlrxevento', id=id)  
 @login_required   
 def print_view(request, id):
 
@@ -3976,4 +4082,37 @@ def consultar_estado_pedido(request):
                                 { "firstName":"Jane", "lastName":"Doe", "email": "Jane@example.com" } ] } }
     return JsonResponse(response_data)
         
-    
+
+def enviar_mensaje(request, id):
+
+    ####### BUSCAR LAS PERSONAS CON TELEFONO Y ESTATUS E #######
+    ####### REVISAR SI TIENE VARIAS RADIOS ###### SOLO SE DEBE ENVIAR UN MENSAJE ###########
+    personas_envio_queryset = controlrxevent.objects.filter(id_salida=id).exclude(Q(telefono__isnull=True) | Q(telefono=''))
+
+    personas_envio_dict = {}
+    for persona in personas_envio_queryset:
+        if persona.telefono not in personas_envio_dict:
+            personas_envio_dict[persona.telefono] = persona
+
+    personas_envio = list(personas_envio_dict.values())
+
+    for i in personas_envio:
+        telwhat = i.telefono
+        if not telwhat is None:
+                telwhat = re.sub(r'[^\d]+', '', telwhat)
+                telwhat = "51" + telwhat if not telwhat.startswith("51") else telwhat
+        
+        mensaje = """Buenas.
+Le recordamos que las radios en su poder deben ser devueltas al finalizar el evento.
+Agradecemos su colaboración.
+Quedamos atentos para coordinar la entrega.\n
+Atte.
+*BACKTRAK SOLUTION NETWORK*"""
+        mensaje_codificado = urllib.parse.quote(mensaje)
+
+        url = "https://api.ultramsg.com/instance109145/messages/chat"
+        payload = f"token=k7wzcqez2zfna7e2&to=%2B{telwhat}&body={mensaje_codificado}"
+        headers = {'content-type': 'application/x-www-form-urlencoded'}
+        response = requests.request("POST", url, data=payload, headers=headers)
+
+    return redirect('controlrxevento', id=id) 

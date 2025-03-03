@@ -310,12 +310,42 @@ class controlrxevent(models.Model):
     estadorx = models.CharField(max_length=5, null=True, blank=True)
     telefono = models.CharField(max_length=20, null=True, blank=True)
     hora = models.TimeField(null=True, blank=True)
+    hora_entrega = models.TimeField(null=True, blank=True)
+    dia = models.PositiveIntegerField(null=True, blank=True)
+    responsable_bk = models.CharField(max_length=200, null=True, blank=True)
 
     class Meta:
         managed = False
         db_table = 'controlrxevent'
         auto_created = True
 
+class controlrx_event_dia(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_salida = models.PositiveIntegerField(null=True, blank=True)
+    dia = models.PositiveIntegerField(null=True, blank=True)
+    activo = models.BooleanField(default=False)
+
+    class Meta:
+        managed = False
+        db_table = 'controlrx_event_dia'
+        auto_created = True
+
+class espejo_dia_control_rx(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_salida = models.PositiveIntegerField(null=True, blank=True)
+    serial = models.CharField(max_length=50, null=True, blank=True)
+    responsable = models.CharField(max_length=200, null=True, blank=True)
+    estadorx = models.CharField(max_length=5, null=True, blank=True)
+    telefono = models.CharField(max_length=20, null=True, blank=True)
+    hora = models.TimeField(null=True, blank=True)
+    hora_entrega = models.TimeField(null=True, blank=True)
+    dia = models.PositiveIntegerField(null=True, blank=True)
+    responsable_bk = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'espejo_dia_control_rx'
+        auto_created = True
 
 class CajasMikrot(models.Model):
     id = models.AutoField(primary_key=True)

@@ -91,6 +91,8 @@ urlpatterns = [
     path('enviarmensajeentrega/',views.envio_whatsapp_entrega),
     path('enviarmensajerecojo/',views.envio_whatsapp_recojo),
     path('api/estado_pedido/', views.consultar_estado_pedido, name='consultar_estado_pedido'),
+    path('cerrareventorx/<int:id>',views.cerrar_dia_rx_evento),
+    path('sendmesaje/<int:id>',views.enviar_mensaje),
 
 
 
