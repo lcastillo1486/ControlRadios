@@ -2973,91 +2973,95 @@ def controlrxeventorecojo(request, id):
         return redirect('controlrxevento', id=id)
 def cerrar_dia_rx_evento(request, id):
 
-    if controlrx_event_dia.objects.filter(id_salida = id).exists():
-        dia_anterior = controlrx_event_dia.objects.get(id_salida = id, activo = True)
-        dia_anterior.activo = False
-        dia_anterior.save()
+    try:
 
-        
-        dia_nuevo = dia_anterior.dia + 1
+        if controlrx_event_dia.objects.filter(id_salida = id).exists():
+            dia_anterior = controlrx_event_dia.objects.get(id_salida = id, activo = True)
+            dia_anterior.activo = False
+            dia_anterior.save()
 
-        nuevo_dia = controlrx_event_dia(id_salida = id, dia = dia_nuevo, activo = True)
-        nuevo_dia.save()
+            
+            dia_nuevo = dia_anterior.dia + 1
 
-        ############### CREAR UN ESPEJO ###############
+            nuevo_dia = controlrx_event_dia(id_salida = id, dia = dia_nuevo, activo = True)
+            nuevo_dia.save()
 
-        dia_respaldo = dia_anterior.dia
+            ############### CREAR UN ESPEJO ###############
 
-        datos_inicial = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo)
-        total_rx_usados = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo).count()
-        total_rx_por_recojo = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo, estadorx = 'E')
-        datos_espejo = []
-        
-        for i in datos_inicial:
-            dato_espejo = espejo_dia_control_rx(id_salida = id,
-                                                serial = i.serial,
-                                                responsable = i.responsable, 
-                                                estadorx = i.estadorx,
-                                                telefono = i.telefono,
-                                                hora = i.hora,
-                                                hora_entrega = i.hora_entrega,
-                                                dia = i.dia)
-            datos_espejo.append(dato_espejo)
-        espejo_dia_control_rx.objects.bulk_create(datos_espejo)
+            dia_respaldo = dia_anterior.dia
 
-        ############# GENERAR UN EXCEL #################
+            datos_inicial = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo)
+            total_rx_usados = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo).count()
+            total_rx_por_recojo = controlrxevent.objects.filter(id_salida = id, dia = dia_respaldo, estadorx = 'E')
+            datos_espejo = []
+            
+            for i in datos_inicial:
+                dato_espejo = espejo_dia_control_rx(id_salida = id,
+                                                    serial = i.serial,
+                                                    responsable = i.responsable, 
+                                                    estadorx = i.estadorx,
+                                                    telefono = i.telefono,
+                                                    hora = i.hora,
+                                                    hora_entrega = i.hora_entrega,
+                                                    dia = i.dia)
+                datos_espejo.append(dato_espejo)
+            espejo_dia_control_rx.objects.bulk_create(datos_espejo)
 
-        rpt_dia = espejo_dia_control_rx.objects.filter(id_salida = id, dia = dia_respaldo)
-        wb = openpyxl.Workbook()
-        hoja = wb.active
+            ############# GENERAR UN EXCEL #################
 
-        hoja['A1'] = 'ID SALIDA'
-        hoja['B1'] = 'RESPONSABLE'
-        hoja['C1'] = 'TELÉFONO'
-        hoja['D1'] = 'SERIAL'
-        hoja['E1'] = 'TIPO MOVIMIENTO'
-        hoja['F1'] = 'HORA ENTREGA'
-        hoja['G1'] = 'HORA RECOJO'
-        hoja['H1'] = 'DÍA'
+            rpt_dia = espejo_dia_control_rx.objects.filter(id_salida = id, dia = dia_respaldo)
+            wb = openpyxl.Workbook()
+            hoja = wb.active
 
-        row = 2
+            hoja['A1'] = 'ID SALIDA'
+            hoja['B1'] = 'RESPONSABLE'
+            hoja['C1'] = 'TELÉFONO'
+            hoja['D1'] = 'SERIAL'
+            hoja['E1'] = 'TIPO MOVIMIENTO'
+            hoja['F1'] = 'HORA ENTREGA'
+            hoja['G1'] = 'HORA RECOJO'
+            hoja['H1'] = 'DÍA'
 
-        for i in rpt_dia:
-            hoja.cell(row, 1, i.id_salida)
-            hoja.cell(row, 2, i.responsable)
-            hoja.cell(row, 3, i.telefono)
-            hoja.cell(row, 4, i.serial)
-            hoja.cell(row, 5, i.estadorx)
-            hoja.cell(row, 6, i.hora_entrega)
-            hoja.cell(row, 7, i.hora)
-            hoja.cell(row, 8, i.dia)
+            row = 2
+
+            for i in rpt_dia:
+                hoja.cell(row, 1, i.id_salida)
+                hoja.cell(row, 2, i.responsable)
+                hoja.cell(row, 3, i.telefono)
+                hoja.cell(row, 4, i.serial)
+                hoja.cell(row, 5, i.estadorx)
+                hoja.cell(row, 6, i.hora_entrega)
+                hoja.cell(row, 7, i.hora)
+                hoja.cell(row, 8, i.dia)
+                row += 1
+
+            row += 3
+            hoja.cell(row, 1, f'TOTAL RADIOS USADAS DEL DÍA: {total_rx_usados}')
+            
+            row += 2
+            hoja.cell(row, 1, f'RADIOS PENDIENTE POR RECOGER DÍA {dia_respaldo}')
             row += 1
 
-        row += 3
-        hoja.cell(row, 1, f'TOTAL RADIOS USADAS DEL DÍA: {total_rx_usados}')
-        
-        row += 2
-        hoja.cell(row, 1, f'RADIOS PENDIENTE POR RECOGER DÍA {dia_respaldo}')
-        row += 1
+            hoja.cell(row, 1, 'RESPONSABLE')
+            hoja.cell(row, 2, 'SERIAL')
+            hoja.cell(row, 3, 'HORA DE ENTREGA')
 
-        hoja.cell(row, 1, 'RESPONSABLE')
-        hoja.cell(row, 2, 'SERIAL')
-        hoja.cell(row, 3, 'HORA DE ENTREGA')
+            row += 1
 
-        row += 1
+            for j in total_rx_por_recojo:
+                hoja.cell(row,1, j.responsable)
+                hoja.cell(row,2, j.serial)
+                hoja.cell(row,3, j.hora_entrega)
+                row +=1
 
-        for j in total_rx_por_recojo:
-            hoja.cell(row,1, j.responsable)
-            hoja.cell(row,2, j.serial)
-            hoja.cell(row,3, j.hora_entrega)
-            row +=1
+            response = HttpResponse(content_type='application/vnd.ms-excel')
+            response['Content-Disposition'] = f'attachment; filename="rpt_movimiento_radios_dia_{dia_respaldo}.xlsx"'
 
-        response = HttpResponse(content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = f'attachment; filename="rpt_movimiento_radios_dia_{dia_respaldo}.xlsx"'
-
-        wb.save(response)
-        return response
-
+            wb.save(response)
+            return response
+    except Exception as e:
+                error_message = f"Error al leer los datos: {e}"
+                return HttpResponse(error_message)  
         # return redirect('controlrxevento', id=id)  
 @login_required   
 def print_view(request, id):
