@@ -2902,9 +2902,6 @@ def cargarxordenevento(request, id):
 @login_required
 def controlrxeventorecojo(request, id):
 
-    
-
-
     if request.method == 'POST':
         form_recojo = rxcontroleventoformRecojo(request.POST)
 
@@ -3585,7 +3582,6 @@ def kardex(request):
         
       
         
-
 def exportar_radios_excel(request):
 
 
@@ -3827,7 +3823,7 @@ def carga_formulario_pedido(request):
                 ############ ENVIARLO POR WHATSAPP ############
 
                 # telwhat = +51946364693
-                telwhat = ["+51914142952", "+51974616099"] 
+                telwhat = ["+51933805151", "+51974616099", "+51946364693","+51914142952"] 
                 mensaje = f'''Hola. Tienes un nuevo pedido.
 Cliente: {nombre}
 Teléfono: {telefono}
@@ -3843,8 +3839,8 @@ Tipo Escolta: {cantidad_t_escolta}'''
                 
                 mensaje_codificado = urllib.parse.quote(mensaje)
                 for tel in telwhat:
-                    url = "https://api.ultramsg.com/instance108195/messages/chat"
-                    payload = f"token=uj605z2pvr8uws89&to=%2B{tel}&body={mensaje_codificado}"
+                    url = "https://api.ultramsg.com/instance109145/messages/chat"
+                    payload = f"token=k7wzcqez2zfna7e2&to=%2B{tel}&body={mensaje_codificado}"
                     # payload = payload.encode('utf8').decode('iso-8859-1')
                     headers = {'content-type': 'application/x-www-form-urlencoded'}
                     response = requests.request("POST", url, data=payload, headers=headers)
@@ -3862,8 +3858,8 @@ Atte.
 
                 mensaje_cod = urllib.parse.quote(mensaje_cliente)
 
-                url = "https://api.ultramsg.com/instance108195/messages/chat"
-                payload = f"token=uj605z2pvr8uws89&to=%2B{telefono}&body={mensaje_cod}"
+                url = "https://api.ultramsg.com/instance109145/messages/chat"
+                payload = f"token=k7wzcqez2zfna7e2&to=%2B{telefono}&body={mensaje_cod}"
                 # payload = payload.encode('utf8').decode('iso-8859-1')
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
@@ -3895,7 +3891,7 @@ def envio_whatsapp_entrega(request):
     por_entregar = ordenRegistro.objects.filter(fecha_entrega = fecha_hoy, estado_id = 5)
     
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51918961967"] 
+        telwhats = ["+51933805151", "+51914142952", "+51946364693","+51918691967"] 
         mensaje = "*PEDIDOS POR ENTREGAR HOY:*\n"
 
         if por_entregar.exists():
@@ -3911,8 +3907,8 @@ def envio_whatsapp_entrega(request):
             mensaje_codificado = urllib.parse.quote(mensaje)
 
             for tel in telwhats:
-                url = "https://api.ultramsg.com/instance108729/messages/chat"
-                payload = f"token=mq810u759a8gk6e6&to=%2B{tel}&body={mensaje_codificado}"
+                url = "https://api.ultramsg.com/instance109145/messages/chat"
+                payload = f"token=k7wzcqez2zfna7e2&to=%2B{tel}&body={mensaje_codificado}"
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
@@ -3925,7 +3921,7 @@ def envio_whatsapp_recojo(request):
     por_recoger = ordenRegistro.objects.filter(fecha_retiro = fecha_hoy, estado_id = 3)
 
     if request.method == "POST":
-        telwhats = ["+51933805151", "+51918961967"] 
+        telwhats = ["+51933805151", "+51914142952", "+51946364693","+51918691967"] 
         mensaje = "*PEDIDOS POR RECOGER HOY:*\n"
 
         if por_recoger.exists():
@@ -3941,8 +3937,8 @@ def envio_whatsapp_recojo(request):
             mensaje_codificado = urllib.parse.quote(mensaje)
             # url = "https://api.ultramsg.com/instance108729/messages/chat"
             for tel in telwhats:
-                url = "https://api.ultramsg.com/instance108729/messages/chat"
-                payload = f"token=mq810u759a8gk6e6&to=%2B{tel}&body={mensaje_codificado}"
+                url = "https://api.ultramsg.com/instance109145/messages/chat"
+                payload = f"token=k7wzcqez2zfna7e2&to=%2B{tel}&body={mensaje_codificado}"
                 headers = {'content-type': 'application/x-www-form-urlencoded'}
                 response = requests.request("POST", url, data=payload, headers=headers)
 
