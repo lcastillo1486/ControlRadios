@@ -2971,6 +2971,7 @@ def controlrxeventorecojo(request, id):
                     """)
     else:
         return redirect('controlrxevento', id=id)
+@login_required
 def cerrar_dia_rx_evento(request, id):
 
     try:
@@ -2996,7 +2997,7 @@ def cerrar_dia_rx_evento(request, id):
             datos_espejo = []
             
             for i in datos_inicial:
-                dato_espejo = espejo_dia_control_rx(id_salida = id,
+                dato_espejo = espejo_dia_control_rx(id_salida = i.id_salida,
                                                     serial = i.serial,
                                                     responsable = i.responsable, 
                                                     estadorx = i.estadorx,
