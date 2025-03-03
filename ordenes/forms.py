@@ -80,4 +80,5 @@ class formEditFactura(ModelForm):
         # Ordenar alfabéticamente el campo cliente
         self.fields['cliente'].queryset = cliente.objects.all().order_by('nombre')
         self.fields['razon_Social'].queryset = razonSocial.objects.all().order_by('denominacion')
+        self.fields['cliente'].disabled = True
         
