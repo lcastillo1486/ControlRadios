@@ -2731,7 +2731,6 @@ def pdfporcobrar_detalle(request, cliente):
 def controlrxevento(request, id):
 
     try:
-
         form_serial_recojo = rxcontroleventoformRecojo()
         if controlrx_event_dia.objects.filter(id_salida = id, activo = True).exists():
             busca_dia = controlrx_event_dia.objects.get(id_salida = id, activo = True)
@@ -4096,7 +4095,7 @@ def enviar_mensaje(request, id):
 
     ####### BUSCAR LAS PERSONAS CON TELEFONO Y ESTATUS E #######
     ####### REVISAR SI TIENE VARIAS RADIOS ###### SOLO SE DEBE ENVIAR UN MENSAJE ###########
-    personas_envio_queryset = controlrxevent.objects.filter(id_salida=id).exclude(Q(telefono__isnull=True) | Q(telefono=''))
+    personas_envio_queryset = controlrxevent.objects.filter(id_salida=id, estadorx = 'E').exclude(Q(telefono__isnull=True) | Q(telefono=''))
 
     personas_envio_dict = {}
     for persona in personas_envio_queryset:
