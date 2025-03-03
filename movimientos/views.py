@@ -2730,162 +2730,166 @@ def pdfporcobrar_detalle(request, cliente):
 @login_required
 def controlrxevento(request, id):
 
-    form_serial_recojo = rxcontroleventoformRecojo()
-    if controlrx_event_dia.objects.filter(id_salida = id, activo = True).exists():
-        busca_dia = controlrx_event_dia.objects.get(id_salida = id, activo = True)
-        dia_entrega = busca_dia.dia
+    try:
 
-    # contar radios disponibles en la orden
-    
-    radios_en_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F').count()
+        form_serial_recojo = rxcontroleventoformRecojo()
+        if controlrx_event_dia.objects.filter(id_salida = id, activo = True).exists():
+            busca_dia = controlrx_event_dia.objects.get(id_salida = id, activo = True)
+            dia_entrega = busca_dia.dia
 
-    # Si se ha presionado "Limpiar Todo", vaciamos la sesión
-    if request.GET.get('limpiar', False):
-        request.session.pop('responsable', None)
-        request.session.pop('telefono', None)
-        request.session.pop('seriales', None)
-        return redirect('controlrxevento', id=id)
+        # contar radios disponibles en la orden
+        
+        radios_en_orden = movimientoRadios.objects.filter(id_salida = id, estado = 'F').count()
 
-    # Inicializamos el formulario del responsable solo si no está en sesión
-    if 'responsable' not in request.session:
-        request.session['seriales'] = []  # Inicializamos la lista de seriales
+        # Si se ha presionado "Limpiar Todo", vaciamos la sesión
+        if request.GET.get('limpiar', False):
+            request.session.pop('responsable', None)
+            request.session.pop('telefono', None)
+            request.session.pop('seriales', None)
+            return redirect('controlrxevento', id=id)
 
-    # Procesamos el formulario cuando el usuario hace POST
-    if request.method == 'POST':
-        # Si aún no hemos guardado el responsable, guardamos el valor de la sesión
+        # Inicializamos el formulario del responsable solo si no está en sesión
         if 'responsable' not in request.session:
-            form_responsable = ResponsableForm(request.POST)
-            form_serial = rxcontroleventoform()  # Inicializamos formulario de serial vacío
-            if form_responsable.is_valid():
-                # Guardamos el responsable en la sesión
-                request.session['responsable'] = form_responsable.cleaned_data['responsable']
-                # request.session['telefono'] = form_responsable.cleaned_data['telefono']
-                tel_modificado = form_responsable.cleaned_data['telefono']
-                request.session['telefono'] = re.sub(r'[^\d]+', '', tel_modificado)
+            request.session['seriales'] = []  # Inicializamos la lista de seriales
 
-                request.session.modified = True
-                return redirect('controlrxevento', id=id)
-        else:
-            # Si el responsable ya está en sesión, procesamos los seriales
-            form_responsable = ResponsableForm()  # Formulario de responsable vacío porque ya lo tenemos
-            form_serial = rxcontroleventoform(request.POST)
-            if form_serial.is_valid():
+        # Procesamos el formulario cuando el usuario hace POST
+        if request.method == 'POST':
+            # Si aún no hemos guardado el responsable, guardamos el valor de la sesión
+            if 'responsable' not in request.session:
+                form_responsable = ResponsableForm(request.POST)
+                form_serial = rxcontroleventoform()  # Inicializamos formulario de serial vacío
+                if form_responsable.is_valid():
+                    # Guardamos el responsable en la sesión
+                    request.session['responsable'] = form_responsable.cleaned_data['responsable']
+                    # request.session['telefono'] = form_responsable.cleaned_data['telefono']
+                    tel_modificado = form_responsable.cleaned_data['telefono']
+                    request.session['telefono'] = re.sub(r'[^\d]+', '', tel_modificado)
+
+                    request.session.modified = True
+                    return redirect('controlrxevento', id=id)
+            else:
+                # Si el responsable ya está en sesión, procesamos los seriales
+                form_responsable = ResponsableForm()  # Formulario de responsable vacío porque ya lo tenemos
+                form_serial = rxcontroleventoform(request.POST)
+                if form_serial.is_valid():
 
 
-                ###### INICIO VALIDACIONES #######
-                    # QUE EL SERIAL PERTENEZCA A LA ORDEN
-                valida_serial = form_serial.cleaned_data['serial']
-                if not controlrxevent.objects.filter(serial = valida_serial, estadorx = 'S').exists():
-                    return HttpResponse(f"""
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
-                        <h3 style="color: red;">EL SERIAL INTRODUCIDO NO PERTENECE A ESTA ORDEN</h3>
-                        <h3 style="color: red;">POR FAVOR VUELVE ATRÁS Y VERIFICA.</H3>
-                        <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
-                        Volver atrás
-                        </button>
-                        </div>
-                        """)
-                    # QUE NO SE HAYA ENTREGADO SIN SER DEVUELTO
-                if controlrxevent.objects.filter(serial = valida_serial, estadorx = 'E').exists():
-                    return HttpResponse(f"""
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
-                        <h3  style="color: red;">EL ESTADO DE ESTE SERIAL ES "ENTREGADO".</h3>
-                        <h3  style="color: red;">POR FAVOR VUELVE ATRÁS Y VERIFICA.</H3>
-                        <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
-                        Volver atrás
-                        </button>
-                        </div>
-                        """)
-                    # QUE NO SE REPITA EN EL SESSION
-                if 'seriales' in request.session and any(item['serial'] == valida_serial for item in request.session['seriales']):
-                # El serial ya existe en la sesión
-                    return HttpResponse(f"""
-                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
-                            <h2 style="color: red;">EL SERIAL YA SE ENCUENTRA AGREGADO</h2>
+                    ###### INICIO VALIDACIONES #######
+                        # QUE EL SERIAL PERTENEZCA A LA ORDEN
+                    valida_serial = form_serial.cleaned_data['serial']
+                    if not controlrxevent.objects.filter(serial = valida_serial, estadorx = 'S').exists():
+                        return HttpResponse(f"""
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                            <h3 style="color: red;">EL SERIAL INTRODUCIDO NO PERTENECE A ESTA ORDEN</h3>
+                            <h3 style="color: red;">POR FAVOR VUELVE ATRÁS Y VERIFICA.</H3>
                             <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
-                                Volver atrás
+                            Volver atrás
                             </button>
-                        </div>
-                    """)
+                            </div>
+                            """)
+                        # QUE NO SE HAYA ENTREGADO SIN SER DEVUELTO
+                    if controlrxevent.objects.filter(serial = valida_serial, estadorx = 'E').exists():
+                        return HttpResponse(f"""
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                            <h3  style="color: red;">EL ESTADO DE ESTE SERIAL ES "ENTREGADO".</h3>
+                            <h3  style="color: red;">POR FAVOR VUELVE ATRÁS Y VERIFICA.</H3>
+                            <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                            Volver atrás
+                            </button>
+                            </div>
+                            """)
+                        # QUE NO SE REPITA EN EL SESSION
+                    if 'seriales' in request.session and any(item['serial'] == valida_serial for item in request.session['seriales']):
+                    # El serial ya existe en la sesión
+                        return HttpResponse(f"""
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
+                                <h2 style="color: red;">EL SERIAL YA SE ENCUENTRA AGREGADO</h2>
+                                <button onclick="history.back()" style="padding: 10px 20px; background-color: #f0ad4e; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                                    Volver atrás
+                                </button>
+                            </div>
+                        """)
 
-                # Agregamos el serial a la lista en la sesión.
-                request.session['seriales'].append({
-                    'serial': form_serial.cleaned_data['serial'],
-                    'responsable': request.session['responsable'],
-                    'telefono': request.session['telefono'],
-                    'estado': 'S'  # Pendiente
-                })
-                request.session.modified = True
-                return redirect('controlrxevento', id=id)
+                    # Agregamos el serial a la lista en la sesión.
+                    request.session['seriales'].append({
+                        'serial': form_serial.cleaned_data['serial'],
+                        'responsable': request.session['responsable'],
+                        'telefono': request.session['telefono'],
+                        'estado': 'S'  # Pendiente
+                    })
+                    request.session.modified = True
+                    return redirect('controlrxevento', id=id)
 
-    else:
-        # Formularios en GET
-        form_responsable = ResponsableForm()
-        form_serial = rxcontroleventoform()
+        else:
+            # Formularios en GET
+            form_responsable = ResponsableForm()
+            form_serial = rxcontroleventoform()
 
-    # Guardamos todos los seriales al hacer clic en "Guardar Todos los Seriales"
-    if request.GET.get('guardar', False):
-        
-        hora_actual = d.now()
-        hora_actual = hora_actual.strftime("%H:%M")
-        usuario_bk = request.user.username
-        
-        for item in request.session['seriales']:
-            # Guardamos cada serial en la base de datos
-            controlrxevent.objects.create(
-                id_salida=id,
-                serial=item['serial'],
-                responsable=item['responsable'],
-                telefono = item['telefono'],
-                estadorx='E',
-                hora_entrega = hora_actual,
-                dia = dia_entrega,
-                responsable_bk = usuario_bk
-                ####### METER EL DIA AQUI ###########    
-            )
-        # Pasamos los datos de los seriales y responsable a la sesión para impresión
-        responsable = request.session.get('responsable', '')
-        telefono = request.session.get('telefono', '')
-        seriales = request.session.get('seriales', [])
+        # Guardamos todos los seriales al hacer clic en "Guardar Todos los Seriales"
+        if request.GET.get('guardar', False):
+            
+            hora_actual = d.now()
+            hora_actual = hora_actual.strftime("%H:%M")
+            usuario_bk = request.user.username
+            
+            for item in request.session['seriales']:
+                # Guardamos cada serial en la base de datos
+                controlrxevent.objects.create(
+                    id_salida=id,
+                    serial=item['serial'],
+                    responsable=item['responsable'],
+                    telefono = item['telefono'],
+                    estadorx='E',
+                    hora_entrega = hora_actual,
+                    dia = dia_entrega,
+                    responsable_bk = usuario_bk
+                    ####### METER EL DIA AQUI ###########    
+                )
+            # Pasamos los datos de los seriales y responsable a la sesión para impresión
+            responsable = request.session.get('responsable', '')
+            telefono = request.session.get('telefono', '')
+            seriales = request.session.get('seriales', [])
 
-        # Guardamos en la sesión para que esté disponible en el template de impresión
-        request.session['responsable_print'] = responsable
-        request.session['seriales_print'] = seriales
-        request.session['telefono_print'] = telefono
-        request.session.modified = True
+            # Guardamos en la sesión para que esté disponible en el template de impresión
+            request.session['responsable_print'] = responsable
+            request.session['seriales_print'] = seriales
+            request.session['telefono_print'] = telefono
+            request.session.modified = True
 
-        # Limpiamos la lista de seriales y el responsable después de guardar
-        del request.session['seriales']
-        del request.session['responsable']
-        del request.session['telefono']
-        return redirect('print_template', id = id)
-        # return redirect('controlrxevento', id=id)
-        
-    ######### DATOS PARA TAB 3 ##################
+            # Limpiamos la lista de seriales y el responsable después de guardar
+            del request.session['seriales']
+            del request.session['responsable']
+            del request.session['telefono']
+            return redirect('print_template', id = id)
+            # return redirect('controlrxevento', id=id)
+            
+        ######### DATOS PARA TAB 3 ##################
 
-    total_entregado = controlrxevent.objects.filter(id_salida = id, estadorx = 'E').count()
-    total_disponible = radios_en_orden - total_entregado
-    total_recogido = controlrxevent.objects.filter(id_salida = id, estadorx = 'R').count()
-    tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('-dia','responsable', 'hora')
+        total_entregado = controlrxevent.objects.filter(id_salida = id, estadorx = 'E').count()
+        total_disponible = radios_en_orden - total_entregado
+        total_recogido = controlrxevent.objects.filter(id_salida = id, estadorx = 'R').count()
+        tabla_resumen = controlrxevent.objects.filter(Q(estadorx='E') | Q(estadorx='R'), id_salida=id).order_by('-dia','responsable', 'hora')
 
-    # Obtenemos los seriales agregados temporalmente
-    seriales_temporales = request.session.get('seriales', [])
-    return render(request, 'controlrxeventos.html', {
-        'form_responsable': form_responsable,
-        'form_serial': form_serial, 
-        'seriales_temporales': seriales_temporales,
-        'id': id,
-        'responsable': request.session.get('responsable'),
-        'telefono': request.session.get('telefono'),
-        'radios_orden': radios_en_orden,
-        'form_recojo':form_serial_recojo,
-        'total_entregado':total_entregado,
-        'total_disponibles': total_disponible,
-        'total_recogido': total_recogido,
-        'tabla_resumen':tabla_resumen,
-        'dia':dia_entrega
-    })
-
+        # Obtenemos los seriales agregados temporalmente
+        seriales_temporales = request.session.get('seriales', [])
+        return render(request, 'controlrxeventos.html', {
+            'form_responsable': form_responsable,
+            'form_serial': form_serial, 
+            'seriales_temporales': seriales_temporales,
+            'id': id,
+            'responsable': request.session.get('responsable'),
+            'telefono': request.session.get('telefono'),
+            'radios_orden': radios_en_orden,
+            'form_recojo':form_serial_recojo,
+            'total_entregado':total_entregado,
+            'total_disponibles': total_disponible,
+            'total_recogido': total_recogido,
+            'tabla_resumen':tabla_resumen,
+            'dia':dia_entrega
+        })
+    except Exception as e:
+                error_message = f"Error al leer los datos: {e}"
+                return HttpResponse(error_message) 
 
 @login_required
 def cargarxordenevento(request, id):
