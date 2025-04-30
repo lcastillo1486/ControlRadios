@@ -2787,7 +2787,7 @@ def controlrxevento(request, id):
                             </div>
                             """)
                         # QUE NO SE HAYA ENTREGADO SIN SER DEVUELTO
-                    if controlrxevent.objects.filter(serial = valida_serial, estadorx = 'E').exists():
+                    if controlrxevent.objects.filter(serial = valida_serial, estadorx = 'E', id_salida = id).exists():
                         return HttpResponse(f"""
                             <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column; background-color: #f0f0f0; padding: 20px; border-radius: 5px; font-family: Arial, sans-serif; font-style: italic;">
                             <h3  style="color: red;">EL ESTADO DE ESTE SERIAL ES "ENTREGADO".</h3>
