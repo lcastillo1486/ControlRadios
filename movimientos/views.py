@@ -393,7 +393,7 @@ def salidas(request):
 @login_required
 def ordenesProcesadas(request):
     user_actual = request.user.username
-    item = User.objects.all().order_by('id')
+    item = User.objects.filter(Q(username='fmeneses') | Q(username='jgonzalez')| Q(username='lnoriega')).order_by('id')
     if user_actual in ('ljramirez','lcastillo','jramirez','lmeneses'):
         ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
     else:
