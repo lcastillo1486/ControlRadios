@@ -93,6 +93,7 @@ urlpatterns = [
     path('api/estado_pedido/', views.consultar_estado_pedido, name='consultar_estado_pedido'),
     path('cerrareventorx/<int:id>',views.cerrar_dia_rx_evento),
     path('sendmesaje/<int:id>',views.enviar_mensaje),
+    path('asignarPedido/',views.asignar_pedido_preparado)
 
 
 

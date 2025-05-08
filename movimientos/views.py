@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx, pedidos_asignados_prepa
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -45,6 +45,7 @@ import openpyxl
 from openpyxl.styles import PatternFill, alignment, Alignment
 from django.core.validators import RegexValidator
 import urllib.parse
+from django.contrib.auth.models import User
 
 # Create your views here. 
 @login_required
@@ -391,10 +392,14 @@ def salidas(request):
     return render(request, 'salidas.html', {"listaOrdenes": ordenes, "fecha_actal":fecha_actual, "fecha_tope":fecha_tope})
 @login_required
 def ordenesProcesadas(request):
-    # ordenes = ordenRegistro.objects.filter(estado_id = 5)
-    # return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
-    ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
-    return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes})
+    user_actual = request.user.username
+    item = User.objects.all().order_by('id')
+    if user_actual == "ljramirez":
+        ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
+    else:
+        ordenes = vista_ordenes_procesadas.objects.filter(asignado_a = user_actual).order_by('fecha_entrega')
+        # ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
+    return render(request, 'ordenesProcesadas.html', {"listaOrdenes": ordenes, "users":item})
 @login_required
 def ordenesCerradas(request): 
     # ordenes = ordenRegistro.objects.filter(estado_id = 3)
@@ -4129,3 +4134,23 @@ Atte.
         response = requests.request("POST", url, data=payload, headers=headers)
 
     return redirect('controlrxevento', id=id) 
+
+def asignar_pedido_preparado(request):
+
+    #verificar si ya existe
+    if request.method == 'POST':
+        id_orden = request.POST.get('orden_id')
+        usuario_asignado = request.POST.get('itemasignado')
+        fecha_hoy = datetime.date.today()
+        hora_actual = d.now()
+        # hora_actual = hora_actual + timedelta(hours=3)
+        hora_actual = hora_actual.strftime("%H:%M")
+
+        if not pedidos_asignados_prepa.objects.filter(id_orden = id_orden).exists():
+            pedidos_asignados_prepa.objects.create(id_orden = id_orden, asignado_a = usuario_asignado, fecha_asignacion = fecha_hoy, hora_asignacion = hora_actual)
+            #### ENVIAR MENSAJE
+            return redirect('ordenesProcesadas')
+        else:
+            pedidos_asignados_prepa.objects.filter(id_orden=id_orden).update(asignado_a=usuario_asignado)
+            #### ENVIAR MENSAJE
+            return redirect('ordenesProcesadas')

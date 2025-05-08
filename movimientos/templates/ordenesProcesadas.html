@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>BackTrack</title>
 </head>
 
@@ -137,7 +138,8 @@
                             <th>
                                 Observaciones:
                             </th>
-                           
+                            <th class="px-3 py-2 text-left">Asignado a:</th>
+                            <th class="px-3 py-2 text-left">Fecha/Hora asignación:</th>
 
                         </tr>
                     </thead>
@@ -158,25 +160,47 @@
                             </td>
                             </font>
                             <td>{{c.observaciones}} {{cantidadRadios}}</td>
-                            <td><a href='/cambiaEstadoEnt/{{c.id}}' class="btn btn-success"
-                                style="background: url(/static/entregado.png); background-size: cover; width: 50px; height: 50px;"
-                                title="Entregar" onclick="return confirm('¿Estás seguro?');"></a></a>
+                            <td>
+                                {% if user.username in 'ljramirez, lcastillo, lmeneses' %}
+                                <!-- Formulario para asignar usuario -->
+                                <form action="/asignarPedido/" method="POST"
+                                    class="flex flex-wrap items-center gap-2 mt-2">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="orden_id" value="{{ c.id }}">
+                                    <select name="itemasignado" id="itemasignado"
+                                        class="h-9 px-3 border border-blue-400 rounded-md bg-blue-50 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        {% for d in users %}
+                                        <option value="{{ d.username }}">{{ d.username }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit"
+                                        onclick="return confirm('Confirme que desea asignar el pedido.');"
+                                        class="h-9 px-4 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-md shadow">
+                                        Asignar
+                                    </button>
+                                </form>
+                                {% endif %}
                             </td>
-                                
+                            <td><a href='/cambiaEstadoEnt/{{c.id}}' class="btn btn-success"
+                                    style="background: url(/static/entregado.png); background-size: cover; width: 50px; height: 50px;"
+                                    title="Entregar" onclick="return confirm('¿Estás seguro?');"></a></a>
+                            </td>
+
                             <td><a href='/generaPDFGuia/{{c.id}}' class="btn btn-success"
-                                style="background: url(/static/guia.png); background-size: cover; width: 50px; height: 50px;"
-                                title="Imprimir Guia"></a>
-                               
+                                    style="background: url(/static/guia.png); background-size: cover; width: 50px; height: 50px;"
+                                    title="Imprimir Guia"></a>
+
                             </td>
                             <td><a href='/anularorden/{{c.id}}' class="btn btn-success"
-                                style="background: url(/static/anular.png); background-size: cover; width: 50px; height: 50px;"
-                                title="Anular" onclick="return confirm('¿Estás seguro de que quieres anular esta orden? Esta acción no se puede deshacer.');"></a>
-                                
-                                </td>
+                                    style="background: url(/static/anular.png); background-size: cover; width: 50px; height: 50px;"
+                                    title="Anular"
+                                    onclick="return confirm('¿Estás seguro de que quieres anular esta orden? Esta acción no se puede deshacer.');"></a>
+
+                            </td>
                             <td><a href='/guiadevueltos/{{c.id}}' class="btn btn-success"
-                                style="background: url(/static/ver_detalle.png); background-size: cover; width: 50px; height: 50px;"
-                                title="Ver detalle"></a>
-                                
+                                    style="background: url(/static/ver_detalle.png); background-size: cover; width: 50px; height: 50px;"
+                                    title="Ver detalle"></a>
+
                             </td>
                             <!-- <td><a href='/detalleOrden/{{c.id}}' class="btn btn-success">Detall</a></td> -->
                             <!-- <td><a href='/cambiaEstadoEnt/{{c.id}}' class="btn btn-warning">Entregado</a></td>

@@ -527,3 +527,15 @@ class formulario_pedido(models.Model):
         managed = False
         db_table = 'formulario_pedido'
         auto_created = True
+
+class pedidos_asignados_prepa(models.Model):
+    id = models.AutoField(primary_key=True)
+    id_orden = models.IntegerField(blank=True, null=True, default=0)
+    asignado_a = models.CharField(max_length=200, blank=True, null=True)
+    fecha_asignacion = models.DateField()
+    hora_asignacion = models.CharField(max_length=7, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'pedidos_asignados_prepa'
+        auto_created = True
