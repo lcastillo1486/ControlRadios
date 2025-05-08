@@ -172,7 +172,7 @@
                                 style="background-image: url('/static/ver_detalle.png');"
                                 title="Ver detalle">
                             </a>
-                            {% if user.username in  'linux, lcastillo' %}
+                            {% if user.username in  'ljramirez, lcastillo, lmeneses' %}
                             <!-- Formulario para asignar usuario -->
                             <form action="/asignarPedido/" method="POST" class="flex flex-wrap items-center gap-2 mt-2">
                                 {% csrf_token %}
