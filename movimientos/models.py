@@ -166,6 +166,9 @@ class vista_ordenes_procesadas(models.Model):
     fecha_evento_hasta = models.DateTimeField(blank=True, null=True)
     telefono = models.CharField(max_length=150)
     cliente = models.CharField(max_length=150)
+    asignado_a = models.CharField(max_length=200, blank=True, null=True)
+    fecha_asignacion = models.DateField(blank=True, null=True)
+    hora_asignacion = models.CharField(max_length=12, blank=True, null=True)
 
     class Meta:
         managed = False
