@@ -175,7 +175,7 @@
                             </a>
                         
                             {% if user.username in 'linux, lcastillo' %}
-                            <form action="/asignarPedido/" method="POST" class="flex items-center gap-2 mt-2">
+                            <form action="/asignarPedidoEntrega/" method="POST" class="flex items-center gap-2 mt-2">
                                 {% csrf_token %}
                                 <input type="hidden" name="orden_id" value="{{ c.id }}">
                                 <select name="itemasignado" id="itemasignado"
