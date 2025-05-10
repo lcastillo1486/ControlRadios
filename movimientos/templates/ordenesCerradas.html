@@ -10,6 +10,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>BackTrack</title>
 </head>
 
@@ -103,68 +104,94 @@
 
 <body>
 
-    <div class="row">
-
-        <div class="container mt-4">
-
-            <div class="table-responsive py-2">
-
-                <div class="centrar">
-                    <img src="{% static 'logo.png' %}" width="50" height="50">
-                    <h1>Listado de pedidos entregados</h1>
-                </div>
-
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>
-                                ID
-                            </th>
-                            <th>
-                                Cliente
-                            </th>
-                            <th>
-                                Teléfono
-                            </th>
-                            <th>
-                                Creada el:
-                            </th>
-                            <th>
-                                Entregar el:
-                            </th>
-                            <th>
-                                Retirar el:
-                            </th>
-                            <th colspan="2"></th>
-
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        {% for c in listaOrdenes %}
-                        <tr>
-                            <td>{{c.id}}</td>
-                            <td>{{c.cliente}}</td>
-                            <td>{{c.telefono}}</td>
-                            <td>{{c.fecha_creacion}}</td>
-                            <td>{{c.fecha_entrega}}</td>
-                            <td>
-                                <font color="red">{{c.fecha_retiro}}
-                            </td>
-                            </font>
-                            <td><a href='/entradas/{{c.id_salida}}' class="btn btn-success">Recibir</a></td>
-                            <td><a href='/generaPDFGuia/{{c.id}}' target="_blank" class="btn btn-success">Guia</a></td>
-                            <td><a href='/generaPDFprint/{{c.id}}' target="_blank" class="btn btn-primary">Etiqueta</a>
-                            </td>
-                            <td><a href='/entradatotal/{{c.id_salida}}/{{c.id}}' title=""
-                                    class="btn btn-danger">Devolución Total</a></td>
-                            <td><a href='/cargarrxevento/{{c.id_salida}}' class="btn btn-success"
-                                    onclick="return confirm('¿Estás seguro?');">Ent-Rec Radios</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+    <div class="w-full px-4 md:px-8 py-6">
+        <div class="max-w-full overflow-x-auto bg-white shadow rounded-lg p-4">
+            <!-- Logo + Título -->
+            <div class="flex flex-col items-center justify-center text-center mb-6">
+                <img src="{% static 'logo.png' %}" width="50" height="50" alt="Logo" class="mb-2">
+                <h1 class="text-2xl font-bold text-blue-800">Listado de pedidos entregados</h1>
             </div>
+
+            <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-md">
+                <thead class="bg-gray-100 text-xs uppercase text-gray-600">
+                    <tr>
+                        <th class="px-3 py-2 text-left">ID</th>
+                        <th class="px-3 py-2 text-left">Cliente</th>
+                        <th class="px-3 py-2 text-left">Teléfono</th>
+                        <th class="px-3 py-2 text-left">Creada el</th>
+                        <th class="px-3 py-2 text-left">Entregar el</th>
+                        <th class="px-3 py-2 text-left">Retirar el</th>
+                        <th class="px-3 py-2 text-left">Acciones</th>
+                        <th class="px-3 py-2 text-left"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in listaOrdenes %}
+                    <tr class="border-t">
+                        <td class="px-3 py-2">{{ c.id }}</td>
+                        <td class="px-3 py-2">{{ c.cliente }}</td>
+                        <td class="px-3 py-2">{{ c.telefono }}</td>
+                        <td class="px-3 py-2">{{ c.fecha_creacion }}</td>
+                        <td class="px-3 py-2">{{ c.fecha_entrega }}</td>
+                        <td class="px-3 py-2 text-red-600">{{ c.fecha_retiro }}</td>
+                        <td class="px-3 py-2 flex flex-wrap gap-2">
+
+                            <!-- Botón Recibir -->
+                            <a href='/entradas/{{c.id_salida}}'
+                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
+                                title="Recibir">
+                                Recibir
+                            </a>
+
+                            <!-- Botón Guía -->
+                            <a href='/generaPDFGuia/{{c.id}}' target="_blank"
+                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
+                                title="Guía">
+                                Guía
+                            </a>
+
+                            <!-- Botón Etiqueta -->
+                            <a href='/generaPDFprint/{{c.id}}' target="_blank"
+                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-xs no-underline font-semibold"
+                                title="Etiqueta">
+                                Etiqueta
+                            </a>
+
+                            <!-- Botón Devolución Total -->
+                            <a href='/entradatotal/{{c.id_salida}}/{{c.id}}'
+                                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded text-xs no-underline font-semibold"
+                                title="Devolución Total">
+                                Devolución
+                            </a>
+
+                            <!-- Botón Ent-Rec Radios -->
+                            <a href='/cargarrxevento/{{c.id_salida}}'
+                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
+                                title="Ent-Rec Radios" onclick="return confirm('¿Estás seguro?');">
+                                Ent-Rec Radios
+                            </a>
+                        
+                            {% if user.username in 'linux, lcastillo' %}
+                            <form action="/asignarPedido/" method="POST" class="flex items-center gap-2 mt-2">
+                                {% csrf_token %}
+                                <input type="hidden" name="orden_id" value="{{ c.id }}">
+                                <select name="itemasignado" id="itemasignado"
+                                    class="h-9 px-14 border border-blue-400 rounded-md bg-blue-50 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    {% for d in users %}
+                                    <option value="{{ d.username }}">{{ d.username }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" onclick="return confirm('Confirme que desea asignar el pedido.');"
+                                    class="h-9 px-4 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-md shadow">
+                                    Asignar
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"

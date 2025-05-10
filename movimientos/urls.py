@@ -10,7 +10,7 @@ urlpatterns = [
     path('consultainventario/',views.consultainventario),
     path('ubicarRadios/',views.movimientosRadios),
     path('ordenesProcesadas/',views.ordenesProcesadas, name="ordenesProcesadas"),
-    path('ordenesCerradas/',views.ordenesCerradas),
+    path('ordenesCerradas/',views.ordenesCerradas, name="ordenesCerradas"),
     path('ordenesDevueltas/',views.ordenesDevueltas),
     path('detalleOrdenCerrada/<int:id>',views.detalleOrdenCerrada),
     path('cambiaEstadoEnt/<int:id>',views.cambiaEstadoEntregado),
