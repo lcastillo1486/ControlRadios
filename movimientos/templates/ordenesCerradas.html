@@ -176,7 +176,7 @@
                                 {% csrf_token %}
                                 <input type="hidden" name="orden_id" value="{{ c.id }}">
                                 <select name="itemasignado" id="itemasignado"
-                                    class="h-9 px-14 border border-blue-400 rounded-md bg-blue-50 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    class="h-9 px-8 border border-blue-400 rounded-md bg-blue-50 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
                                     {% for d in users %}
                                     <option value="{{ d.username }}">{{ d.username }}</option>
                                     {% endfor %}
