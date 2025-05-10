@@ -174,7 +174,7 @@
                                 Ent-Rec Radios
                             </a>
                         
-                            {% if user.username in 'linux, lcastillo' %}
+                            {% if user.username in 'ljramirez, lcastillo, lmeneses' %}
                             <form action="/asignarPedidoEntrega/" method="POST" class="flex items-center gap-2 mt-2">
                                 {% csrf_token %}
                                 <input type="hidden" name="orden_id" value="{{ c.id }}">
