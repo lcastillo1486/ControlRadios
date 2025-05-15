@@ -55,7 +55,7 @@ def buscaEdit(request, id_orden):
         form = formEdit(request.POST,instance=editCurso)
         if form.is_valid:
             form.save()
-            return redirect('salidas/')
+            return redirect('/salidas/')
 
 ###AUDITORIA#######
             #buscar el ultimo id generado

@@ -3,7 +3,7 @@ from movimientos import views
 
 urlpatterns = [
     path('entradas/<int:id>',views.entradas),
-    path('salidas/',views.salidas),
+    path('salidas/',views.salidas, name='listadoSalidas'),
     path('detalleOrden/<int:id>',views.ordenDetalle),
     path('generarsalida/<int:id>',views.generarSalida),
     path('detalleradios/<int:id>/<int:id_orden>',views.guardarDetalleRadio),
