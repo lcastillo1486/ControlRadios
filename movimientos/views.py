@@ -4181,5 +4181,5 @@ def asignar_pedido_entregado(request):
 
 def clientes_ajax(request):
     q = request.GET.get('q', '')
-    clientes = vista_entrada_detalle.objects.filter(cliente__icontains=q).values('id', 'cliente').distinct()[:10]
+    clientes = vista_entrada_detalle.objects.filter(cliente__icontains=q).values_list('cliente', flat=True).distinct()[:10]
     return JsonResponse(list(clientes), safe=False)
