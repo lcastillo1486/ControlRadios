@@ -94,7 +94,8 @@ urlpatterns = [
     path('cerrareventorx/<int:id>',views.cerrar_dia_rx_evento),
     path('sendmesaje/<int:id>',views.enviar_mensaje),
     path('asignarPedido/',views.asignar_pedido_preparado),
-    path('asignarPedidoEntrega/',views.asignar_pedido_entregado)
+    path('asignarPedidoEntrega/',views.asignar_pedido_entregado),
+    path('clientes_ajax/', views.clientes_ajax, name='clientes_ajax'),
 
 
 

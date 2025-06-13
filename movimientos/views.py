@@ -4178,3 +4178,8 @@ def asignar_pedido_entregado(request):
             pedidos_asignados_entrega.objects.filter(id_orden=id_orden).update(asignado_a=usuario_asignado)
             #### ENVIAR MENSAJE
             return redirect('ordenesCerradas')
+
+def clientes_ajax(request):
+    q = request.GET.get('q', '')
+    clientes = vista_entrada_detalle.objects.filter(cliente__icontains=q).values('id', 'cliente')[:10]
+    return JsonResponse(list(clientes), safe=False)
