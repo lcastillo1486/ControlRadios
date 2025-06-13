@@ -4180,6 +4180,12 @@ def asignar_pedido_entregado(request):
             return redirect('ordenesCerradas')
 
 def clientes_ajax(request):
-    q = request.GET.get('q', '')
-    clientes = vista_entrada_detalle.objects.filter(cliente__icontains=q).values('id', 'cliente')[:10]
+
+    termino = request.GET.get('q', '')
+    clientes = cliente.objects.filter(
+        Q(nombre__icontains=termino)
+        ).values('id', 'nombre')[:15]
+
     return JsonResponse(list(clientes), safe=False)
+
+   
