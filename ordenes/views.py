@@ -4,6 +4,9 @@ from django.contrib import messages
 from .models import ordenRegistro
 from movimientos.models import auditoria
 from django.utils import timezone
+from cliente.models import cliente
+from django.db.models import Q
+from django.http import JsonResponse
 # Create your views here.
 
 
@@ -95,4 +98,11 @@ def buscaEditFactura(request, id_orden):
 
 
 
+def buscar_proveedor(request):
+    termino = request.GET.get('q', '')
+    proveedores = cliente.objects.filter(
+        Q(nombre__icontains=termino)|
+        Q(ruc__icontains=termino)
+        ).values('id', 'nombre', 'ruc')[:15]
 
+    return JsonResponse(list(proveedores), safe=False)

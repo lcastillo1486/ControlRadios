@@ -153,15 +153,29 @@
     <form method="post">
       {% csrf_token %}
       <div class="form-row">
-        <div class="form-group col-md-6">
+          <!-- <div class="form-group col-md-6">
           <label class="campo-label">{{ form_orden.cliente.label_tag }}</label>
-          {{ form_orden.cliente }}
+          {{ form_orden.cliente }} -->
+          <!-- </div> -->
+          <div>
+            <label for="proveedor_nombre" class="block text-md font-medium text-blue-700">Cliente</label>
+            <div class="flex gap-2">
+              <input type="hidden" name="cliente" id="proveedor_id" required>
+              <input type="text" id="proveedor_nombre" placeholder="Buscar cliente..." readonly
+                class="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100 text-sm"
+                onclick="abrirModalProveedor()">
+            </div>
+          </div>
+
         </div>
-        <div class="form-group col-md-6">
-          <label class="campo-label">{{ form_orden.razon_Social.label_tag }}</label>
-          {{ form_orden.razon_Social }}
+
+        <div class="form-row">
+
+          <div class="form-group col-md-6">
+            <label class="campo-label">{{ form_orden.razon_Social.label_tag }}</label>
+            {{ form_orden.razon_Social }}
+          </div>
         </div>
-      </div>
       <div class="form-row">
         <div class="form-group col-md-3">
           <label class="campo-label">{{ form_orden.fecha_entrega.label_tag }}</label>
@@ -241,10 +255,87 @@
         </div>
       
     </form>
+    <!-- Modal Proveedor -->
+      <div id="modalProveedor" class="fixed inset-0 z-50 hidden items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-xl shadow-lg w-full max-w-xl">
+          <h3 class="text-xl font-semibold mb-4 text-blue-700">Buscar Cliente</h3>
+
+          <input type="text" oninput="buscarProveedor(this.value)" placeholder="Buscar por nombre o RUC"
+            class="w-full mb-4 px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm">
+
+          <div class="overflow-auto max-h-64">
+            <table class="table-auto w-full border border-gray-300 text-sm">
+              <thead class="bg-gray-100">
+                <tr>
+                  <th class="px-2 py-1 border">Nombre</th>
+                  <th class="px-2 py-1 border">RUC</th>
+                  <th class="px-2 py-1 border">Acción</th>
+                </tr>
+              </thead>
+              <tbody id="tablaResultadosProveedor">
+                <tr>
+                  <td colspan="3" class="text-center py-2 text-gray-500">Escribe para buscar...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="text-right mt-4">
+            <button onclick="cerrarModalProveedor()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
     </div>  
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
+
+    <!-- Proveedor -->
+    <script>
+      function abrirModalProveedor() {
+        document.getElementById("modalProveedor").classList.remove("hidden");
+        document.getElementById("inputBuscarProveedor").focus();
+      }
+
+      function cerrarModalProveedor() {
+        document.getElementById("modalProveedor").classList.add("hidden");
+      }
+
+      function seleccionarProveedor(id, nombre) {
+        document.getElementById("proveedor_id").value = id;
+        document.getElementById("proveedor_nombre").value = nombre;
+        cerrarModalProveedor();
+      }
+
+      function buscarProveedor(valor) {
+        fetch(`/buscarcliente/?q=${encodeURIComponent(valor)}`)
+          .then(response => response.json())
+          .then(data => {
+            const tabla = document.getElementById("tablaResultadosProveedor");
+            tabla.innerHTML = "";
+            if (data.length === 0) {
+              tabla.innerHTML = '<tr><td colspan="2" class="text-center py-2 text-gray-500">Sin resultados</td></tr>';
+            } else {
+              data.forEach(prov => {
+                tabla.innerHTML += `
+              <tr>
+                <td class="border px-2 py-1">${prov.nombre}</td>
+                <td class="border px-2 py-1">${prov.ruc}</td>
+                <td class="border px-2 py-1 text-center">
+                  <button onclick="seleccionarProveedor('${prov.id}', '${prov.nombre}')"
+                          class="bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded text-xs">
+                    Seleccionar
+                  </button>
+                </td>
+              </tr>
+            `;
+              });
+            }
+          });
+      }
+    </script>
     
 	</body>
 	{% endblock %}
