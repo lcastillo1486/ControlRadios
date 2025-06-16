@@ -4188,4 +4188,13 @@ def clientes_ajax(request):
 
     return JsonResponse(list(clientes), safe=False)
 
-   
+def buscaOrdenesCerradas(request):
+
+    if request.method == 'POST':
+        nombre = request.POST.get('clienteNombre')
+
+        nombre_cliente = cliente.objects.all()
+    
+        devueltas = vista_ordenes_cerradas.objects.filter(cliente = nombre)
+
+        return render(request, 'ordenesCerradas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})   

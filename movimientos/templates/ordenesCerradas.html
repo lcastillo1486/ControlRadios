@@ -112,84 +112,92 @@
                 <h1 class="text-2xl font-bold text-blue-800">Listado de pedidos entregados</h1>
             </div>
 
-            <table class="min-w-full text-sm text-gray-700 border border-gray-200 rounded-md">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-4 px-2">
+                <form action="/buscaOrdenesCerradas/" method="POST"
+                    class="w-full sm:w-auto flex flex-col sm:flex-row items-center gap-2">
+                    {% csrf_token %}
+                    <!-- Campo de búsqueda con Live Search -->
+                    <div class="relative w-full sm:w-64">
+                        <input type="text" id="cliente_search" placeholder="Buscar cliente..."
+                            class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            autocomplete="off">
+                        <div id="resultados_cliente"
+                            class="absolute z-10 w-full bg-white border border-gray-200 rounded-md shadow-md mt-1 hidden max-h-48 overflow-y-auto">
+                            <!-- Resultados autocompletados -->
+                        </div>
+                        <input type="hidden" name="clienteNombre" id="cliente_id">
+                    </div>
+                    <button type="submit"
+                        class="bg-yellow-400 hover:bg-yellow-500 text-black font-medium px-3 py-2 rounded-md shadow-sm text-sm transition-all duration-200">
+                        Buscar
+                    </button>
+                </form>
+            </div>
+
+            <table class="min-w-full text-sm text-gray-800 border border-gray-200">
                 <thead class="bg-gray-100 text-xs uppercase text-gray-600">
                     <tr>
-                        <th class="px-3 py-2 text-left">ID</th>
-                        <th class="px-3 py-2 text-left">Cliente</th>
-                        <th class="px-3 py-2 text-left">Teléfono</th>
-                        <th class="px-3 py-2 text-left">Creada el</th>
-                        <th class="px-3 py-2 text-left">Entregar el</th>
-                        <th class="px-3 py-2 text-left">Retirar el</th>
-                        <th class="px-3 py-2 text-left">Asignado a:</th>
-                        <th class="px-3 py-2 text-left">Fecha/Hora asignación:</th>
-                        <th class="px-3 py-2 text-left">Acciones</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">ID</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Cliente</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Teléfono</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Creada</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Entregar</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Retirar</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Asignado</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Fecha/Hora</th>
+                        <th class="px-2 py-2 text-left whitespace-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for c in listaOrdenes %}
-                    <tr class="border-t">
-                        <td class="px-3 py-2">{{ c.id }}</td>
-                        <td class="px-3 py-2">{{ c.cliente }}</td>
-                        <td class="px-3 py-2">{{ c.telefono }}</td>
-                        <td class="px-3 py-2">{{ c.fecha_creacion }}</td>
-                        <td class="px-3 py-2">{{ c.fecha_entrega }}</td>
-                        <td class="px-3 py-2 text-red-600">{{ c.fecha_retiro }}</td>
-                        <td class="px-3 py-2">{{ c.asignado_a |default:"" }}</td>
-                        <td class="px-3 py-2">{{ c.fecha_asignacion|default:""}} - {{c.hora_asignacion |default:"" }}</td>
-                        <td class="px-3 py-2 flex flex-wrap gap-2">
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-2 py-2">{{ c.id }}</td>
+                        <td class="px-2 py-2">{{ c.cliente }}</td>
+                        <td class="px-2 py-2">{{ c.telefono }}</td>
+                        <td class="px-2 py-2">{{ c.fecha_creacion }}</td>
+                        <td class="px-2 py-2">{{ c.fecha_entrega }}</td>
+                        <td class="px-2 py-2 text-red-600">{{ c.fecha_retiro }}</td>
+                        <td class="px-2 py-2 text-red-600">{{ c.asignado_a }}</td>
+                        <td class="px-2 py-2">{{ c.fecha_asignacion|default:"" }} - {{ c.hora_asignacion|default:"" }}
+                        </td>
+                        <td class="px-2 py-2">
+                            <div class="flex flex-wrap md:flex-nowrap gap-1 items-center">
+                                <!-- Botones -->
+                                <a href="/entradas/{{ c.id_salida }}"
+                                    class="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-semibold"
+                                    title="Recibir">Recibir</a>
 
-                            <!-- Botón Recibir -->
-                            <a href='/entradas/{{c.id_salida}}'
-                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
-                                title="Recibir">
-                                Recibir
-                            </a>
+                                <a href="/generaPDFGuia/{{ c.id }}" target="_blank"
+                                    class="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-semibold"
+                                    title="Guía">Guía</a>
 
-                            <!-- Botón Guía -->
-                            <a href='/generaPDFGuia/{{c.id}}' target="_blank"
-                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
-                                title="Guía">
-                                Guía
-                            </a>
+                                <a href="/entradatotal/{{ c.id_salida }}/{{ c.id }}"
+                                    class="px-2 py-1 bg-red-500 hover:bg-red-600 text-white rounded text-xs font-semibold"
+                                    title="Devolución">Devolución</a>
 
-                            <!-- Botón Etiqueta -->
-                            <!-- <a href='/generaPDFprint/{{c.id}}' target="_blank"
-                                class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded text-xs no-underline font-semibold"
-                                title="Etiqueta">
-                                Etiqueta
-                            </a> -->
+                                <a href="/cargarrxevento/{{ c.id_salida }}" onclick="return confirm('¿Estás seguro?');"
+                                    class="px-2 py-1 bg-green-500 hover:bg-green-600 text-white rounded text-xs font-semibold"
+                                    title="Ent-Rec">Ent-Rec</a>
 
-                            <!-- Botón Devolución Total -->
-                            <a href='/entradatotal/{{c.id_salida}}/{{c.id}}'
-                                class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded text-xs no-underline font-semibold"
-                                title="Devolución Total">
-                                Devolución
-                            </a>
-
-                            <!-- Botón Ent-Rec Radios -->
-                            <a href='/cargarrxevento/{{c.id_salida}}'
-                                class="px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded text-xs no-underline font-semibold"
-                                title="Ent-Rec Radios" onclick="return confirm('¿Estás seguro?');">
-                                Ent-Rec Radios
-                            </a>
-                        
-                            {% if user.username in 'ljramirez, lcastillo, lmeneses' %}
-                            <form action="/asignarPedidoEntrega/" method="POST" class="flex items-center gap-2 mt-2">
-                                {% csrf_token %}
-                                <input type="hidden" name="orden_id" value="{{ c.id }}">
-                                <select name="itemasignado" id="itemasignado"
-                                    class="h-9 px-8 border border-blue-400 rounded-md bg-blue-50 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    {% for d in users %}
-                                    <option value="{{ d.username }}">{{ d.username }}</option>
-                                    {% endfor %}
-                                </select>
-                                <button type="submit" onclick="return confirm('Confirme que desea asignar el pedido.');"
-                                    class="h-9 px-4 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-md shadow">
-                                    Asignar
-                                </button>
-                            </form>
-                            {% endif %}
+                                <!-- Formulario de asignación en línea -->
+                                {% if user.username in 'ljramirez, lcastillo, lmeneses' %}
+                                <form action="/asignarPedidoEntrega/" method="POST" class="flex items-center gap-1">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="orden_id" value="{{ c.id }}">
+                                    <select name="itemasignado"
+                                        class="h-7 px-6 border border-blue-400 rounded bg-blue-50 text-xs text-gray-800 focus:ring-1 focus:ring-blue-500">
+                                        {% for d in users %}
+                                        <option value="{{ d.username }}">{{ d.username }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit"
+                                        onclick="return confirm('Confirme que desea asignar el pedido.');"
+                                        class="h-7 px-2 bg-green-500 hover:bg-green-600 text-white text-xs font-semibold rounded shadow">
+                                        Asignar
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}
@@ -200,7 +208,52 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const input = document.getElementById("cliente_search");
+  const resultados = document.getElementById("resultados_cliente");
+  const clienteIdInput = document.getElementById("cliente_id");
 
+  input.addEventListener("input", function () {
+    const query = input.value.trim();
+    if (query.length < 2) {
+      resultados.innerHTML = "";
+      resultados.classList.add("hidden");
+      return;
+    }
+
+    fetch(`/clientes_ajax/?q=${encodeURIComponent(query)}`)
+      .then(response => response.json())
+      .then(data => {
+        resultados.innerHTML = "";
+        if (data.length === 0) {
+          resultados.classList.add("hidden");
+          return;
+        }
+
+        data.forEach(cliente => {
+          const item = document.createElement("div");
+          item.className = "px-3 py-2 hover:bg-blue-100 cursor-pointer text-sm";
+          item.textContent = cliente.nombre;
+          item.addEventListener("click", function () {
+            input.value = cliente.nombre;
+            clienteIdInput.value = cliente.nombre; // o cliente.id si quieres usar el ID
+            resultados.classList.add("hidden");
+          });
+          resultados.appendChild(item);
+        });
+
+        resultados.classList.remove("hidden");
+      });
+  });
+
+  document.addEventListener("click", function (e) {
+    if (!input.contains(e.target) && !resultados.contains(e.target)) {
+      resultados.classList.add("hidden");
+    }
+  });
+});
+</script>
 </body>
 {% endblock %}
 
