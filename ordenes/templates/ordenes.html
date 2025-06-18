@@ -348,6 +348,33 @@
           });
       }
     </script>
+
+    <script>
+      function obtenerRecomendaciones(clienteId) {
+        const clienteSelect = document.getElementById("proveedor_id");  // ajusta según el ID real de tu campo
+        const recomendacionesBox = document.getElementById("recomendaciones-box");
+        const recomendacionesList = document.getElementById("recomendaciones-list");
+
+
+        fetch(`/recomendaciones/${clienteId}/`)
+          .then(response => response.json())
+          .then(data => {
+            if (typeof data === "string") {
+              recomendacionesList.innerHTML = `<li>${data}</li>`;
+            } else {
+              recomendacionesList.innerHTML = "";
+              data.recomendaciones.forEach(item => {
+                recomendacionesList.innerHTML += `<li>${item}</li>`;
+              });
+            }
+            recomendacionesBox.classList.remove("hidden");
+          })
+          .catch(err => {
+            console.error("Error obteniendo recomendaciones", err);
+          });
+
+      }
+    </script>
     
 	</body>
 	{% endblock %}
