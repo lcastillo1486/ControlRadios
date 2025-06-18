@@ -158,13 +158,24 @@
           <label class="campo-label">{{ form_orden.cliente.label_tag }}</label>
           {{ form_orden.cliente }} -->
           <!-- </div> -->
-          <div>
-            <label for="proveedor_nombre" class="block text-md font-medium text-blue-700">Cliente</label>
-            <div class="flex gap-2">
-              <input type="hidden" name="cliente" id="proveedor_id" required>
-              <input type="text" id="proveedor_nombre" placeholder="Buscar cliente..." readonly
-                class="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100 text-sm"
-                onclick="abrirModalProveedor()">
+          <div class="flex gap-4 w-full">
+            <!-- Selector de cliente -->
+            <div class="w-3/4">
+              <label for="proveedor_nombre" class="block text-md font-medium text-blue-700">Cliente</label>
+              <div class="flex gap-2">
+                <input type="hidden" name="cliente" id="proveedor_id" required>
+                <input type="text" id="proveedor_nombre" placeholder="Buscar cliente..." readonly
+                  class="w-full px-4 py-2 border border-gray-300 rounded bg-gray-100 text-sm"
+                  onclick="abrirModalProveedor()">
+              </div>
+            </div>
+
+            <!-- Recomendaciones -->
+            <div class="w-3/4">
+              <div id="recomendaciones-box" class="p-4 bg-green-50 border border-yellow-300 rounded-lg hidden">
+                <h3 class="font-bold text-blue-800 mb-2">Recomendaciones para este cliente:</h3>
+                <ul id="recomendaciones-list" class="list-disc list-inside text-sm text-blue-700"></ul>
+              </div>
             </div>
           </div>
 

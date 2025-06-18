@@ -97,6 +97,8 @@ urlpatterns = [
     path('asignarPedidoEntrega/',views.asignar_pedido_entregado),
     path('clientes_ajax/', views.clientes_ajax, name='clientes_ajax'),
     path('buscaOrdenesCerradas/',views.buscaOrdenesCerradas),
+    path('recomendaciones/<int:cliente_id>/', views.vista_recomendaciones, name='recomendaciones'),
+    path('entrenarIA/',views.generar_recomendaciones, name='entrenarIA'),
 
 
 

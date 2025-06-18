@@ -4,7 +4,7 @@ from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
 from django.contrib import messages
-from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx, pedidos_asignados_prepa, pedidos_asignados_entrega
+from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx, pedidos_asignados_prepa, pedidos_asignados_entrega, vista_ia
 from cliente.models import cliente
 from django import forms
 from django.db import models
@@ -46,6 +46,8 @@ from openpyxl.styles import PatternFill, alignment, Alignment
 from django.core.validators import RegexValidator
 import urllib.parse
 from django.contrib.auth.models import User
+import pandas as pd
+import joblib
 
 # Create your views here. 
 @login_required
@@ -748,12 +750,21 @@ def movimientosRadios(request):
                 "cantidadnoDispo":cuenta_nodisponibles, "cantidadMalogrado":cuenta_malogrado, "buscaradios":formBuscaRadio, "amarillasDisponibles":amarillas_disp, 
                 "moradasDisponibles":moradas_disp, "plomoDisponibles":plomo_disp, "amarillasnoDisponibles":amarillas_nodisp, "moradasnoDisponibles":moradas_nodisp, 
                 "plomonoDisponibles":plomo_nodisp, 'extraviadas':extraviadas, "estado":estadorx.estado,"ultima_salida":formatedDate, "cliente":nombre_cliente})         
+
+def generar_recomendaciones():
+    df = obtener_historial_pedidos()
+    resumen = df.groupby(["cliente_id", "cliente"]).mean(numeric_only=True).reset_index()
+    joblib.dump(resumen, "modelo_recomendacion.pkl")
+
+
 @login_required
 def cambiaEstadoEntregado(request, id):
     detalle_salida = ordenRegistro.objects.get(id=id)
     b = detalle_salida
     b.estado_id = 3
-    b.save() 
+    b.save()
+
+    a = generar_recomendaciones() 
 
     #####AUDITORIA############
     # numero_orden = id
@@ -4197,4 +4208,60 @@ def buscaOrdenesCerradas(request):
     
         devueltas = vista_ordenes_cerradas.objects.filter(cliente = nombre)
 
-        return render(request, 'ordenesCerradas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})   
+        return render(request, 'ordenesCerradas.html', {"listaOrdenes": devueltas, "lista_cliente":nombre_cliente})
+
+
+
+##### NECESARIO PARA LA IA ##############
+def obtener_historial_pedidos():
+    queryset = vista_ia.objects.values(
+        "cliente_id", "cliente",
+        "cantidad_radios", "cantidad_cobras", "cantidad_baterias",
+        "cantidad_cargadores", "cantidad_manos_libres", "cantidad_cascos"
+    )
+    df = pd.DataFrame.from_records(queryset)
+    return df
+
+
+def sugerencias_para(cliente_id):
+    import joblib
+
+    resumen = joblib.load("modelo_recomendacion.pkl")
+    datos = resumen[resumen["cliente_id"] == cliente_id]
+
+    if datos.empty:
+        return "Cliente nuevo, sin historial de pedidos."
+
+    cliente = datos.iloc[0]["cliente"]
+    sugerencias = []
+
+    columnas = [
+        "cantidad_radios", "cantidad_cobras", "cantidad_baterias",
+        "cantidad_cargadores", "cantidad_manos_libres",
+        "cantidad_cascos"
+    ]
+
+    for col in columnas:
+        try:
+            cantidad = (datos.iloc[0].get(col, 0))
+        except (ValueError, TypeError):
+            cantidad = 0
+
+        if cantidad >= 0.3:
+            nombre = col.replace("cantidad_", "").replace("_", " ").upper()
+            if col == "cantidad_radios":
+                cantidad_radios = round(cantidad)  # lo guardamos para mensaje principal
+            else:
+                sugerencias.append(nombre)
+
+    mensaje_radios = f"Cantidad Promedio de Radios: {cantidad_radios}"
+    mensaje_accesorios = "Accesorios Comunes: " + ", ".join(sugerencias) if sugerencias else "Sin accesorios sugeridos"
+
+    return {
+        "cliente": cliente,
+        "recomendaciones": [mensaje_radios, mensaje_accesorios]
+    }
+
+def vista_recomendaciones(request, cliente_id):
+    data = sugerencias_para(cliente_id)
+    return JsonResponse(data, safe=False)
