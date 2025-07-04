@@ -396,7 +396,7 @@ def salidas(request):
 def ordenesProcesadas(request):
     user_actual = request.user.username
     item = User.objects.filter(Q(username='fmeneses') | Q(username='jgonzalez')| Q(username='lnoriega')).order_by('id')
-    if user_actual in ('ljramirez','lcastillo','jramirez','lmeneses', 'lnoriega'):
+    if user_actual in ('ljramirez','lcastillo','jramirez','lmeneses', 'lnoriega', 'fmeneses'):
         ordenes = vista_ordenes_procesadas.objects.all().order_by('fecha_entrega')
     else:
         ordenes = vista_ordenes_procesadas.objects.filter(asignado_a = user_actual).order_by('fecha_entrega')
@@ -406,7 +406,7 @@ def ordenesProcesadas(request):
 def ordenesCerradas(request): 
     user_actual = request.user.username
     item = User.objects.filter(Q(username='fmeneses') | Q(username='jgonzalez')| Q(username='lnoriega')).order_by('id')
-    if user_actual in ('ljramirez','lcastillo','jramirez','lmeneses', 'lnoriega'):
+    if user_actual in ('ljramirez','lcastillo','jramirez','lmeneses', 'lnoriega', 'fmeneses'):
         ordenes = vista_ordenes_cerradas.objects.all().order_by('fecha_entrega')
     else:
         ordenes = vista_ordenes_cerradas.objects.filter(asignado_a = user_actual).order_by('fecha_entrega')
