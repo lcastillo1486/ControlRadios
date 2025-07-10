@@ -4274,7 +4274,7 @@ def vista_recomendaciones(request, cliente_id):
 def guardar_vcard(request):
     if request.method == 'POST' and request.FILES['file']:
         vcard_file = request.FILES['file']
-        fs = FileSystemStorage(location='/var/media/vcards/')  # Ubicación en el disco persistente de Render
+        fs = FileSystemStorage(location='/var/media/')  # Ubicación en el disco persistente de Render
         filename = fs.save(vcard_file.name, vcard_file)
         file_url = fs.url(filename)
         

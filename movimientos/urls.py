@@ -1,6 +1,7 @@
 from django.urls import path
 from movimientos import views
 
+
 urlpatterns = [
     path('entradas/<int:id>',views.entradas),
     path('salidas/',views.salidas, name='listadoSalidas'),
@@ -106,6 +107,6 @@ urlpatterns = [
 
 
 
-]
+] 
 
 ##recibir parametro 
