@@ -102,6 +102,7 @@ urlpatterns = [
     path('recomendaciones/<int:cliente_id>/', views.vista_recomendaciones, name='recomendaciones'),
     path('entrenarIA/',views.generar_recomendaciones, name='entrenarIA'),
     path('api/guardar_vcard', views.guardar_vcard, name='guardar_vcard'),
+    path('vcard/<str:archivo_nombre>/', views.servir_vcard, name='servir_vcard'),
 
 
 

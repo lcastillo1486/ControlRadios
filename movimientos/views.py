@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, FileResponse
 from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
 from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
@@ -50,6 +50,7 @@ import pandas as pd
 import joblib
 from django.views.decorators.csrf import csrf_exempt
 from django.core.files.storage import FileSystemStorage
+from django.conf import settings
 
 # Create your views here. 
 @login_required
@@ -4282,3 +4283,15 @@ def guardar_vcard(request):
         return JsonResponse({'message': 'vCard guardado correctamente', 'file_url': file_url}, status=200)
     else:
         return JsonResponse({'message': 'No se ha recibido el archivo vCard'}, status=400)
+    
+
+def servir_vcard(request, archivo_nombre):
+    # Construir la ruta completa del archivo basado en el nombre
+    ruta_archivo = os.path.join(settings.MEDIA_ROOT, archivo_nombre)
+
+    # Verificar si el archivo existe
+    if not os.path.exists(ruta_archivo):
+        raise Http404("Archivo no encontrado")
+
+    # Servir el archivo
+    return FileResponse(open(ruta_archivo, 'rb'), content_type='text/vcard')
