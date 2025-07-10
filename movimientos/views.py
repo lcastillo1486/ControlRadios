@@ -48,6 +48,8 @@ import urllib.parse
 from django.contrib.auth.models import User
 import pandas as pd
 import joblib
+from django.views.decorators.csrf import csrf_exempt
+from django.core.files.storage import FileSystemStorage
 
 # Create your views here. 
 @login_required
@@ -4265,3 +4267,18 @@ def sugerencias_para(cliente_id):
 def vista_recomendaciones(request, cliente_id):
     data = sugerencias_para(cliente_id)
     return JsonResponse(data, safe=False)
+
+
+
+@csrf_exempt
+def guardar_vcard(request):
+    if request.method == 'POST' and request.FILES['file']:
+        vcard_file = request.FILES['file']
+        fs = FileSystemStorage(location='/var/media/vcards/')  # Ubicación en el disco persistente de Render
+        filename = fs.save(vcard_file.name, vcard_file)
+        file_url = fs.url(filename)
+        
+        # Aquí puedes guardar la URL o la ruta del archivo en la base de datos si lo necesitas
+        return JsonResponse({'message': 'vCard guardado correctamente', 'file_url': file_url}, status=200)
+    else:
+        return JsonResponse({'message': 'No se ha recibido el archivo vCard'}, status=400)
