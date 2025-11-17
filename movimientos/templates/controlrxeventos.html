@@ -398,47 +398,46 @@
                     <div class="tab-pane fade show active" id="tab4" role="tabpanel" aria-labelledby="tab4-tab">
                         <h4>TOTAL ENTREGADAS: {{total_entregado}}</h4>
                         <div
-                            style="border: 2px solid #7ed957; padding: 15px; width: 450px ;border-radius: 8px; max-width: 100%; margin: 0 auto; margin-top: 10px; background-color: #c7e0bb; display: flex; flex-direction: column; align-items: center; text-align: center;">
-                            <div class="row d-flex justify-content-center">
-                                <div class="mb-3">
-                                    <input type="text" id="buscarResponsable" class="form-control"
-                                        placeholder="Buscar por Responsable">
-                                </div>
-                                <div class="mb-3">
-                                    <input type="text" id="buscarserial" class="form-control"
-                                        placeholder="Buscar por Serial">
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="table-responsive py-2 text-center">
-                                        <table class="table table-striped" style="margin: 0 auto;">
-                                            <thead>
-                                                <tr>
-                                                    <th>N°</th>
-                                                    <th>RESPONSABLE</th>
-                                                    <th>SERIAL</th>
-                                                    <th>ESTADO</th>
-                                                    <th>HORA</th>
-                                                    <th>DIA</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="tablaResumen">
-                                                {% for c in tabla_resumen %}
-                                                {% if c.estadorx == "E" %}
-                                                <tr>
-                                                    <td>{{ forloop.counter }}</td>
-                                                    <td>{{ c.responsable }}</td>
-                                                    <td>{{ c.serial }}</td>
-                                                    <td>{{ c.estadorx }}</td>
-                                                    <td>{{c.hora_entrega}}</td>
-                                                    <td>{{c.dia}}</td>
-                                                </tr>
-                                                {% endif %}
-                                                {% endfor %}
+                            class="border-2 border-[#7ed957] p-4 max-w-full w-[450px] mx-auto mt-2 rounded-lg bg-[#c7e0bb] flex flex-col items-center text-center">
 
-                                            </tbody>
-                                        </table>
-                                    </div>
+                            <div class="w-full flex flex-col items-center space-y-3">
+
+                                <input type="text" id="buscarResponsable" placeholder="Buscar por Responsable"
+                                    class="w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-green-400">
+
+                                <input type="text" id="buscarserial" placeholder="Buscar por Serial"
+                                    class="w-full rounded-md border border-gray-300 p-2 focus:ring-2 focus:ring-green-400">
+
+                                <div class="w-full overflow-x-auto py-2">
+                                    <table class="w-full text-center min-w-max border-collapse">
+                                        <thead class="bg-gray-200">
+                                            <tr>
+                                                <th class="p-2 border">N°</th>
+                                                <th class="p-2 border">RESPONSABLE</th>
+                                                <th class="p-2 border">SERIAL</th>
+                                                <th class="p-2 border">ESTADO</th>
+                                                <th class="p-2 border">HORA</th>
+                                                <th class="p-2 border">DIA</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody id="tablaResumen">
+                                            {% for c in tabla_resumen %}
+                                            {% if c.estadorx == "E" %}
+                                            <tr class="odd:bg-white even:bg-gray-100">
+                                                <td class="p-2 border">{{ forloop.counter }}</td>
+                                                <td class="p-2 border">{{ c.responsable }}</td>
+                                                <td class="p-2 border">{{ c.serial }}</td>
+                                                <td class="p-2 border">{{ c.estadorx }}</td>
+                                                <td class="p-2 border">{{ c.hora_entrega }}</td>
+                                                <td class="p-2 border">{{ c.dia }}</td>
+                                            </tr>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
                                 </div>
+
                             </div>
 
                         </div>
