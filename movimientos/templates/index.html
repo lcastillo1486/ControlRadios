@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="es">
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Clientes</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Favicon opcional -->
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" />
+
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"></script>
+</head>
+
+<style>
+    /* Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --bg-color: #0b1120;
+        /* Darker blue mostly black */
+        --card-bg: rgba(27, 54, 136, 0.15);
+        /* Corporate Blue tinted */
+        --primary-gradient: linear-gradient(135deg, #1B3688 0%, #254eb0 50%, #A2C617 100%);
+        --text-color: #f8fafc;
+        --text-muted: #cbd5e1;
+        --input-bg: rgba(15, 23, 42, 0.8);
+        --border-color: rgba(162, 198, 23, 0.2);
+        /* Corporate Green border */
+        --success-color: #A2C617;
+        /* Corporate Green */
+        --error-color: #ef4444;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Outfit', sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image:
+            radial-gradient(circle at 10% 20%, rgba(27, 54, 136, 0.4) 0%, transparent 40%),
+            radial-gradient(circle at 90% 80%, rgba(162, 198, 23, 0.15) 0%, transparent 40%);
+        overflow-x: hidden;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 500px;
+        padding: 20px;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Glassmorphism Card */
+    .form-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Decorative elements */
+    .form-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: var(--primary-gradient);
+    }
+
+    /* Logo */
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .logo {
+        max-width: 200px;
+        height: auto;
+        filter: drop-shadow(0 0 10px rgba(162, 198, 23, 0.3));
+    }
+
+    header {
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #ffffff;
+    }
+
+    p.subtitle {
+        color: var(--text-muted);
+        font-size: 0.95rem;
+    }
+
+    /* Form Groups */
+    .form-group {
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-muted);
+        font-size: 0.9rem;
+        transition: color 0.3s;
+    }
+
+    .form-group:focus-within label {
+        color: #a855f7;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 14px 16px;
+        background: var(--input-bg);
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        color: var(--text-color);
+        font-family: inherit;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        outline: none;
+    }
+
+    .form-input:focus {
+        border-color: #a855f7;
+        box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
+    }
+
+    .form-input::placeholder {
+        color: rgba(148, 163, 184, 0.5);
+    }
+
+    /* Button */
+    .btn-submit {
+        width: 100%;
+        padding: 16px;
+        border: none;
+        border-radius: 12px;
+        background: var(--primary-gradient);
+        color: white;
+        font-weight: 600;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        font-family: inherit;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px -5px rgba(168, 85, 247, 0.4);
+    }
+
+    .btn-submit:active {
+        transform: translateY(0);
+    }
+
+    .iti__country-name {
+        color: #000 !important;
+    }
+
+    /* Código del país */
+    .iti__dial-code {
+        color: #000 !important;
+    }
+
+    /* Texto del buscador */
+    .iti__search-input {
+        color: #000 !important;
+    }
+
+    /* País seleccionado */
+    .iti__selected-country {
+        color: #000 !important;
+    }
+
+    /* Loader */
+    .loader {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        border-top-color: white;
+        animation: spin 1s ease-in-out infinite;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    @keyframes spin {
+        to {
+            transform: translate(-50%, -50%) rotate(360deg);
+        }
+    }
+
+    .btn-submit.loading .btn-text {
+        visibility: hidden;
+    }
+
+    .btn-submit.loading .loader {
+        display: block;
+    }
+
+    /* Notification */
+    .notification {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 500;
+        opacity: 0;
+        transform: translateY(10px);
+        transition: all 0.4s ease;
+        display: none;
+    }
+
+    .notification.success {
+        background: rgba(16, 185, 129, 0.2);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        color: #34d399;
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .notification.error {
+        background: rgba(239, 68, 68, 0.2);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        color: #f87171;
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Footer Link (Admin) */
+    .admin-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .admin-link a {
+        color: var(--text-muted);
+        font-size: 0.8rem;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .admin-link a:hover {
+        color: var(--text-color);
+    }
+</style>
+
+<body>
+    <div class="container">
+        <div class="form-card">
+            <div class="logo-container">
+                <img src="{% static 'logo.png' %}" width="50" height="50" class="logo">
+            </div>
+            <header>
+                <h1>Registro de Clientes</h1>
+                <!-- <p class="subtitle">Complete sus datos para nuestro sistema de gestión</p> -->
+            </header>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div id="mensaje-confirmacion" class="notification success">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <form id="clienteForm" method="post" action="{% url 'formulariocliente' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo</label>
+                    <input type="text" id="nombre" name="nombre" class="form-input" placeholder="Ej. Juan Pérez"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Número de Teléfono</label>
+                    <input type="tel" id="telefono" name="telefono" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo Electrónico</label>
+                    <input type="email" id="email" name="email" class="form-input" placeholder="Ej. juan@empresa.com"
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="referencia">Referencia (Agencia/Productora)</label>
+                    <input type="text" id="referencia" name="referencia" class="form-input"
+                        placeholder="¿Con quién trabaja habitualmente?">
+                </div>
+
+                <div class="form-group">
+
+                    <p class="subtitle">Nota: complete sus datos con información exacta y veraz, ya que este será el
+                        único medio válido de registro en nuestro sistema de gestión.</p>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <span class="btn-text">Guardar Datos</span>
+                    <div class="loader"></div>
+                </button>
+            </form>
+
+            <div id="notification" class="notification"></div>
+
+            <div class="admin-link">
+                <!-- Enlace discreto para exportar (podría protegerse más adelante) -->
+                <!-- <a href="/api/exportar" target="_blank">Exportar Base de Datos (Admin)</a> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+<script>
+    const input = document.querySelector("#telefono");
+
+    const iti = window.intlTelInput(input, {
+        initialCountry: "pe",        // país por defecto
+        separateDialCode: true,      // muestra el código separado
+        nationalMode: false,         // fuerza formato internacional
+        preferredCountries: ["pe", "ar", "cl", "co"],
+        utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js"
+    });
+
+    // Antes de enviar el formulario
+    document.getElementById("clienteForm").addEventListener("submit", function () {
+        input.value = iti.getNumber(); // guarda +51999999999
+    });
+</script>
+
+<script>
+    setTimeout(() => {
+        const msg = document.getElementById("mensaje-confirmacion");
+        if (msg) msg.style.display = "none";
+    }, 5000);
+</script>
+
+</html>

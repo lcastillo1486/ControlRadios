@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, Http404, FileResponse
 from ordenes.models import ordenRegistro
 from movimientos.models import salidasDetalle, contable, abono_factura,vista_ordenes_cxc, controlrxevent
-from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente
+from .forms import radiotipos, agregarInven, formBuscaRadio, guardaEntradaRx, formEntradaDetalle, formBuscarInformes, FacturaPDFForm, formRegistroMontoFact, formRegistroMontopago, comprobantePagoForm, comprobanteabonoForm, formRegistroMontoFactNoSunat, rxcontroleventoform, ResponsableForm, rxcontroleventoformRecojo, FormPedidoCliente, base_clientes
 from django.contrib import messages
 from .models import movimientoRadios, invSeriales, entradaDetalle, accesoriosFaltantes, radiosFantantes, vista_radios_faltantes, vista_accesorios_faltantes, vista_movimiento_radios_tipos, auditoria, mochila, vista_ordenes_procesadas, vista_ordenes_cerradas, vista_entrada_detalle, vista_movimiento_radios_tipos, CajasMikrot, controlinventario, espejo_inventario_ant, espejo_inventario_desp, inv_accesorios, entrada_salida_acce, controlinventarioacce, espejo_inventarioacce_ant, espejo_inventarioacce_desp, entrada_accesorios, inv_accesorios_temp, rpt_kardex,formulario_pedido, controlrx_event_dia, espejo_dia_control_rx, pedidos_asignados_prepa, pedidos_asignados_entrega, vista_ia
 from cliente.models import cliente
@@ -4295,3 +4295,16 @@ def servir_vcard(request, archivo_nombre):
 
     # Servir el archivo
     return FileResponse(open(ruta_archivo, 'rb'), content_type='text/vcard')
+
+
+def formulariocliente(request):
+    if request.method == "POST":
+        base_clientes.objects.create(
+            nombre=request.POST["nombre"],
+            telefono=request.POST["telefono"],
+            correo=request.POST["email"],
+            referencia=request.POST.get("referencia", "")
+        )
+        messages.success(request, "Datos guardados correctamente.")
+        return redirect("formulariocliente")  
+    return render(request, 'index.html')
