@@ -589,6 +589,7 @@ class pedidos_asignados_entrega(models.Model):
         auto_created = True
 
 class base_clientes(models.Model):
+    id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=200, null=True, blank=True)
     telefono = models.CharField( max_length=15)
     correo = models.EmailField(
@@ -599,3 +600,8 @@ class base_clientes(models.Model):
         help_text="Ingrese un correo electrónico válido."
     )
     referencia = models.CharField(max_length=200, null=True, blank=True)
+
+    class Meta:
+        managed = False
+        db_table = 'base_clientes'
+        auto_created = True
