@@ -4308,3 +4308,8 @@ def formulariocliente(request):
         messages.success(request, "Datos guardados correctamente.")
         return redirect("formulariocliente")  
     return render(request, 'index.html')
+
+def ver_listado_clientes(request):
+    listado_clientes = base_clientes.objects.all()
+    return render(request, 'listado_clientes_new.html',{'listado_clientes':listado_clientes})
+

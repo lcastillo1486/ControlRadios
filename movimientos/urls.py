@@ -104,6 +104,7 @@ urlpatterns = [
     path('api/guardar_vcard', views.guardar_vcard, name='guardar_vcard'),
     path('vcard/<str:archivo_nombre>/', views.servir_vcard, name='servir_vcard'),
     path("formulario-clientes", views.formulariocliente, name="formulariocliente"),
+    path("listado-clientes", views.ver_listado_clientes, name="listadocliente"),
 
 
 
