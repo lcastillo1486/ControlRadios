@@ -212,7 +212,7 @@
                                             style="background: url(/static/editar_rs.png); background-size: cover; width: 30px; height: 30px;"
                                             title="Editar Razón Social"></a>
                                         <!-- <input type="checkbox" id="facturado" name="facturado" {% if c.facturado %}checked{% endif %} disabled> -->
-                                        {% if not c.facturado %}
+                                        
                                         <a id="sunat_{{c.id_orden}}" href='/formregistrafactura/{{c.id_orden}}/{{c.cliente}}/{{c.ruc_razon_social}}/{{c.id_salida}}/{{c.razon_social}}'
                                             class="btn btn-success"
                                             style="background: url(/static/subir_factura.png); background-size: cover; width: 30px; height: 30px;"
@@ -224,7 +224,7 @@
                                         <a href='/guiadevueltos/{{c.id_orden}}' class="btn btn-success"
                                             style="background: url(/static/pedido.png); background-size: cover; width: 30px; height: 30px;"
                                             title="Descargar Orden"></a>
-                                        {% endif %}
+                                        
                                     </td>
                                 </tr>
                                 {% endfor %}
